@@ -368,8 +368,8 @@
   var lenis = null;
   var ctx = null;
   var introPlayed = false;
-  var snapTimer = null;
   var snapLock = false;
+  var snapTimer = null;
 
   function initMotion() {
     document.documentElement.classList.remove('no-motion');
@@ -379,32 +379,45 @@
     lenis.on('scroll', ScrollTrigger.update);
 
     /* ----- section magnet: The Path and What I Do settle into place.
-       When scrolling stops with a section heading in the upper half of
-       the viewport, ease the page so the section lands cleanly. ----- */
+       Two triggers, one action: engage as the scroll slows inside the
+       zone (felt immediately on wheel/trackpad), or on the settle
+       fallback once events stop (jumps, scrollbar, keyboard). Fires
+       once per approach and re-arms only after leaving the zone, so it
+       never traps the user. ----- */
     var snapEls = ['.path', '.work'].map(function (sel) {
       return document.querySelector(sel);
     }).filter(Boolean);
+    var snapArmed = snapEls.map(function () { return true; });
+    function engageSnap(requireSlow) {
+      if (snapLock || !lenis) return;
+      var vh = window.innerHeight;
+      var v = Math.abs(lenis.velocity || 0);
+      for (var i = 0; i < snapEls.length; i++) {
+        var top = snapEls[i].getBoundingClientRect().top;
+        var inZone = top > vh * 0.02 && top < vh * 0.72;
+        if (!inZone) { snapArmed[i] = true; continue; }
+        if (!snapArmed[i]) continue;
+        if (requireSlow && v >= 2.2) continue;
+        snapArmed[i] = false;
+        snapLock = true;
+        lenis.scrollTo(snapEls[i], {
+          offset: -Math.round(vh * 0.08),
+          duration: 0.9,
+          easing: function (t) { return 1 - Math.pow(1 - t, 3); }
+        });
+        setTimeout(function () { snapLock = false; }, 1000);
+        break;
+      }
+    }
+    window.__dbg = { lenis: lenis, engage: engageSnap, events: 0 };
     lenis.on('scroll', function () {
+      window.__dbg.events++;
       if (snapLock) return;
+      engageSnap(true);
       if (snapTimer) clearTimeout(snapTimer);
-      snapTimer = setTimeout(function () {
-        if (snapLock || !lenis) return;
-        var vh = window.innerHeight;
-        for (var i = 0; i < snapEls.length; i++) {
-          var top = snapEls[i].getBoundingClientRect().top;
-          if (top > vh * 0.14 && top < vh * 0.55) {
-            snapLock = true;
-            lenis.scrollTo(snapEls[i], {
-              offset: -Math.round(vh * 0.08),
-              duration: 0.85,
-              easing: function (t) { return 1 - Math.pow(1 - t, 3); }
-            });
-            setTimeout(function () { snapLock = false; }, 950);
-            break;
-          }
-        }
-      }, 170);
+      snapTimer = setTimeout(function () { engageSnap(false); }, 160);
     });
+
     gsap.ticker.add(tickLenis);
     gsap.ticker.lagSmoothing(0);
 
