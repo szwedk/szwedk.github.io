@@ -547,6 +547,23 @@ em {
   color: var(--bone);
   padding: 140px var(--pad-x) 72px;
 }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 34px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--bone-dim);
+  text-decoration: none;
+  padding: 9px 16px;
+  border: 1px solid var(--hairline-light);
+  border-radius: 999px;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.back-link:hover { color: var(--bone); border-color: var(--bone-dim); }
 .page-hero .eyebrow { margin-bottom: 26px; }
 .page-hero h1 {
   font-size: clamp(2.6rem, 6vw, 5.2rem);

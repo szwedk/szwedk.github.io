@@ -368,6 +368,8 @@
   var lenis = null;
   var ctx = null;
   var introPlayed = false;
+  var snapTimer = null;
+  var snapLock = false;
 
   function initMotion() {
     document.documentElement.classList.remove('no-motion');
@@ -375,6 +377,34 @@
 
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
+
+    /* ----- section magnet: The Path and What I Do settle into place.
+       When scrolling stops with a section heading in the upper half of
+       the viewport, ease the page so the section lands cleanly. ----- */
+    var snapEls = ['.path', '.work'].map(function (sel) {
+      return document.querySelector(sel);
+    }).filter(Boolean);
+    lenis.on('scroll', function () {
+      if (snapLock) return;
+      if (snapTimer) clearTimeout(snapTimer);
+      snapTimer = setTimeout(function () {
+        if (snapLock || !lenis) return;
+        var vh = window.innerHeight;
+        for (var i = 0; i < snapEls.length; i++) {
+          var top = snapEls[i].getBoundingClientRect().top;
+          if (top > vh * 0.14 && top < vh * 0.55) {
+            snapLock = true;
+            lenis.scrollTo(snapEls[i], {
+              offset: -Math.round(vh * 0.08),
+              duration: 0.85,
+              easing: function (t) { return 1 - Math.pow(1 - t, 3); }
+            });
+            setTimeout(function () { snapLock = false; }, 950);
+            break;
+          }
+        }
+      }, 170);
+    });
     gsap.ticker.add(tickLenis);
     gsap.ticker.lagSmoothing(0);
 
@@ -530,6 +560,8 @@
   }
 
   function teardownMotion() {
+    if (snapTimer) { clearTimeout(snapTimer); snapTimer = null; }
+    snapLock = false;
     if (ctx) { ctx.revert(); ctx = null; }
     if (lenis) { lenis.destroy(); lenis = null; }
     gsap.ticker.remove(tickLenis);

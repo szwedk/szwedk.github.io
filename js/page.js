@@ -17,7 +17,7 @@
   gsap.ticker.lagSmoothing(0);
 
   /* hero intro */
-  gsap.fromTo('.page-hero .eyebrow, .page-hero h1, .page-intro, .page-chips li',
+  gsap.fromTo('.back-link, .page-hero .eyebrow, .page-hero h1, .page-intro, .page-chips li',
     { y: 30, autoAlpha: 0 },
     { y: 0, autoAlpha: 1, duration: 0.9, ease: 'power3.out', stagger: 0.05, delay: 0.1 });
   gsap.fromTo('.brand, .site-chrome',
