@@ -732,6 +732,13 @@ html.no-motion .marquee-track { animation-play-state: paused; }
    they would sit inverted over the light sections and the footer forever */
 html.no-motion .rail { display: none; }
 
+/* section wrapper for feature modules on standalone pages */
+.brief-section {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 9vh var(--pad-x) 11vh;
+}
+
 /* ============ Focus ============ */
 :focus-visible {
   outline: 2px solid currentColor;
@@ -844,6 +851,11 @@ main:focus, section:focus, footer:focus { outline: none; }
   transition: color 0.25s ease;
 }
 .contact-links a:hover { color: var(--bone); }
+.contact-wordmark {
+  margin-top: 54px;
+  width: min(320px, 70vw);
+}
+
 .contact-fine {
   position: absolute;
   bottom: 26px;

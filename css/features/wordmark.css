@@ -1,0 +1,234 @@
+/* =============================================================================
+   Wordmark, reprinted  --  [data-ks-wordmark]
+   -----------------------------------------------------------------------------
+   Footer wordmark that reprints itself as a slicer preview. Built for the DARK
+   sections (#050505, bone type); every colour comes from a global token so it
+   inherits correctly wherever it is mounted.
+
+   The canvas is painted by js/features/wordmark.js. Until that script has the
+   font measured and the geometry derived, .ks-wordmark-text is a plain visible
+   wordmark -- so the footer never renders empty, and if the script never runs
+   at all the name simply stays as type.
+   ============================================================================= */
+
+[data-ks-wordmark] {
+  /* hot-end tint for the freshly extruded bead and the cooling shimmer.
+     Read by the script via getComputedStyle -- override it to retune. */
+  --ks-wordmark-hot: 246, 214, 170;
+
+  display: block;
+  width: 100%;
+  color: var(--bone);
+}
+
+/* ============ Stage ============ */
+
+[data-ks-wordmark] .ks-wordmark-stage {
+  display: block;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  min-height: clamp(56px, 15vw, 190px);
+  /* the pre-script wordmark is nowrap and can outrun a narrow container for
+     one frame; clip it rather than pushing the page sideways (an outline on
+     this element is not clipped by its own overflow) */
+  overflow: hidden;
+
+  /* press-and-hold: suppress selection and the iOS callout, but leave vertical
+     panning to the browser so a scroll that starts here still scrolls */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-ks-wordmark] .ks-wordmark-stage:focus { outline: none; }
+[data-ks-wordmark] .ks-wordmark-stage:focus-visible {
+  outline: 2px solid var(--bone);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+[data-ks-wordmark] .ks-wordmark-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+/* ============ The name ============
+   In flow and visible until the canvas takes over, then clipped to the
+   standard screen-reader-only box. It stays real text either way: it carries
+   the button's readable name and keeps the wordmark indexable. */
+
+[data-ks-wordmark] .ks-wordmark-text {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 13vw, 11rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--bone);
+}
+
+[data-ks-wordmark].ks-wordmark-ready .ks-wordmark-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ============ Meta row ============ */
+
+[data-ks-wordmark] .ks-wordmark-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 28px;
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid var(--hairline-light);
+}
+
+[data-ks-wordmark] .ks-wordmark-hint,
+[data-ks-wordmark] .ks-wordmark-readout {
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone);
+  opacity: 0.55;
+}
+
+[data-ks-wordmark] .ks-wordmark-hint {
+  transition: opacity 0.25s ease;
+}
+[data-ks-wordmark] .ks-wordmark-stage:hover ~ .ks-wordmark-meta .ks-wordmark-hint,
+[data-ks-wordmark] .ks-wordmark-stage:focus-visible ~ .ks-wordmark-meta .ks-wordmark-hint {
+  opacity: 0.85;
+}
+
+[data-ks-wordmark] .ks-wordmark-readout {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+
+[data-ks-wordmark] .ks-wordmark-cell { white-space: nowrap; }
+
+[data-ks-wordmark] .ks-wordmark-sep {
+  display: inline-block;
+  padding: 0 0.75em;
+  opacity: 0.5;
+}
+
+/* ============ Screen-reader status ============ */
+
+[data-ks-wordmark] .ks-wordmark-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============ Responsive ============
+   The readout is the first thing to give: drop the least interesting fields
+   before letting it wrap or overflow. */
+
+@media (max-width: 860px) {
+  [data-ks-wordmark] .ks-wordmark-cell--flow { display: none; }
+}
+
+@media (max-width: 680px) {
+  [data-ks-wordmark] .ks-wordmark-cell--bed { display: none; }
+  [data-ks-wordmark] .ks-wordmark-meta {
+    justify-content: flex-start;
+    gap: 6px 0;
+  }
+  [data-ks-wordmark] .ks-wordmark-hint,
+  [data-ks-wordmark] .ks-wordmark-readout { flex: 1 0 100%; }
+}
+
+@media (max-width: 430px) {
+  [data-ks-wordmark] .ks-wordmark-cell--nozzle { display: none; }
+  [data-ks-wordmark] .ks-wordmark-hint,
+  [data-ks-wordmark] .ks-wordmark-readout {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* ============ Light surfaces ============
+   The feature is specified for the dark footer, but nothing stops it being
+   mounted on paper -- so honour an explicit opt-in rather than guessing. */
+
+[data-ks-wordmark].ks-wordmark-on-paper,
+[data-ks-wordmark].ks-wordmark-on-paper .ks-wordmark-text,
+[data-ks-wordmark].ks-wordmark-on-paper .ks-wordmark-hint,
+[data-ks-wordmark].ks-wordmark-on-paper .ks-wordmark-readout {
+  color: var(--ink);
+}
+[data-ks-wordmark].ks-wordmark-on-paper .ks-wordmark-meta {
+  border-top-color: var(--hairline-dark);
+}
+[data-ks-wordmark].ks-wordmark-on-paper .ks-wordmark-stage:focus-visible {
+  outline-color: var(--ink);
+}
+
+/* ============ Reduced motion ============
+   The script switches to three instant states and never starts a frame loop,
+   so there is no animation here to disable. Nothing else to do -- the hover
+   fade on the hint is a 0.25s opacity change on a static element. */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-ks-wordmark] .ks-wordmark-hint { transition: none; }
+}
+
+/* ============ Print ============
+   Fall back to plain type, in ink, and drop the simulated machine readout. */
+
+@media print {
+  [data-ks-wordmark] .ks-wordmark-canvas,
+  [data-ks-wordmark] .ks-wordmark-meta { display: none !important; }
+
+  [data-ks-wordmark] .ks-wordmark-stage {
+    min-height: 0;
+    height: auto !important;
+  }
+
+  [data-ks-wordmark].ks-wordmark-ready .ks-wordmark-text,
+  [data-ks-wordmark] .ks-wordmark-text {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    font-size: 2.2rem;
+    color: var(--ink) !important;
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "_source": "Unitree official URDF (unitreerobotics/unitree_ros): g1_29dof.urdf, go2_description.urdf",
+  "_note": "Sagittal-plane link lengths in metres, derived from URDF joint origins. Limits in radians.",
+  "g1": {
+    "label": "Unitree G1 (29 DOF)",
+    "standingHeight": 1.32,
+    "links": {
+      "hipToKnee": 0.19386,
+      "kneeToAnkle": 0.30001,
+      "pelvisToHip": 0.1027,
+      "pelvisToShoulder": 0.23778,
+      "shoulderToElbow": 0.08205,
+      "hipSpacing": 0.1289,
+      "shoulderSpacing": 0.20042
+    },
+    "limits": {
+      "right_hip_pitch_joint": {
+        "lower": -2.5307,
+        "upper": 2.8798,
+        "effort": 88.0
+      },
+      "right_knee_joint": {
+        "lower": -0.087267,
+        "upper": 2.8798,
+        "effort": 139.0
+      },
+      "right_ankle_pitch_joint": {
+        "lower": -0.87267,
+        "upper": 0.5236,
+        "effort": 35.0
+      },
+      "right_shoulder_pitch_joint": {
+        "lower": -3.0892,
+        "upper": 2.6704,
+        "effort": 25.0
+      },
+      "right_elbow_joint": {
+        "lower": -1.0472,
+        "upper": 2.0944,
+        "effort": 25.0
+      },
+      "waist_yaw_joint": {
+        "lower": -2.618,
+        "upper": 2.618,
+        "effort": 88.0
+      }
+    }
+  },
+  "go2": {
+    "label": "Unitree Go2",
+    "links": {
+      "thigh": 0.213,
+      "calf": 0.213,
+      "bodyLengthHalf": 0.1934,
+      "bodyWidthHalf": 0.142
+    },
+    "limits": {
+      "FR_hip_joint": {
+        "lower": -1.0472,
+        "upper": 1.0472,
+        "effort": 23.7
+      },
+      "FR_thigh_joint": {
+        "lower": -1.5708,
+        "upper": 3.4907,
+        "effort": 23.7
+      },
+      "FR_calf_joint": {
+        "lower": -2.7227,
+        "upper": -0.83776,
+        "effort": 45.43
+      }
+    }
+  }
+}
