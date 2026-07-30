@@ -1,0 +1,305 @@
+/* =============================================================================
+   Gait Lab  —  [data-ks-gait-lab]
+   Quadruped gait explorer. Sits on a PAPER section by default; add
+   .ks-gait-lab-on-dark (or data-theme handling in JS) for dark placement.
+   All classes are prefixed ks-gait-lab- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-gait-lab] {
+  --gl-ink: var(--ink);
+  --gl-soft: var(--ink-soft);
+  --gl-hair: var(--hairline-dark);
+  --gl-bg: transparent;
+  color: var(--gl-ink);
+}
+
+[data-ks-gait-lab].ks-gait-lab-on-dark,
+[data-ks-gait-lab] .ks-gait-lab-dark {
+  --gl-ink: var(--bone);
+  --gl-soft: var(--bone-dim);
+  --gl-hair: var(--hairline-light);
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.ks-gait-lab {
+  display: grid;
+  gap: 26px;
+}
+
+.ks-gait-lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-gait-lab-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-gait-lab-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+}
+
+/* ---- stage / canvases --------------------------------------------------- */
+.ks-gait-lab-stage {
+  position: relative;
+  border-top: 1px solid var(--gl-hair);
+  border-bottom: 1px solid var(--gl-hair);
+  padding: 18px 0;
+}
+
+.ks-gait-lab-canvas {
+  display: block;
+  width: 100%;
+  /* explicit height: gait-lab.js sizes its backing store from clientHeight */
+  height: clamp(250px, 34vh, 360px);
+}
+
+.ks-gait-lab-plot {
+  display: block;
+  width: 100%;
+  height: clamp(110px, 17vh, 165px);
+}
+
+.ks-gait-lab-chart { display: block; width: 100%; }
+
+.ks-gait-lab-charthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+/* ---- controls ----------------------------------------------------------- */
+.ks-gait-lab-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 22px 34px;
+  align-items: start;
+}
+
+.ks-gait-lab-field {
+  display: grid;
+  gap: 9px;
+  border: 0;         /* it is a <fieldset> — drop the UA box */
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.ks-gait-lab-field > legend {
+  padding: 0;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-gait-lab-key,
+.ks-gait-lab-sliderhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-gait-lab-val {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  opacity: 0.95;
+}
+
+/* pill group (gait selector) */
+.ks-gait-lab-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.ks-gait-lab-pill {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--gl-ink);
+  background: none;
+  border: 1px solid var(--gl-hair);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.ks-gait-lab-pill:hover { border-color: var(--gl-ink); }
+.ks-gait-lab-pill[aria-pressed="true"],
+.ks-gait-lab-pill.is-active {
+  background: var(--gl-ink);
+  color: var(--paper);
+  border-color: var(--gl-ink);
+}
+[data-ks-gait-lab].ks-gait-lab-on-dark .ks-gait-lab-pill[aria-pressed="true"],
+[data-ks-gait-lab].ks-gait-lab-on-dark .ks-gait-lab-pill.is-active {
+  color: #050505;
+}
+
+/* range inputs — thin track, small round thumb */
+.ks-gait-lab-range,
+.ks-gait-lab-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: none;
+  cursor: pointer;
+  margin: 0;
+}
+.ks-gait-lab-range::-webkit-slider-runnable-track,
+.ks-gait-lab-slider::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--gl-hair);
+}
+.ks-gait-lab-range::-moz-range-track,
+.ks-gait-lab-slider::-moz-range-track {
+  height: 1px;
+  background: var(--gl-hair);
+}
+.ks-gait-lab-range::-webkit-slider-thumb,
+.ks-gait-lab-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--gl-ink);
+  margin-top: -5px;
+}
+.ks-gait-lab-range::-moz-range-thumb,
+.ks-gait-lab-slider::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--gl-ink);
+}
+
+/* ---- readout ------------------------------------------------------------ */
+.ks-gait-lab-readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 14px 28px;
+  border-top: 1px solid var(--gl-hair);
+  padding-top: 18px;
+}
+
+.ks-gait-lab-cell { display: grid; gap: 5px; }
+
+.ks-gait-lab-cellkey {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-gait-lab-cellval {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- footfall legend / swing-stance key --------------------------------- */
+.ks-gait-lab-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-gait-lab-sw {
+  display: inline-block;
+  width: 22px;
+  height: 7px;
+  border: 1px solid currentColor;
+  margin-right: 7px;
+  vertical-align: -1px;
+}
+.ks-gait-lab-sw-fill { background: currentColor; }
+
+/* ---- warning / notes ----------------------------------------------------
+   NOTE: gait-lab.js puts .ks-gait-lab-warn on the ROOT element as a state
+   flag when the gait is unstable. It must therefore never set `color`, or
+   the whole module inherits it. Only the flag text is tinted. */
+.ks-gait-lab-flag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #b03a2e;
+  min-height: 1.2em;
+}
+
+.ks-gait-lab-warn .ks-gait-lab-flag { color: #b03a2e; }
+
+.ks-gait-lab-note {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--gl-soft);
+  opacity: 0.85;
+  max-width: 62ch;
+}
+
+.ks-gait-lab-body { display: grid; gap: 20px; }
+
+/* ---- a11y --------------------------------------------------------------- */
+.ks-gait-lab-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ks-gait-lab :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .ks-gait-lab-panel { grid-template-columns: 1fr 1fr; gap: 18px 22px; }
+  .ks-gait-lab-readout { grid-template-columns: 1fr 1fr; }
+}
