@@ -526,6 +526,165 @@ em {
   content: '\2192\00a0\00a0';
   opacity: 0.45;
 }
+.work-more {
+  display: inline-block;
+  margin: 0 0 40px 64px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 4px;
+  transition: opacity 0.25s ease;
+}
+.work-more:hover { opacity: 0.6; }
+
+/* ============ Field sub-pages (work/*.html) ============ */
+.page-hero {
+  background: #050505;
+  color: var(--bone);
+  padding: 140px var(--pad-x) 72px;
+}
+.page-hero .eyebrow { margin-bottom: 26px; }
+.page-hero h1 {
+  font-size: clamp(2.6rem, 6vw, 5.2rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  max-width: 16ch;
+}
+.page-intro {
+  margin-top: 26px;
+  max-width: 52ch;
+  font-size: clamp(0.9rem, 1.1vw, 1.02rem);
+  line-height: 1.7;
+  color: var(--bone-dim);
+}
+.page-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 34px;
+  list-style: none;
+}
+.page-chips li {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 7px 13px;
+  border: 1px solid var(--hairline-light);
+  border-radius: 999px;
+  color: var(--bone-dim);
+  white-space: nowrap;
+}
+
+.projects {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 11vh var(--pad-x) 12vh;
+}
+.projects-head { margin-bottom: 6vh; }
+.project {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: clamp(16px, 3vw, 48px);
+  padding: 44px 0 48px;
+  border-top: 1px solid var(--hairline-dark);
+}
+.project:last-of-type { border-bottom: 1px solid var(--hairline-dark); }
+.project-num {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  opacity: 0.62;
+  font-weight: 600;
+  padding-top: 8px;
+}
+.project h3 {
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin-bottom: 14px;
+  max-width: 24ch;
+}
+.project h3 em { font-size: 1.05em; }
+.project-body p {
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 66ch;
+  opacity: 0.9;
+}
+.project-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-top: 20px;
+}
+.project-facts div { font-size: 0.82rem; }
+.project-facts dt {
+  display: inline;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+  margin-right: 8px;
+}
+.project-facts dd { display: inline; color: var(--ink-soft); }
+/* media slot — drop <figure class="project-media"><img …/></figure> into a
+   project to show photos; grid + aspect keep any count of images tidy */
+.project-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 26px;
+}
+.project-media img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+}
+
+.page-foot {
+  background: #050505;
+  color: var(--bone);
+  padding: 12vh var(--pad-x);
+  text-align: center;
+}
+.page-foot h2 {
+  font-size: clamp(1.9rem, 4.4vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.page-foot-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 38px;
+  list-style: none;
+}
+.page-foot-links a {
+  color: var(--bone-dim);
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: color 0.25s ease;
+}
+.page-foot-links a:hover { color: var(--bone); }
+
+@media (max-width: 900px) {
+  .page-hero { padding-top: 120px; }
+  .project { grid-template-columns: 40px 1fr; }
+  .work-more { margin-left: 0; }
+}
 
 /* ============ Marquee ============ */
 .marquee {
