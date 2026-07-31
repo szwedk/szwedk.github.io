@@ -11,6 +11,19 @@
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var motionOn = !prefersReduced;
 
+  /* The scroll reveals animate autoAlpha, which parks everything below the
+     hero at `visibility: hidden`. That is fine for a mouse, but it strands a
+     keyboard: nothing past the header is focusable, so Tab can never scroll
+     far enough to trigger the reveal that would make it focusable. The first
+     Tab press flips a flag that CSS uses to restore visibility while leaving
+     the opacity animation alone, so tabbing scrolls each section into view
+     and it fades in as it arrives. */
+  window.addEventListener('keydown', function onFirstTab(e) {
+    if (e.key !== 'Tab') return;
+    document.documentElement.classList.add('kb-nav');
+    window.removeEventListener('keydown', onFirstTab);
+  });
+
   /* ---------- deterministic rng ---------- */
   function mulberry32(a) {
     return function () {
@@ -482,14 +495,22 @@
       }, 0)
       .to({}, { duration: 26 }, 74);
 
-      /* ----- rails: only over the hero ----- */
-      gsap.to('.rail-top-right, .rail-mid-right, .rail-bottom-right', {
-        autoAlpha: 0, duration: 0.4, ease: 'none',
-        scrollTrigger: {
-          trigger: '.manifesto',
-          start: 'top 65%',
-          toggleActions: 'play none none reverse'
-        }
+      /* ----- rails: only over the hero -----
+         Driven by a class rather than a tween on autoAlpha. The intro
+         timeline also animates .rail, so scrolling out of the hero while
+         that intro is still running used to leave the rails lit, and
+         .rail-mid-right then sat on top of the work row tags. A class the
+         CSS marks !important cannot be undone by a later inline tween. */
+      var railEls = document.querySelectorAll(
+        '.rail-top-right, .rail-mid-right, .rail-bottom-right');
+      function setRails(hidden) {
+        railEls.forEach(function (el) { el.classList.toggle('is-past-hero', hidden); });
+      }
+      ScrollTrigger.create({
+        trigger: '.manifesto',
+        start: 'top 65%',
+        onEnter: function () { setRails(true); },
+        onLeaveBack: function () { setRails(false); }
       });
 
       /* ----- path timeline ----- */
@@ -644,11 +665,25 @@
   document.querySelectorAll('.work-row').forEach(function (row) {
     var btn = row.querySelector('.work-summary');
     if (!btn) return;
+    var detail = row.querySelector('.work-detail');
+    var inner = row.querySelector('.work-detail-inner');
+
+    /* A collapsed panel is only visually clipped by overflow, so its links
+       stay in the tab order and focus scrolls to something nobody can see.
+       `inert` takes the whole subtree out until the row is actually open. */
+    function syncInert(open) {
+      if (!inner) return;
+      if (open) { inner.removeAttribute('inert'); }
+      else { inner.setAttribute('inert', ''); }
+    }
+    syncInert(row.classList.contains('is-open'));
+
     btn.addEventListener('click', function () {
       var open = row.classList.toggle('is-open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      syncInert(open);
     });
-    var detail = row.querySelector('.work-detail');
+
     if (detail) {
       detail.addEventListener('transitionend', function (e) {
         if (e.propertyName === 'grid-template-rows') ScrollTrigger.refresh();

@@ -1448,8 +1448,8 @@
     function syncLabels() {
       var reduced = isReduced();
       stage.setAttribute('aria-label', reduced
-        ? text + ' \u2014 press to step through a simulated 3D print of the wordmark'
-        : text + ' \u2014 press and hold to reprint the wordmark');
+        ? text + '. Press to step through a simulated 3D print of the wordmark.'
+        : text + '. Press and hold to reprint the wordmark.');
       hint.textContent = reduced
         ? 'PRESS TO STEP \u00B7 SLICER SIMULATION'
         : 'PRESS AND HOLD \u00B7 SLICER SIMULATION';

@@ -497,10 +497,15 @@
       o.hx = hx; o.hy = hy; o.tx = tx; o.ty = ty;
       o.clamped = false;
 
+      /* hx/hy/tx/ty arrive in canvas pixels, but L1, L2, D_MIN and D_MAX are
+         URDF metres. Divide the hip-to-target span by `scale` so the joint
+         limits and the cosine rule below both work in metres; every position
+         written back out is multiplied by `scale` again. */
       var vx = tx - hx, vy = ty - hy;
-      var d = Math.sqrt(vx * vx + vy * vy);
+      var dpx = Math.sqrt(vx * vx + vy * vy);
+      var d = dpx / scale;
       var ux, uy;
-      if (d < 1e-6) { ux = dxu; uy = dyu; d = 1e-6; } else { ux = vx / d; uy = vy / d; }
+      if (d < 1e-6) { ux = dxu; uy = dyu; d = 1e-6; } else { ux = vx / dpx; uy = vy / dpx; }
 
       var dc = clamp(d, D_MIN, D_MAX);        /* calf joint limit             */
       if (Math.abs(dc - d) > 1e-5) { o.clamped = true; }

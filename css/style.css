@@ -186,6 +186,10 @@ em {
   right: var(--pad-x);
   opacity: 0.55;
 }
+/* set once the hero is behind us; !important so the intro tween, which also
+   animates .rail, cannot light them back up over the sections below */
+.rail { transition: opacity 0.4s ease; }
+.rail.is-past-hero { opacity: 0 !important; }
 
 /* ============ Hero ============ */
 .hero {
@@ -548,13 +552,16 @@ em {
 }
 .work-detail-inner { overflow: hidden; }
 .work-row.is-open .work-detail { grid-template-rows: 1fr; }
+/* the summary grid is `64px 1fr auto auto` with a column gap, so the detail
+   has to clear BOTH to line up under the row title, not just the number */
+.work-detail-inner { --work-indent: calc(64px + clamp(16px, 3vw, 48px)); }
 .work-groups {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
   gap: 28px 44px;
-  padding: 6px 0 42px 64px;
+  padding: 6px 0 42px var(--work-indent);
 }
-.work-group h4 {
+.work-group-label {
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -580,7 +587,7 @@ em {
 }
 .work-more {
   display: inline-block;
-  margin: 0 0 40px 64px;
+  margin: 0 0 40px var(--work-indent);
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -588,7 +595,7 @@ em {
   color: var(--ink);
   text-decoration: none;
   border-bottom: 1px solid var(--ink);
-  padding-bottom: 4px;
+  padding: 5px 0 6px;
   transition: opacity 0.25s ease;
 }
 .work-more:hover { opacity: 0.6; }
@@ -629,8 +636,10 @@ em {
   max-width: 52ch;
   font-size: clamp(0.9rem, 1.1vw, 1.02rem);
   line-height: 1.7;
-  color: var(--bone-dim);
+  color: var(--ink-soft);
 }
+/* the bone tone is only legible on the dark hero, not on paper sections */
+.page-hero .page-intro { color: var(--bone-dim); }
 .page-chips {
   display: flex;
   flex-wrap: wrap;
@@ -656,6 +665,11 @@ em {
   padding: 11vh var(--pad-x) 12vh;
 }
 .projects-head { margin-bottom: 6vh; }
+
+/* the story column caps at 66ch, so without a ceiling on the row itself the
+   spread opens a dead gutter that grows with the viewport */
+.projects-head,
+.project { max-width: 1080px; }
 
 /* Editorial three-column spread: index / story / specs.
    .project-body uses display:contents so its children join the parent grid. */
@@ -698,7 +712,7 @@ em {
   font-size: 0.95rem;
   line-height: 1.68;
   color: var(--ink-soft);
-  max-width: 66ch;
+  max-width: 70ch;
   opacity: 0.88;
 }
 
@@ -770,6 +784,8 @@ em {
   list-style: none;
 }
 .page-foot-links a {
+  display: inline-block;
+  padding: 6px 2px;          /* 11px caps alone leave a sub-24px tap target */
   color: var(--bone-dim);
   text-decoration: none;
   font-size: 11px;
@@ -831,6 +847,37 @@ html.no-motion .rail { display: none; }
   color: var(--ink);
   padding: 9vh var(--pad-x) 11vh;
 }
+.brief-lead {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+  margin-bottom: 26px;
+}
+.brief-list {
+  list-style: none;
+  max-width: 62ch;
+  border-top: 1px solid var(--hairline-dark);
+}
+.brief-list li {
+  padding: 18px 0 19px;
+  border-bottom: 1px solid var(--hairline-dark);
+  font-size: 0.95rem;
+  line-height: 1.68;
+  color: var(--ink-soft);
+}
+.brief-list strong {
+  display: block;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.brief-send { margin-top: 42px; }
+.brief-send .contact-email,
+.contact-email { display: inline-block; }
+.brief-send .contact-email { color: var(--ink); border-bottom-color: var(--hairline-dark); }
+.brief-send .contact-email:hover { color: var(--ink); border-bottom-color: var(--ink); }
 
 /* ============ Print-bed band (hardware page) ============ */
 .printbed {
@@ -954,6 +1001,8 @@ main:focus, section:focus, footer:focus { outline: none; }
   margin-top: 54px;
 }
 .contact-links a {
+  display: inline-block;
+  padding: 6px 2px;          /* 11px caps alone leave a sub-24px tap target */
   color: var(--bone-dim);
   text-decoration: none;
   font-size: 11px;
@@ -963,13 +1012,15 @@ main:focus, section:focus, footer:focus { outline: none; }
   transition: color 0.25s ease;
 }
 .contact-links a:hover { color: var(--bone); }
+/* stays in normal flow: absolute positioning here used to ride up over
+   .contact-links on short viewports and eat the "Start a project" tap */
 .contact-fine {
-  position: absolute;
-  bottom: 26px;
+  margin-top: clamp(56px, 11vh, 104px);
   font-size: 9.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--bone-faint);
+  text-wrap: balance;
 }
 
 /* ============ Responsive ============ */
@@ -1028,7 +1079,7 @@ main:focus, section:focus, footer:focus { outline: none; }
   .hero-sub { max-width: 34ch; }
   .work-summary { grid-template-columns: 40px 1fr auto; }
   .work-tag { display: none; }
-  .work-groups { padding-left: 0; }
+  .work-detail-inner { --work-indent: 0px; }
   .brand-sub { display: none; }
 }
 
@@ -1055,7 +1106,23 @@ main:focus, section:focus, footer:focus { outline: none; }
   .hero-foot { display: none; }
   .hero-copy { bottom: 17vh; }   /* clear the bottom nav pill */
   .contact-links { gap: clamp(16px, 6vw, 34px); }
-  .contact-fine { bottom: 74px; }
+  .contact { padding-bottom: 96px; }   /* clear the bottom nav pill */
+}
+
+/* ============ Keyboard navigation ============
+   Set on <html> by the first Tab press. GSAP parks the scroll reveals at
+   visibility:hidden, which takes their links and buttons out of the tab
+   order entirely; restoring visibility puts them back while the opacity
+   half of the reveal still plays as each one scrolls into view. */
+html.kb-nav .path-stop,
+html.kb-nav .path-head,
+html.kb-nav .work-row,
+html.kb-nav .work-head,
+html.kb-nav .platform-card,
+html.kb-nav .contact-title,
+html.kb-nav .contact-email,
+html.kb-nav .contact-links {
+  visibility: visible !important;
 }
 
 /* ============ Reduced motion ============ */
