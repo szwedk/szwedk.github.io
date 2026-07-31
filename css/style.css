@@ -147,9 +147,83 @@ em {
   background: #fff;
   transition: transform 0.3s cubic-bezier(0.6, 0, 0.2, 1);
 }
+/* knob right = on, knob left = off. The switch used to run the other way,
+   which read as "already enabled" to anyone who knows how a switch works
+   and is half the reason nobody was turning motion back on. */
+.motion-toggle .motion-toggle-knob { transform: translateX(20px); }
 .motion-toggle[aria-checked="false"] .motion-toggle-knob {
-  transform: translateX(20px);
+  transform: none;
   background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- coach mark on the switch ---- */
+.motion-hint {
+  position: fixed;
+  top: 58px;                       /* clears the 24px switch at top:22px */
+  right: var(--pad-x);
+  z-index: 49;                     /* under the switch: never blends with it */
+  width: max-content;
+  max-width: min(268px, calc(100vw - var(--pad-x) * 2 - 8px));
+  padding: 11px 14px 12px;
+  background: var(--bone);
+  color: var(--ink);
+  /* bone sits almost on top of paper, so the bubble needs its own edge to
+     keep a shape if it is still up when a light section scrolls under it */
+  border: 1px solid rgba(11, 11, 12, 0.12);
+  text-align: right;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: opacity 0.42s ease, transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0s linear 0.42s;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+}
+.motion-hint.is-live {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.42s ease, transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0s;
+}
+/* the little beak, pointing back up at the switch */
+.motion-hint::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 16px;                     /* centres on the 44px switch */
+  width: 9px;
+  height: 9px;
+  background: var(--bone);
+  border-top: 1px solid rgba(11, 11, 12, 0.12);
+  border-left: 1px solid rgba(11, 11, 12, 0.12);
+  transform: rotate(45deg);
+}
+.motion-hint-lead {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.motion-hint-sub {
+  margin-top: 3px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--ink-soft);
+  opacity: 0.72;
+  text-wrap: balance;
+}
+.motion-hint-sub:empty { display: none; }
+
+/* a ring while the coach mark is up. Static by default, because the people
+   who see this are the ones who asked their OS for less movement. */
+.motion-toggle.is-nudging { box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.11); }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-toggle.is-nudging { animation: ks-nudge 2.6s ease-in-out 3; }
+}
+@keyframes ks-nudge {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  45%      { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.13); }
 }
 
 /* ============ Side rails ============ */
@@ -1130,6 +1204,10 @@ html.kb-nav .contact-links {
   .marquee-track { animation: none; }
   .rail { display: none; }
   .work-detail, .work-toggle { transition: none; }
+  /* the coach mark shows precisely to these people, so it fades and
+     does not slide */
+  .motion-hint { transform: none; transition: opacity 0.42s ease, visibility 0s linear 0.42s; }
+  .motion-hint.is-live { transition: opacity 0.42s ease, visibility 0s; }
 }
 html.no-motion .work-detail, html.no-motion .work-toggle { transition: none; }
 
@@ -1138,7 +1216,7 @@ html.no-motion .work-detail, html.no-motion .work-toggle { transition: none; }
    flip the dark sections to ink-on-white so the default "no background
    graphics" setting still yields readable pages. */
 @media print {
-  .site-chrome, .brand, .motion-toggle, .rail, .hud,
+  .site-chrome, .brand, .motion-toggle, .motion-hint, .rail, .hud,
   #heroCanvas, .hero-fallback, .marquee { display: none !important; }
 
   body, .hero, .contact, .platforms {

@@ -6,7 +6,14 @@
 (function () {
   'use strict';
 
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* The home page switch writes ks-motion. Honour it here too, so turning
+     motion on there does not silently revert the moment someone opens a
+     field page. An explicit choice outranks the OS preference either way. */
+  var stored = null;
+  try { stored = window.localStorage.getItem('ks-motion'); } catch (e) { stored = null; }
+  var reduced = stored
+    ? stored === 'off'
+    : window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced || typeof gsap === 'undefined') return;
 
   gsap.registerPlugin(ScrollTrigger);

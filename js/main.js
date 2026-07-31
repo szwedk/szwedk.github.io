@@ -9,7 +9,20 @@
   gsap.registerPlugin(ScrollTrigger);
 
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var motionOn = !prefersReduced;
+
+  /* Private browsing and locked-down storage both throw on access, so every
+     read and write is guarded. A site that will not load without localStorage
+     is a site that does not load. */
+  var MOTION_KEY = 'ks-motion';
+  var HINT_KEY = 'ks-motion-hint-seen';
+  function readStore(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function writeStore(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* no-op */ } }
+
+  /* An explicit choice outlives the OS preference, so turning motion on
+     survives a reload and a trip through the sub-pages. Without this the
+     coach mark below would ask again on every visit. */
+  var storedMotion = readStore(MOTION_KEY);
+  var motionOn = storedMotion ? storedMotion === 'on' : !prefersReduced;
 
   /* The scroll reveals animate autoAlpha, which parks everything below the
      hero at `visibility: hidden`. That is fine for a mouse, but it strands a
@@ -617,9 +630,85 @@
     toggle.setAttribute('aria-checked', motionOn ? 'true' : 'false');
     if (motionOn) initMotion(); else teardownMotion();
   }
+
+  /* ---- coach mark ----
+     One bubble, two jobs: nudge people whose OS turned motion off, then
+     say something back when they flip it. It is a live region, so the text
+     is only written at the moment it becomes visible, keeping what a screen
+     reader announces in step with what everyone else sees. */
+  var hint = document.getElementById('motionHint');
+  var hintLead = document.getElementById('motionHintLead');
+  var hintSub = document.getElementById('motionHintSub');
+  var hintTimer = null;
+  var hintSeen = readStore(HINT_KEY) === '1';
+
+  function clearHintTimer() {
+    if (hintTimer) { window.clearTimeout(hintTimer); hintTimer = null; }
+  }
+  function hideHint() {
+    clearHintTimer();
+    hint.classList.remove('is-live');
+    toggle.classList.remove('is-nudging');
+    /* wait out the fade before emptying, or the text vanishes mid-transition */
+    hintTimer = window.setTimeout(function () {
+      hintLead.textContent = '';
+      hintSub.textContent = '';
+      hintTimer = null;
+    }, 460);
+  }
+  function say(lead, sub, holdMs, then) {
+    clearHintTimer();
+    hintLead.textContent = lead;
+    hintSub.textContent = sub || '';
+    hint.classList.add('is-live');
+    if (holdMs === Infinity) return;
+    hintTimer = window.setTimeout(function () {
+      hintTimer = null;
+      if (then) { then(); } else { hideHint(); }
+    }, holdMs);
+  }
+
+  /* Dismiss on tap, and never nag again once it has been seen. */
+  hint.addEventListener('click', function () {
+    writeStore(HINT_KEY, '1');
+    hintSeen = true;
+    hideHint();
+  });
+
+  function nudge() {
+    if (hintSeen || motionOn) return;
+    toggle.classList.add('is-nudging');
+    say('Toggle me on ↗',
+        'Your device asked for less motion. This page has rather a lot of it.',
+        Infinity);
+
+    /* Retire it once the hero is behind them. A coach mark that follows you
+       down the page stops being a hint and starts being a nag. Deliberately
+       not persisted, so a later visit still gets one prompt. */
+    function onScrollAway() {
+      if (window.scrollY < window.innerHeight * 0.75) return;
+      window.removeEventListener('scroll', onScrollAway);
+      hintSeen = true;
+      hideHint();
+    }
+    window.addEventListener('scroll', onScrollAway, { passive: true });
+  }
+
   toggle.addEventListener('click', function () {
     motionOn = !motionOn;
+    writeStore(MOTION_KEY, motionOn ? 'on' : 'off');
+    writeStore(HINT_KEY, '1');
+    hintSeen = true;
+    toggle.classList.remove('is-nudging');
     applyMotionState();
+
+    if (motionOn) {
+      say('Motion on.', '', 1000, function () {
+        say('Now don’t be afraid to scroll.', '', 3600);
+      });
+    } else {
+      say('Motion off.', 'Nothing breaks. It is just quieter.', 2600);
+    }
   });
 
   /* ============================================================
@@ -695,4 +784,6 @@
      Boot
      ============================================================ */
   applyMotionState();
+  /* let the page settle before pointing at anything */
+  window.setTimeout(nudge, 1400);
 })();
