@@ -385,7 +385,7 @@
     for (var di = 0; di < CELL_DEFS.length; di++) {
       var cell = el('span', 'ks-gait-lab-cell');
       cell.appendChild(el('span', 'ks-gait-lab-cellkey', CELL_DEFS[di][1]));
-      var b = el('b', 'ks-gait-lab-cellval', '—');
+      var b = el('b', 'ks-gait-lab-cellval', '··');
       cell.appendChild(b);
       readout.appendChild(cell);
       cells[CELL_DEFS[di][0]] = b;
@@ -1130,13 +1130,13 @@
       var word = nContact === 1 ? 'foot' : 'feet';
       var txt, bad = false;
       if (nContact < gait.need) {
-        txt = 'Unstable — ' + nContact + ' ' + word + ' in contact';
+        txt = 'Unstable · ' + nContact + ' ' + word + ' in contact';
         bad = true;
       } else if (anyClamped) {
-        txt = 'Joint limit — foot short of commanded target';
+        txt = 'Joint limit · foot short of commanded target';
         bad = true;
       } else {
-        txt = 'Support — ' + nContact + ' ' + word + ' in contact';
+        txt = 'Support · ' + nContact + ' ' + word + ' in contact';
       }
       if (txt !== lastFlag) {
         lastFlag = txt;

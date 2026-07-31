@@ -1,5 +1,5 @@
 /* ============================================================
-   Field sub-pages — smooth scroll + reveals, nothing heavier.
+   Field sub-pages - smooth scroll + reveals, nothing heavier.
    Respects prefers-reduced-motion by skipping all of it.
    ============================================================ */
 

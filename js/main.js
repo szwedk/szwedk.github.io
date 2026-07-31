@@ -1,5 +1,5 @@
 /* ============================================================
-   Kamil Szwed — portfolio
+   Kamil Szwed - portfolio
    Lenis smooth scroll + GSAP ScrollTrigger + canvas particle hero
    ============================================================ */
 
@@ -35,8 +35,8 @@
      The photo is erased along that same front, which is what produces the
      intact-face-with-a-dissolving-edge frame instead of a plain crossfade. */
   var A0_BASE = 0.14;
-  var A0_MID = A0_BASE + 0.19 * 0.5;   // 0.235 — front at the right edge
-  var A0_SPAN = 0.62 * 0.5;            // 0.31  — front travel to the left edge
+  var A0_MID = A0_BASE + 0.19 * 0.5;   // 0.235 - front at the right edge
+  var A0_SPAN = 0.62 * 0.5;            // 0.31  - front travel to the left edge
 
   var heroFX = (function () {
     var canvas = document.getElementById('heroCanvas');
@@ -260,7 +260,7 @@
       var scrubbing = Math.abs(targetP - curP) > 0.0004;
       if (!(dirty || animating || scrubbing || parMoving)) return;
       // when the only reason to draw is the slow ambient wobble, halve the
-      // rate — imperceptible on a 6-28px sine, but half the idle CPU
+      // rate - imperceptible on a 6-28px sine, but half the idle CPU
       if (!dirty && !scrubbing && !parMoving && (frameNo & 1)) return;
       render(t);
       updateHud(t);
@@ -305,7 +305,7 @@
           targetP = 0; curP = 0; pulse.v = 0;
           if (hudSys) hudSys.textContent = 'STATIC';
           if (hudP) hudP.textContent = '0%';
-          if (hudFps) hudFps.textContent = '—';
+          if (hudFps) hudFps.textContent = '··';
         } else if (hudSys) {
           hudSys.textContent = 'ONLINE';
         }
@@ -354,16 +354,16 @@
 
   /* ---------- progress line for the path timeline ---------- */
   var pathLine = (function () {
-    var list = document.querySelector('.path-list');
+    var list = document.querySelector('.path-track');
     if (!list) return null;
     var line = document.createElement('span');
-    line.className = 'path-line';
+    line.className = 'path-progress';
     list.appendChild(line);
     return line;
   })();
 
   /* ============================================================
-     Motion context — everything revertable lives in here
+     Motion context - everything revertable lives in here
      ============================================================ */
   var lenis = null;
   var ctx = null;
@@ -494,17 +494,22 @@
 
       /* ----- path timeline ----- */
       if (pathLine) {
-        gsap.fromTo(pathLine, { scaleY: 0 }, {
-          scaleY: 1, ease: 'none',
+        /* horizontal on desktop, vertical once the rail collapses */
+        var vertRail = window.matchMedia('(max-width: 900px)').matches;
+        var from = vertRail ? { scaleY: 0 } : { scaleX: 0 };
+        var to = vertRail ? { scaleY: 1 } : { scaleX: 1 };
+        to.ease = 'none';
+        gsap.fromTo(pathLine, from, {
+          scaleX: to.scaleX, scaleY: to.scaleY, ease: 'none',
           scrollTrigger: {
-            trigger: '.path-list',
+            trigger: '.path-track',
             start: 'top 75%',
             end: 'bottom 55%',
             scrub: true
           }
         });
       }
-      gsap.utils.toArray('.path-item').forEach(function (item) {
+      gsap.utils.toArray('.path-stop').forEach(function (item) {
         gsap.fromTo(item, { x: -34, autoAlpha: 0 }, {
           x: 0, autoAlpha: 1, duration: 0.8, ease: 'power3.out',
           scrollTrigger: { trigger: item, start: 'top 82%' }
@@ -597,7 +602,7 @@
   });
 
   /* ============================================================
-     Nav — active states + anchored scrolling
+     Nav - active states + anchored scrolling
      ============================================================ */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('.pill-nav a'));
   function setActive(hash) {
@@ -620,7 +625,7 @@
       var hash = a.getAttribute('href');
       var target = document.querySelector(hash);
       // with motion off, let native fragment navigation handle scroll,
-      // history and focus — it does all three correctly
+      // history and focus - it does all three correctly
       if (!lenis || !target) return;
       e.preventDefault();
       if (history.pushState) history.pushState(null, '', hash);
@@ -632,7 +637,7 @@
   });
 
   /* ============================================================
-     Work accordion — plain class toggle; CSS animates the height.
+     Work accordion - plain class toggle; CSS animates the height.
      Row heights change the page length, so scroll positions are
      re-measured once the transition settles.
      ============================================================ */

@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Hardware — Kamil Szwed</title>
-  <meta name="description" content="Kamil Szwed — custom hardware: 3D-printed products (Fusion 360, Bambu Lab, Formlabs Form 4L, Fuse 1), ESP32 electronics with Adafruit and Seeed Studio sensors." />
+  <title>Custom Hardware · Kamil Szwed</title>
+  <meta name="description" content="Kamil Szwed · custom hardware: 3D-printed products (Fusion 360, Bambu Lab, Formlabs Form 4L, Fuse 1), ESP32 electronics with Adafruit and Seeed Studio sensors." />
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="../fonts/fonts.css" />
-  <link rel="stylesheet" href="../css/style.css?v=8" />
+  <link rel="stylesheet" href="../css/style.css?v=10" />
+  <link rel="stylesheet" href="../css/features/wordmark.css?v=10" />
 </head>
 <body>
 
@@ -29,9 +30,9 @@
   <main>
     <section class="page-hero">
       <a class="back-link" href="../index.html#work">&larr;&nbsp; Back to all work</a>
-      <p class="eyebrow"><span>FIELD 06 &mdash; CUSTOM HARDWARE</span></p>
+      <p class="eyebrow"><span>FIELD 06 &middot; CUSTOM HARDWARE</span></p>
       <h1>Ideas you<br />can <em>hold.</em></h1>
-      <p class="page-intro">A full print lab and an electronics bench &mdash; CAD to physical part, sensor to dashboard. When the job needs a thing that doesn&rsquo;t exist yet, I make it.</p>
+      <p class="page-intro">A full print lab and an electronics bench. CAD to physical part, sensor to dashboard. When the job needs a thing that doesn&rsquo;t exist yet, I make it.</p>
       <ul class="page-chips">
         <li>Fusion 360</li>
         <li>Bambu Lab</li>
@@ -44,6 +45,16 @@
       </ul>
     </section>
 
+    <!-- slicer-preview demo: the wordmark reprints itself -->
+    <section class="printbed" aria-label="Slicer preview">
+      <p class="eyebrow"><span>SLICER PREVIEW</span></p>
+      <div class="printbed-mark" data-ks-wordmark>Kamil Szwed</div>
+      <p class="printbed-hint">Press and hold. The toolpath is not canned: the name
+        is rasterised, turned into a distance field, and the perimeters and 45&deg;
+        infill are extracted from it in the browser, then printed back layer by
+        layer.</p>
+    </section>
+
     <section class="projects">
       <div class="projects-head">
         <p class="eyebrow eyebrow-dark"><span>PROJECTS &amp; CAPABILITIES</span></p>
@@ -52,8 +63,10 @@
       <article class="project">
         <span class="project-num">01</span>
         <div class="project-body">
-          <h3>Unitree Accessory Line</h3>
-          <p>A product line of 3D-printed accessories for Unitree robots &mdash; sensor mounts, camera brackets, protective covers, and joint guards. Designed in Fusion 360, iterated on FDM, and produced in materials that survive field work.</p>
+          <div class="project-main">
+            <h3>Unitree Accessory Line</h3>
+          <p>A product line of 3D-printed accessories for Unitree robots: sensor mounts, camera brackets, protective covers, and joint guards. Designed in Fusion 360, iterated on FDM, and produced in materials that survive field work.</p>
+          </div>
           <dl class="project-facts">
           <div><dt>Role</dt><dd>Designer &amp; maker</dd></div>
           <div><dt>Stack</dt><dd>Fusion 360 &middot; FDM &middot; SLS</dd></div>
@@ -71,8 +84,10 @@
       <article class="project">
         <span class="project-num">02</span>
         <div class="project-body">
-          <h3>The Print Lab</h3>
-          <p>Fusion 360 CAD through slicers to the right machine for the part: Bambu Lab FDM for fast iteration, Formlabs Form 4L resin for fine detail, and the Fuse 1 for SLS nylon parts with production strength &mdash; prepped and managed in PreForm.</p>
+          <div class="project-main">
+            <h3>The Print Lab</h3>
+          <p>Fusion 360 CAD through slicers to the right machine for the part: Bambu Lab FDM for fast iteration, Formlabs Form 4L resin for fine detail, and the Fuse 1 for SLS nylon parts with production strength, all prepped and managed in PreForm.</p>
+          </div>
           <dl class="project-facts">
           <div><dt>Machines</dt><dd>Bambu Lab &middot; Form 4L &middot; Fuse 1</dd></div>
           <div><dt>Software</dt><dd>Fusion 360 &middot; PreForm &middot; slicers</dd></div>
@@ -89,8 +104,10 @@
       <article class="project">
         <span class="project-num">03</span>
         <div class="project-body">
-          <h3>Sensors to Software</h3>
+          <div class="project-main">
+            <h3>Sensors to Software</h3>
           <p>Hardware and software designed together: ESP32 firmware reading Adafruit and Seeed Studio sensors, feeding dashboards, robots, and alerts. The physical world, showing up in the interface.</p>
+          </div>
           <dl class="project-facts">
           <div><dt>Stack</dt><dd>ESP32 &middot; Adafruit &middot; Seeed Studio &middot; Raspberry Pi &middot; Jetson</dd></div>
           <div><dt>Output</dt><dd>Sensor rigs &middot; firmware &middot; dashboards</dd></div>
@@ -118,6 +135,7 @@
   <script src="../vendor/gsap.min.js"></script>
   <script src="../vendor/ScrollTrigger.min.js"></script>
   <script src="../vendor/lenis.min.js"></script>
-  <script src="../js/page.js?v=8"></script>
+  <script src="../js/page.js?v=10"></script>
+  <script src="../js/features/wordmark.js?v=10"></script>
 </body>
 </html>

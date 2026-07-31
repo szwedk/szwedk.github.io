@@ -1,14 +1,14 @@
 /* =============================================================================
-   GO2 — the resident quadruped                                   (easter egg)
+   GO2 - the resident quadruped                                   (easter egg)
    -----------------------------------------------------------------------------
    Type "go2" anywhere on the page and a small line-drawn Unitree Go2 trots in
    along the top edge of whatever page rule is nearest the cursor. Type "go2"
-   again — or press Escape — and it leaves.
+   again - or press Escape - and it leaves.
 
    This feature does NOT mount into a container. It self-initialises on load,
    builds its own fixed full-viewport canvas overlay (pointer-events: none,
-   z-index 45, aria-hidden) and stays dormant — no canvas, no listeners beyond a
-   single keydown probe — until the sequence is typed.
+   z-index 45, aria-hidden) and stays dormant - no canvas, no listeners beyond a
+   single keydown probe - until the sequence is typed.
 
    HONESTY NOTE
    The thigh / calf link lengths, the hip-axis spacing and the calf joint limits
@@ -16,7 +16,7 @@
    go2_description.urdf (unitreerobotics/unitree_ros). They are loaded at runtime
    from /assets/robot-kinematics.json, with the same values inlined here as a
    fallback so the feature never breaks. Everything the readout prints is a
-   SIMULATION driven by those numbers — it is not telemetry from a real robot,
+   SIMULATION driven by those numbers - it is not telemetry from a real robot,
    and the on-screen credit says exactly that.
 
    Trunk depth, the head pod and the 2.5D offset of the far leg pair are drawing
@@ -32,7 +32,7 @@
   window.__ksGo2Loaded = true;
 
   /* ===========================================================================
-     1.  KINEMATICS — real numbers, with an inlined fallback
+     1.  KINEMATICS - real numbers, with an inlined fallback
      ======================================================================== */
 
   /* Mirrors the "go2" block of /assets/robot-kinematics.json verbatim, so the
@@ -40,9 +40,9 @@
   var FALLBACK = {
     label: 'Unitree Go2',
     links: {
-      thigh: 0.213,            /* m — hip pitch axis to knee axis             */
-      calf: 0.213,             /* m — knee axis to foot                       */
-      bodyLengthHalf: 0.1934,  /* m — trunk centre to hip axis (URDF origin)  */
+      thigh: 0.213,            /* m - hip pitch axis to knee axis             */
+      calf: 0.213,             /* m - knee axis to foot                       */
+      bodyLengthHalf: 0.1934,  /* m - trunk centre to hip axis (URDF origin)  */
       bodyWidthHalf: 0.142
     },
     limits: {
@@ -77,7 +77,7 @@
      ======================================================================== */
 
   var FONT = '"Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-  var GROUND_SEL = '.work-row, .path-item, .platform-card, .marquee, .contact, .project';
+  var GROUND_SEL = '.work-row, .path-stop, .platform-card, .marquee, .contact, .project';
 
   function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -93,7 +93,7 @@
   function now() {
     return (window.performance && performance.now) ? performance.now() : Date.now();
   }
-  /* Distance from a point to a segment — so a fast cursor flick that jumps the
+  /* Distance from a point to a segment - so a fast cursor flick that jumps the
      robot in a single event still counts as a sweep across it. */
   function segDist(px, py, ax, ay, bx2, by2) {
     var vx = bx2 - ax, vy = by2 - ay;
@@ -170,7 +170,7 @@
     L1 = K.links.thigh * PX;
     L2 = K.links.calf * PX;
     HL = K.links.bodyLengthHalf * PX;
-    HH = 0.057 * PX;              /* trunk half-depth — a drawing choice     */
+    HH = 0.057 * PX;              /* trunk half-depth - a drawing choice     */
     HEAD_L = 0.072 * PX;
     HEAD_H = 0.055 * PX;
 
@@ -185,7 +185,7 @@
     HIP_STAND = 0.72 * D_MAX;     /* ≈ the real 0.28 m stance hip height     */
     LIFT = 0.15 * HIP_STAND;
     STRIDE_MAX = 0.30 * PX;       /* 0.30 m of stance travel per cycle       */
-    MAX_V = 1.8 * PX;             /* 1.8 m·s — inside Go2's trot envelope    */
+    MAX_V = 1.8 * PX;             /* 1.8 m·s - inside Go2's trot envelope    */
     staticDrawn = false;
   }
 
@@ -215,7 +215,7 @@
   var STAGGER_T = 0.42, RECOVER_T = 0.78;
   var DUTY = 0.5;                /* trot: 50 % stance                        */
 
-  /* Diagonal pairs share a phase — that is what makes it a trot.
+  /* Diagonal pairs share a phase - that is what makes it a trot.
      `near` is the side of the robot facing the viewer. */
   var LEGS = [
     { id: 'FR', front: true,  near: true,  phase: 0.0 },
@@ -234,7 +234,7 @@
   var ptr = { x: 0, y: 0, px: 0, py: 0, vx: 0, vy: 0, t: 0, seen: false };
 
   /* ===========================================================================
-     5.  Ground lines — the top edges of real page elements
+     5.  Ground lines - the top edges of real page elements
      ======================================================================== */
 
   var groundEls = [], ioSeen = null, io = null;
@@ -284,12 +284,12 @@
     }
 
     if (!best) {
-      /* Nothing usable on this page — walk along the viewport bottom. */
+      /* Nothing usable on this page - walk along the viewport bottom. */
       bestEl = null;
       best = { y: H - 10, x0: 0, x1: W };
     }
 
-    /* Only re-resolve the stroke colour when the rule underneath changes —
+    /* Only re-resolve the stroke colour when the rule underneath changes -
        getComputedStyle every frame would be wasteful. */
     var groundChanged = (bestEl !== groundKey);
     groundKey = bestEl;
@@ -335,7 +335,7 @@
     if (canvas) { return; }
     canvas = document.createElement('canvas');
     canvas.className = 'ks-go2-canvas';
-    /* Purely decorative — the live region below carries the text equivalent. */
+    /* Purely decorative - the live region below carries the text equivalent. */
     canvas.setAttribute('aria-hidden', 'true');
     if (!BLEND_OK) { canvas.style.mixBlendMode = 'normal'; }
     document.body.appendChild(canvas);
@@ -381,7 +381,7 @@
   }
 
   /* Analytic 2-bone IK. `face` selects the knee-rearward solution: every Go2
-     leg folds the same way — the URDF calf angle is negative on all four legs —
+     leg folds the same way - the URDF calf angle is negative on all four legs -
      so the knee always sits behind the hip→foot line. */
   function solveIK(out, hx, hy, tx, ty, face) {
     var dx = tx - hx, dy = ty - hy;
@@ -480,7 +480,7 @@
     gaitAmp = walking ? smoothstep(8 / PX, 0.22, speedMs) * (1 - sitBlend) : 0;
     gaitFreq = 1.4 + speedMs * 1.3;
     /* stride = v · duty / f keeps the loaded foot world-fixed. Past the stride
-       ceiling the cadence takes over instead — audibly/visibly faster trot. */
+       ceiling the cadence takes over instead - audibly/visibly faster trot. */
     stride = speed * DUTY / gaitFreq;
     if (stride > STRIDE_MAX) {
       stride = STRIDE_MAX;
@@ -504,7 +504,7 @@
       pitchTarget = shove * facing * 0.26;
       hipH = approach(hipH, hipHTarget, 11, dt);
     } else if (state === 'RECOVER') {
-      /* Tuck the feet under the body first, then extend all four together —
+      /* Tuck the feet under the body first, then extend all four together -
          the shape of Unitree's own stand-up recovery. */
       var r = stateT / RECOVER_T;
       var crouch = Math.max(D_MIN + 6, HIP_STAND * 0.40);
@@ -580,7 +580,7 @@
         holdX[i] = tfx; holdY[i] = gy;
       }
 
-      /* Touchdown impulses drive the bob and the pitch — the body reacts to
+      /* Touchdown impulses drive the bob and the pitch - the body reacts to
          the legs rather than riding its own animation curve. */
       if (inStance && !wasStance[i] && !locked) {
         bobV += 34 * gaitAmp;
@@ -615,7 +615,7 @@
      8.  Drawing
      ======================================================================== */
 
-  /* Manual letter tracking — canvas letterSpacing is not universally supported
+  /* Manual letter tracking - canvas letterSpacing is not universally supported
      and the micro-label look depends on it. */
   function trackedWidth(str, tr) {
     var w = 0;
@@ -663,7 +663,7 @@
     }
   }
 
-  /* Trunk profile in units of (HL, HH), +x forward. A chamfered slab — the Go2
+  /* Trunk profile in units of (HL, HH), +x forward. A chamfered slab - the Go2
      silhouette. The length is the URDF hip-axis spacing; the depth is drawn. */
   var TRUNK = [
     [-1.00, -0.52], [-0.88, -1.00], [0.60, -1.00], [0.94, -0.68],
@@ -795,7 +795,7 @@
     }
     y += 20;
 
-    tracked('SIMULATION — LINK LENGTHS', left, y, 8, '600', 0.34, 0.16);
+    tracked('SIMULATION · LINK LENGTHS', left, y, 8, '600', 0.34, 0.16);
     y += 10;
     tracked('FROM UNITREE GO2 URDF', left, y, 8, '600', 0.34, 0.16);
     y += 13;
@@ -822,7 +822,7 @@
   }
 
   /* ===========================================================================
-     9.  Reduced motion — one static, labelled blueprint
+     9.  Reduced motion - one static, labelled blueprint
      ======================================================================== */
 
   function drawStatic() {
@@ -900,10 +900,10 @@
     ctx.beginPath();
     ctx.moveTo(cx, cy - 12); ctx.lineTo(cx + 236, cy - 12); ctx.stroke();
 
-    tracked('GO2 — SAGITTAL LINKAGE', cx, cy + 2, 10, '600', 0.62, 0.20);
-    tracked('STATIC DIAGRAM — REDUCED MOTION', cx, cy + 16, 8.5, '600', 0.40, 0.17);
+    tracked('GO2 · SAGITTAL LINKAGE', cx, cy + 2, 10, '600', 0.62, 0.20);
+    tracked('STATIC DIAGRAM · REDUCED MOTION', cx, cy + 16, 8.5, '600', 0.40, 0.17);
     /* The one number here that is not from the URDF, said plainly. */
-    tracked('STANCE ' + (HIP_STAND / PX).toFixed(2) + ' M — MODELLED',
+    tracked('STANCE ' + (HIP_STAND / PX).toFixed(2) + ' M · MODELLED',
             cx, cy + 28, 8.5, '600', 0.40, 0.17);
     tracked('CALF JOINT LIMIT ' + lim.lower.toFixed(2) + ' … ' + lim.upper.toFixed(2) +
             ' RAD', cx, cy + 40, 8.5, '600', 0.40, 0.17);
@@ -934,7 +934,7 @@
     ctx.moveTo(x2, y2); ctx.lineTo(x2 + ox, y2 + oy);
     ctx.stroke();
 
-    /* Outward unit vector — the label always sits clear of the geometry. */
+    /* Outward unit vector - the label always sits clear of the geometry. */
     var so = off < 0 ? -1 : 1;
     var lox = nx * so, loy = ny * so;
     var mx = (x1 + x2) / 2 + ox, my = (y1 + y2) / 2 + oy;
@@ -1110,7 +1110,7 @@
     unbind();
     if (canvas) { canvas.classList.remove('ks-go2-is-in'); }
     announce('Go2 quadruped dismissed.');
-    /* Tear the canvas down after the fade — nothing left painting or held. */
+    /* Tear the canvas down after the fade - nothing left painting or held. */
     removeTimer = setTimeout(function () {
       removeTimer = null;
       if (active || !canvas) { return; }
@@ -1120,7 +1120,7 @@
   }
 
   /* ===========================================================================
-     11.  The trigger — type "go2"
+     11.  The trigger - type "go2"
      ======================================================================== */
 
   var CODE = 'go2';
@@ -1144,7 +1144,7 @@
   }
 
   function init() {
-    /* Nothing is created until the sequence is typed — one keydown listener is
+    /* Nothing is created until the sequence is typed - one keydown listener is
        this feature's entire idle cost. (Typing "go2" also fires main.js's own
        "g" dissolve pulse on the hero; the two read as a single moment.) */
     document.addEventListener('keydown', onKeyDown);

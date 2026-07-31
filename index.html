@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kamil Szwed — Building Things That Move</title>
-  <meta name="description" content="Kamil Szwed — engineer and builder: robots, websites, apps, photography, and brands. Long Island, New York." />
-  <meta property="og:title" content="Kamil Szwed — Building Things That Move" />
+  <title>Kamil Szwed · Building Things That Move</title>
+  <meta name="description" content="Kamil Szwed, engineer and builder: robots, websites, apps, photography, and brands. Long Island, New York." />
+  <meta property="og:title" content="Kamil Szwed · Building Things That Move" />
   <meta property="og:description" content="Robots by day. Websites, apps, weddings, and brands the rest of the time." />
   <meta property="og:image" content="assets/portrait.jpg" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -13,7 +13,6 @@
   <link rel="preload" href="fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="fonts/fonts.css" />
   <link rel="stylesheet" href="css/style.css?v=9" />
-  <link rel="stylesheet" href="css/features/wordmark.css?v=9" />
   <link rel="stylesheet" href="css/features/go2.css?v=9" />
 </head>
 <body>
@@ -76,13 +75,13 @@
             </div>
             <div class="hero-headline" data-headline="1">
               <h2>Robots.<br />Websites. Apps.<br /><em>Weddings.</em></h2>
-              <p class="hero-sub">One builder, a lot of mediums &mdash; the same
+              <p class="hero-sub">One builder, a lot of mediums. The same
                 attention to detail in all of them.</p>
             </div>
             <div class="hero-headline" data-headline="2">
               <h2>Work that<br />actually <em>ships.</em></h2>
               <p class="hero-sub">Not mockups or lab demos. Launched, delivered,
-                supported &mdash; out in the real world.</p>
+                supported, out in the real world.</p>
             </div>
           </div>
         </div>
@@ -90,11 +89,11 @@
         <div class="hud" id="hud" aria-hidden="true">
           <p><span class="hud-label">SYS</span><span id="hudSys">BOOT</span></p>
           <p><span class="hud-label">DISSOLVE</span><span id="hudP">0%</span></p>
-          <p><span class="hud-label">PTR</span><span id="hudPtr">&mdash;</span></p>
-          <p><span class="hud-label">FPS</span><span id="hudFps">&mdash;</span></p>
+          <p><span class="hud-label">PTR</span><span id="hudPtr">&middot;&middot;</span></p>
+          <p><span class="hud-label">FPS</span><span id="hudFps">&middot;&middot;</span></p>
         </div>
 
-        <p class="hero-foot" aria-hidden="true">LONG ISLAND, NEW YORK &mdash; AVAILABLE WORLDWIDE</p>
+        <p class="hero-foot" aria-hidden="true">LONG ISLAND, NEW YORK &middot; AVAILABLE WORLDWIDE</p>
       </div>
     </section>
 
@@ -103,54 +102,67 @@
       <div class="manifesto-pin">
         <p class="manifesto-text" id="manifestoText">
           I&rsquo;ve shipped humanoid robots, websites, apps, and wedding
-          albums. The tools keep changing. The standard doesn&rsquo;t &mdash;
-          it has to <em>work.</em>
+          albums. The tools keep changing. The standard
+          <em>doesn&rsquo;t.</em>
         </p>
       </div>
     </section>
 
-    <!-- ===== Path / timeline ===== -->
+    <!-- ===== Path / timeline =====
+         Full-bleed horizontal rail. Each stop is a station on the line:
+         year above the rule, node on it, detail below. Collapses to a
+         vertical rail under 900px. -->
     <section class="path" aria-label="Career path">
       <div class="path-head">
         <p class="eyebrow eyebrow-dark"><span>THE PATH</span></p>
         <h2 class="path-title">Campus to <em>the field.</em></h2>
+        <p class="path-lede">Five years from a high-school engineering itch to
+          commissioning humanoids in the field.</p>
       </div>
-      <ol class="path-list">
-        <li class="path-item">
-          <span class="path-when">2020</span>
-          <div class="path-body">
-            <h3>Kellenberg Memorial High School</h3>
-            <p>Class of 2020, Long Island, New York &mdash; where the engineering
-              itch started. Came back years later with a G1 humanoid in tow to
-              show the next class what robotics looks like now.</p>
+
+      <ol class="path-track">
+        <li class="path-stop">
+          <p class="path-year">2020<span class="path-tick" aria-hidden="true"></span></p>
+          <div class="path-card">
+            <p class="path-place">Kellenberg Memorial</p>
+            <h3 class="path-role">Where it started</h3>
+            <p class="path-note">Long Island, New York. Came back years later with
+              a G1 humanoid in tow, to show the next class what robotics looks
+              like now.</p>
           </div>
         </li>
-        <li class="path-item">
-          <span class="path-when">2020&ndash;2024</span>
-          <div class="path-body">
-            <h3>Sacred Heart University</h3>
-            <p>B.S. Computer Science, minors in Cybersecurity &amp; Mathematics.
-              Built <strong>IntelliPARK</strong> &mdash; a campus-wide smart parking
-              platform running computer-vision cameras, ultrasonic occupancy
-              sensors, and edge processing nodes.</p>
+
+        <li class="path-stop">
+          <p class="path-year">2020<span class="path-en">&ndash;</span>24<span class="path-tick" aria-hidden="true"></span></p>
+          <div class="path-card">
+            <p class="path-place">Sacred Heart University</p>
+            <h3 class="path-role">B.S. Computer Science</h3>
+            <p class="path-note">Minors in Cybersecurity and Mathematics. Built
+              <strong>IntelliPARK</strong>, a campus-wide smart parking platform
+              running computer-vision cameras, ultrasonic occupancy sensors, and
+              edge processing nodes.</p>
           </div>
         </li>
-        <li class="path-item">
-          <span class="path-when">RoboStore</span>
-          <div class="path-body">
-            <h3>Integration Specialist</h3>
-            <p>Joined the Unitree-RoboStore team &mdash; bridging engineering,
-              software, and innovation for classrooms, labs, and industry.
-              Designed a line of custom 3D-printed hardware for Unitree platforms.</p>
+
+        <li class="path-stop">
+          <p class="path-year">2024<span class="path-tick" aria-hidden="true"></span></p>
+          <div class="path-card">
+            <p class="path-place">Unitree-RoboStore</p>
+            <h3 class="path-role">Integration Specialist</h3>
+            <p class="path-note">Bridging engineering, software, and innovation for
+              classrooms, labs, and industry. Designed a line of custom 3D-printed
+              hardware for Unitree platforms.</p>
           </div>
         </li>
-        <li class="path-item">
-          <span class="path-when">Now</span>
-          <div class="path-body">
-            <h3>Head of Technology by day, everything else after hours</h3>
-            <p>Leading a robotics stack &mdash; humanoid commissioning, VR
-              teleoperation, autonomous patrol. Nights and weekends go to
-              websites, apps, weddings, and whatever else lands on the bench.</p>
+
+        <li class="path-stop is-now">
+          <p class="path-year"><em>Now</em><span class="path-tick" aria-hidden="true"></span></p>
+          <div class="path-card">
+            <p class="path-place">Unitree-RoboStore</p>
+            <h3 class="path-role">Head of Technology</h3>
+            <p class="path-note">Humanoid commissioning, VR teleoperation,
+              autonomous patrol. Nights and weekends go to websites, apps,
+              weddings, and whatever else lands on the bench.</p>
           </div>
         </li>
       </ol>
@@ -164,7 +176,7 @@
       <div class="work-head">
         <p class="eyebrow eyebrow-dark"><span>WHAT I DO</span></p>
         <h2 class="work-title">Robots to <em>weddings.</em></h2>
-        <p class="work-hint">Six trades &mdash; open any row for the full picture.</p>
+        <p class="work-hint">Six trades. Open any row for the full picture.</p>
       </div>
       <ol class="work-list">
 
@@ -173,8 +185,8 @@
             <span class="work-num">01</span>
             <span class="work-body">
               <span class="work-row-title">Robotics Engineering</span>
-              <span class="work-row-sub">The day job &mdash; humanoids and quadrupeds
-                in production. ROS2, VR teleoperation, autonomy, edge AI.</span>
+              <span class="work-row-sub">The day job. Humanoids and quadrupeds in
+                production, ROS2, VR teleoperation, autonomy, edge AI.</span>
             </span>
             <span class="work-tag">G1</span>
             <span class="work-toggle" aria-hidden="true">+</span>
@@ -185,23 +197,23 @@
                 <div class="work-group">
                   <h4>At Unitree-RoboStore</h4>
                   <ul>
-                    <li class="proj">G1 humanoid commissioning &mdash; SDK2, ROS2, whole-body control for enterprise clients</li>
-                    <li class="proj">Inspire Hands &amp; BrainCo integration &mdash; dexterous manipulation on G1</li>
-                    <li>Field deployment &amp; support &mdash; classrooms, labs, and industry</li>
+                    <li class="proj">G1 humanoid commissioning: SDK2, ROS2, whole-body control for enterprise clients</li>
+                    <li class="proj">Inspire Hands &amp; BrainCo integration for dexterous manipulation on G1</li>
+                    <li>Field deployment &amp; support across classrooms, labs, and industry</li>
                   </ul>
                 </div>
                 <div class="work-group">
                   <h4>Teleoperation</h4>
                   <ul>
-                    <li class="proj">VR whole-body teleop &mdash; Apple Vision Pro, Quest, and Pico over WebRTC</li>
+                    <li class="proj">VR whole-body teleop: Apple Vision Pro, Quest, and Pico over WebRTC</li>
                     <li>Real-time motor-command bridge to the G1</li>
                   </ul>
                 </div>
                 <div class="work-group">
                   <h4>Autonomy &amp; Patrol</h4>
                   <ul>
-                    <li class="proj">Autonomous patrol on Go2 / B2 &mdash; SLAM, Nav2, LiDAR mapping</li>
-                    <li>Edge AI inference on Jetson Orin &mdash; OpenCV, Isaac Sim</li>
+                    <li class="proj">Autonomous patrol on Go2 / B2: SLAM, Nav2, LiDAR mapping</li>
+                    <li>Edge AI inference on Jetson Orin: OpenCV, Isaac Sim</li>
                   </ul>
                 </div>
                 <div class="work-group">
@@ -215,7 +227,7 @@
                 <div class="work-group">
                   <h4>Outreach</h4>
                   <ul>
-                    <li class="proj">STEM demos &mdash; brought a G1 humanoid and robot dog back to my own high school</li>
+                    <li class="proj">STEM demos: brought a G1 humanoid and robot dog back to my own high school</li>
                   </ul>
                 </div>
               </div>
@@ -229,8 +241,8 @@
             <span class="work-num">02</span>
             <span class="work-body">
               <span class="work-row-title">Websites</span>
-              <span class="work-row-sub">Design and build &mdash; portfolios, landing
-                pages, storefronts. Fast, modern, and made to move.</span>
+              <span class="work-row-sub">Design and build. Portfolios, landing pages,
+                storefronts. Fast, modern, and made to move.</span>
             </span>
             <span class="work-tag">Web</span>
             <span class="work-toggle" aria-hidden="true">+</span>
@@ -241,8 +253,8 @@
                 <div class="work-group">
                   <h4>Design</h4>
                   <ul>
-                    <li>Art direction, typography, and layout &mdash; built around your content, not a template</li>
-                    <li>Motion design &mdash; scroll effects, transitions, micro-interactions</li>
+                    <li>Art direction, typography, and layout, built around your content instead of a template</li>
+                    <li>Motion design: scroll effects, transitions, micro-interactions</li>
                   </ul>
                 </div>
                 <div class="work-group">
@@ -250,13 +262,13 @@
                   <ul>
                     <li>Landing pages &amp; portfolios</li>
                     <li>Storefronts &amp; e-commerce</li>
-                    <li>Hand-written code &mdash; fast to load, easy to maintain</li>
+                    <li>Hand-written code that is fast to load and easy to maintain</li>
                   </ul>
                 </div>
                 <div class="work-group">
                   <h4>Proof</h4>
                   <ul>
-                    <li class="proj">This site &mdash; scroll-driven canvas particles, smooth scroll, zero frameworks</li>
+                    <li class="proj">This site: scroll-driven canvas particles, smooth scroll, zero frameworks</li>
                   </ul>
                 </div>
               </div>
@@ -270,8 +282,8 @@
             <span class="work-num">03</span>
             <span class="work-body">
               <span class="work-row-title">Apps &amp; Software</span>
-              <span class="work-row-sub">Full-stack product work &mdash; from first
-                sketch to shipped, front end to infrastructure.</span>
+              <span class="work-row-sub">Full-stack product work, from first sketch to
+                shipped, front end to infrastructure.</span>
             </span>
             <span class="work-tag">Apps</span>
             <span class="work-toggle" aria-hidden="true">+</span>
@@ -282,7 +294,7 @@
                 <div class="work-group">
                   <h4>Products</h4>
                   <ul>
-                    <li class="proj">IntelliPARK &mdash; campus-wide smart parking: computer-vision cameras, ultrasonic occupancy sensors, edge processing nodes</li>
+                    <li class="proj">IntelliPARK, campus-wide smart parking: computer-vision cameras, ultrasonic occupancy sensors, edge processing nodes</li>
                   </ul>
                 </div>
                 <div class="work-group">
@@ -310,8 +322,8 @@
             <span class="work-num">04</span>
             <span class="work-body">
               <span class="work-row-title">Photography</span>
-              <span class="work-row-sub">Weddings, portraits, events &mdash; planned
-                like an engineer, shot like it matters.</span>
+              <span class="work-row-sub">Weddings, portraits, events. Planned like an
+                engineer, shot like it matters.</span>
             </span>
             <span class="work-tag">Photo</span>
             <span class="work-toggle" aria-hidden="true">+</span>
@@ -322,7 +334,7 @@
                 <div class="work-group">
                   <h4>Weddings</h4>
                   <ul>
-                    <li>Full-day coverage &mdash; prep to last dance</li>
+                    <li>Full-day coverage, prep to last dance</li>
                     <li>Shot lists and timelines planned in advance</li>
                     <li>Edited galleries delivered on schedule</li>
                   </ul>
@@ -360,8 +372,8 @@
             <span class="work-num">05</span>
             <span class="work-body">
               <span class="work-row-title">Marketing &amp; Brand</span>
-              <span class="work-row-sub">Campaigns, content, and identity &mdash;
-                plus the analytics to prove they worked.</span>
+              <span class="work-row-sub">Campaigns, content, and identity, plus the
+                analytics to prove they worked.</span>
             </span>
             <span class="work-tag">Brand</span>
             <span class="work-toggle" aria-hidden="true">+</span>
@@ -379,7 +391,7 @@
                 <div class="work-group">
                   <h4>Content</h4>
                   <ul>
-                    <li>Product photo &amp; video &mdash; shot, cut, and graded in-house (Adobe suite, Final Cut Pro)</li>
+                    <li>Product photo &amp; video, shot, cut, and graded in-house (Adobe suite, Final Cut Pro)</li>
                     <li>Social content &amp; copywriting</li>
                   </ul>
                 </div>
@@ -387,7 +399,7 @@
                   <h4>Campaigns</h4>
                   <ul>
                     <li>Launches, promotions, and email</li>
-                    <li>Analytics and reporting &mdash; what worked, what didn&rsquo;t, what&rsquo;s next</li>
+                    <li>Analytics and reporting: what worked, what didn&rsquo;t, what&rsquo;s next</li>
                   </ul>
                 </div>
               </div>
@@ -401,8 +413,8 @@
             <span class="work-num">06</span>
             <span class="work-body">
               <span class="work-row-title">Custom Hardware</span>
-              <span class="work-row-sub">3D-printed products, firmware, sensor rigs
-                &mdash; when the job needs a physical thing.</span>
+              <span class="work-row-sub">3D-printed products, firmware, sensor rigs,
+                for when the job needs a physical thing.</span>
             </span>
             <span class="work-tag">Maker</span>
             <span class="work-toggle" aria-hidden="true">+</span>
@@ -413,7 +425,7 @@
                 <div class="work-group">
                   <h4>Product Line</h4>
                   <ul>
-                    <li class="proj">3D-printed accessories for Unitree robots &mdash; sensor mounts, camera brackets, protective covers, joint guards</li>
+                    <li class="proj">3D-printed accessories for Unitree robots: sensor mounts, camera brackets, protective covers, joint guards</li>
                   </ul>
                 </div>
                 <div class="work-group">
@@ -427,9 +439,9 @@
                 <div class="work-group">
                   <h4>Electronics</h4>
                   <ul>
-                    <li>ESP32 firmware &mdash; Adafruit &amp; Seeed Studio sensor integration</li>
+                    <li>ESP32 firmware with Adafruit &amp; Seeed Studio sensor integration</li>
                     <li>Raspberry Pi &amp; Jetson builds</li>
-                    <li>Hardware talking to software &mdash; sensors to dashboards</li>
+                    <li>Hardware talking to software, sensors through to dashboards</li>
                   </ul>
                 </div>
                 <div class="work-group">
@@ -451,10 +463,10 @@
     <!-- ===== Marquee ===== -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
-        <span>ROBOTS &mdash; WEBSITES &mdash; APPS &mdash; WEDDINGS &mdash; BRANDS &mdash; ROS2 &mdash; VISION PRO &mdash; 3D PRINT &mdash; MARKETING &mdash; JETSON &mdash;&nbsp;</span>
-        <span>ROBOTS &mdash; WEBSITES &mdash; APPS &mdash; WEDDINGS &mdash; BRANDS &mdash; ROS2 &mdash; VISION PRO &mdash; 3D PRINT &mdash; MARKETING &mdash; JETSON &mdash;&nbsp;</span>
-        <span>ROBOTS &mdash; WEBSITES &mdash; APPS &mdash; WEDDINGS &mdash; BRANDS &mdash; ROS2 &mdash; VISION PRO &mdash; 3D PRINT &mdash; MARKETING &mdash; JETSON &mdash;&nbsp;</span>
-        <span>ROBOTS &mdash; WEBSITES &mdash; APPS &mdash; WEDDINGS &mdash; BRANDS &mdash; ROS2 &mdash; VISION PRO &mdash; 3D PRINT &mdash; MARKETING &mdash; JETSON &mdash;&nbsp;</span>
+        <span>ROBOTS &middot; WEBSITES &middot; APPS &middot; WEDDINGS &middot; BRANDS &middot; ROS2 &middot; VISION PRO &middot; 3D PRINT &middot; MARKETING &middot; JETSON &middot;&nbsp;</span>
+        <span>ROBOTS &middot; WEBSITES &middot; APPS &middot; WEDDINGS &middot; BRANDS &middot; ROS2 &middot; VISION PRO &middot; 3D PRINT &middot; MARKETING &middot; JETSON &middot;&nbsp;</span>
+        <span>ROBOTS &middot; WEBSITES &middot; APPS &middot; WEDDINGS &middot; BRANDS &middot; ROS2 &middot; VISION PRO &middot; 3D PRINT &middot; MARKETING &middot; JETSON &middot;&nbsp;</span>
+        <span>ROBOTS &middot; WEBSITES &middot; APPS &middot; WEDDINGS &middot; BRANDS &middot; ROS2 &middot; VISION PRO &middot; 3D PRINT &middot; MARKETING &middot; JETSON &middot;&nbsp;</span>
       </div>
     </div>
 
@@ -500,8 +512,7 @@
         <li><a href="https://github.com/szwedk" target="_blank" rel="noopener">GitHub</a></li>
         <li><a href="https://www.linkedin.com/in/kamilszwed006" target="_blank" rel="noopener">LinkedIn</a></li>
       </ul>
-      <div class="contact-wordmark" data-ks-wordmark>Kamil Szwed</div>
-      <p class="contact-fine">&copy; 2026 Long Island, New York &mdash; designed and built by hand</p>
+      <p class="contact-fine">&copy; 2026 Kamil Szwed &middot; Long Island, New York &middot; designed and built by hand</p>
     </footer>
   </main>
 
@@ -509,7 +520,6 @@
   <script src="vendor/ScrollTrigger.min.js"></script>
   <script src="vendor/lenis.min.js"></script>
   <script src="js/main.js?v=9"></script>
-  <script src="js/features/wordmark.js?v=9"></script>
   <script src="js/features/go2.js?v=9"></script>
 </body>
 </html>
