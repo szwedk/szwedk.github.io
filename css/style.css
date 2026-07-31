@@ -428,6 +428,37 @@ em {
 }
 .path-note strong { font-weight: 600; }
 
+/* ============ Manifesto (word assembly) ============ */
+.manifesto {
+  position: relative;
+  height: 220vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+.manifesto-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0 var(--pad-x);
+}
+.manifesto-text {
+  max-width: 30ch;
+  font-size: clamp(1.7rem, 3.6vw, 3.1rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.28;
+  text-align: center;
+  text-wrap: balance;
+}
+.manifesto-text .word {
+  display: inline-block;
+  will-change: transform, filter, opacity;
+}
+
 /* ============ Work ============ */
 .work {
   background: var(--paper);
@@ -630,8 +661,8 @@ em {
    .project-body uses display:contents so its children join the parent grid. */
 .project {
   display: grid;
-  grid-template-columns: 3.4rem minmax(0, 1fr) minmax(190px, 20%);
-  column-gap: clamp(20px, 3.4vw, 64px);
+  grid-template-columns: 3.4rem minmax(0, 1fr) minmax(200px, 23%);
+  column-gap: clamp(20px, 3vw, 52px);
   padding: 52px 0 54px;
   border-top: 1px solid var(--hairline-dark);
   transition: background 0.35s ease;
@@ -656,9 +687,9 @@ em {
   font-size: clamp(1.5rem, 2.9vw, 2.3rem);
   font-weight: 500;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.06;
   margin-bottom: 18px;
-  max-width: 20ch;
+  max-width: 30ch;
   text-wrap: balance;
 }
 .project h3 em { font-size: 1.05em; }
@@ -667,7 +698,7 @@ em {
   font-size: 0.95rem;
   line-height: 1.68;
   color: var(--ink-soft);
-  max-width: 58ch;
+  max-width: 66ch;
   opacity: 0.88;
 }
 
