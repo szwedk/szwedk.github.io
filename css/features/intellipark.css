@@ -1,0 +1,240 @@
+/* =============================================================================
+   IntelliPARK Sandbox · [data-ks-intellipark]
+   Top-down smart-parking simulation. Sits on a PAPER section, ink on paper.
+   All classes are prefixed ks-intellipark- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-intellipark] {
+  --ip-ink: var(--ink);
+  --ip-soft: var(--ink-soft);
+  --ip-hair: var(--hairline-dark);
+  color: var(--ip-ink);
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.ks-intellipark {
+  display: grid;
+  gap: 22px;
+}
+
+.ks-intellipark-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-intellipark-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-intellipark-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+}
+
+/* ---- dashboard row ------------------------------------------------------ */
+.ks-intellipark-readout {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) repeat(2, minmax(96px, auto)) 1fr;
+  gap: 14px 34px;
+  align-items: end;
+  border-top: 1px solid var(--ip-hair);
+  padding-top: 16px;
+}
+
+.ks-intellipark-cell { display: grid; gap: 5px; align-content: start; }
+
+.ks-intellipark-cellkey {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-intellipark-cellval {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the entrance-sign number reads big */
+.ks-intellipark-cellval-big {
+  font-size: 1.7rem;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* stale flag sits beside the sign number. tinted only while stale, same
+   restraint as the gait-lab warn flag: state class on the root, colour here. */
+.ks-intellipark-flag {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  vertical-align: 4px;
+  color: var(--ip-soft);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.ks-intellipark-stale .ks-intellipark-flag { color: #b03a2e; opacity: 1; }
+
+/* single-line event log, latest entry only */
+.ks-intellipark-log {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ip-soft);
+  opacity: 0.62;
+  min-height: 1.2em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---- stage -------------------------------------------------------------- */
+.ks-intellipark-stage {
+  position: relative;
+  border-top: 1px solid var(--ip-hair);
+  border-bottom: 1px solid var(--ip-hair);
+  padding: 14px 0;
+}
+
+.ks-intellipark-canvas {
+  display: block;
+  width: 100%;
+  /* explicit height: intellipark.js sizes its backing store from clientHeight */
+  height: clamp(260px, 36vh, 420px);
+}
+
+/* ---- controls ----------------------------------------------------------- */
+.ks-intellipark-panel {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto;
+  gap: 20px 34px;
+  align-items: end;
+}
+
+.ks-intellipark-slider { display: grid; gap: 9px; min-width: 0; }
+
+.ks-intellipark-sliderhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-intellipark-val {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  opacity: 0.95;
+}
+
+/* range input · thin track, small round thumb, same as gait-lab */
+.ks-intellipark-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 24px;          /* WCAG 2.2 minimum target size */
+  background: none;
+  cursor: pointer;
+  margin: 0;
+}
+.ks-intellipark-range::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--ip-hair);
+}
+.ks-intellipark-range::-moz-range-track {
+  height: 1px;
+  background: var(--ip-hair);
+}
+.ks-intellipark-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ip-ink);
+  margin-top: -5px;
+}
+.ks-intellipark-range::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ip-ink);
+}
+
+/* pill buttons */
+.ks-intellipark-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ks-intellipark-btn {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ip-ink);
+  background: none;
+  border: 1px solid var(--ip-hair);
+  border-radius: 999px;
+  padding: 7px 14px;
+  min-height: 24px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.ks-intellipark-btn:hover { border-color: var(--ip-ink); }
+.ks-intellipark-btn.is-active {
+  background: var(--ip-ink);
+  color: var(--paper);
+  border-color: var(--ip-ink);
+}
+
+/* ---- a11y --------------------------------------------------------------- */
+.ks-intellipark-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ks-intellipark :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .ks-intellipark-readout { grid-template-columns: 1fr 1fr; }
+  .ks-intellipark-readout .ks-intellipark-cell-log { grid-column: 1 / -1; }
+  .ks-intellipark-panel { grid-template-columns: 1fr; align-items: start; }
+}

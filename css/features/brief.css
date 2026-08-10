@@ -1,0 +1,372 @@
+/* =============================================================================
+   The Brief  ·  [data-ks-brief]
+   Five-question guided intake on the paper band of brief.html, ink on paper.
+   The rail sits left on wide screens and folds to a top row on small ones.
+   All classes are prefixed ks-brief- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-brief] {
+  --kb-ink: var(--ink);
+  --kb-soft: var(--ink-soft);
+  --kb-hair: var(--hairline-dark);
+  color: var(--kb-ink);
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.ks-brief {
+  position: relative;
+  display: grid;
+  gap: 30px;
+  max-width: 860px;
+}
+
+.ks-brief-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-brief-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-brief-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+}
+
+/* ---- layout: rail | stage ----------------------------------------------- */
+.ks-brief-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 52px;
+  border-top: 1px solid var(--kb-hair);
+  padding-top: 28px;
+}
+
+.ks-brief-rail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ks-brief-rail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 24px;
+  padding: 6px 13px;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-ink);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.42;
+  transition: opacity 0.2s ease, background 0.2s ease,
+              color 0.2s ease, border-color 0.2s ease;
+}
+.ks-brief-rail-btn:hover { opacity: 0.85; }
+.ks-brief-rail-btn.is-done { opacity: 0.8; }
+.ks-brief-rail-btn.is-current {
+  background: var(--kb-ink);
+  color: var(--paper);
+  border-color: var(--kb-ink);
+  opacity: 1;
+}
+
+.ks-brief-rail-tick { display: none; font-size: 9px; line-height: 1; }
+.ks-brief-rail-btn.is-done .ks-brief-rail-tick { display: inline; }
+
+/* ---- stage / steps ------------------------------------------------------- */
+.ks-brief-stage { position: relative; min-height: 330px; }
+
+.ks-brief-step {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  outline: none;
+}
+.ks-brief-step[hidden] { display: none; }
+
+.ks-brief-qnum {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-brief-qtitle {
+  font-size: clamp(1.5rem, 3.2vw, 2.15rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+  max-width: 24ch;
+}
+
+/* quick slide-fade on step entry; still mode never adds these classes,
+   and the guards below make sure css alone can not reintroduce motion */
+@keyframes ks-brief-in-fwd {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ks-brief-in-back {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: none; }
+}
+.ks-brief-anim-fwd  { animation: ks-brief-in-fwd 0.26s ease both; }
+.ks-brief-anim-back { animation: ks-brief-in-back 0.26s ease both; }
+html.no-motion .ks-brief-step { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .ks-brief-step { animation: none !important; }
+}
+
+/* ---- chips --------------------------------------------------------------- */
+.ks-brief-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 560px;
+}
+
+.ks-brief-chip {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--kb-ink);
+  background: none;
+  border: 1px solid var(--kb-hair);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-height: 24px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.ks-brief-chip:hover { border-color: var(--kb-ink); }
+.ks-brief-chip[aria-pressed="true"] {
+  background: var(--kb-ink);
+  color: var(--paper);
+  border-color: var(--kb-ink);
+}
+
+/* ---- text fields ---------------------------------------------------------- */
+.ks-brief-textarea,
+.ks-brief-input {
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--kb-ink);
+  background: transparent;
+  border: 1px solid var(--kb-hair);
+  border-radius: 2px;
+  padding: 12px 14px;
+  width: 100%;
+  max-width: 560px;
+  transition: border-color 0.2s ease;
+}
+.ks-brief-textarea { min-height: 150px; resize: vertical; }
+.ks-brief-textarea::placeholder,
+.ks-brief-input::placeholder { color: var(--kb-soft); opacity: 0.55; }
+.ks-brief-textarea:focus,
+.ks-brief-input:focus { border-color: var(--kb-ink); }
+
+.ks-brief-who { display: grid; gap: 18px; max-width: 480px; }
+
+.ks-brief-fieldlab {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+/* ---- step nav ------------------------------------------------------------- */
+.ks-brief-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-top: 6px;
+  max-width: 560px;
+}
+
+.ks-brief-skip {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.38;
+  text-align: center;
+}
+
+.ks-brief-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 9px 20px;
+  min-height: 24px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease,
+              border-color 0.2s ease, opacity 0.2s ease;
+}
+.ks-brief-btn-solid {
+  background: var(--kb-ink);
+  color: var(--paper);
+  border: 1px solid var(--kb-ink);
+}
+.ks-brief-btn-solid:hover { opacity: 0.85; }
+.ks-brief-btn-ghost {
+  background: none;
+  color: var(--kb-ink);
+  border: 1px solid var(--kb-hair);
+}
+.ks-brief-btn-ghost:hover { border-color: var(--kb-ink); }
+.ks-brief-btn.is-hidden { visibility: hidden; }
+.ks-brief-btn.is-flash { border-color: var(--kb-ink); }
+
+/* ---- review --------------------------------------------------------------- */
+.ks-brief-rhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ks-brief-edit {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--kb-ink);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--kb-hair);
+  padding: 4px 2px;
+  min-height: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+.ks-brief-edit:hover { opacity: 1; border-color: var(--kb-ink); }
+
+.ks-brief-sheet {
+  border: 1px solid var(--kb-hair);
+  padding: 4px 22px;
+  max-width: 640px;
+}
+
+.ks-brief-frow {
+  display: grid;
+  gap: 6px;
+  padding: 15px 0 16px;
+  border-bottom: 1px solid var(--kb-hair);
+}
+.ks-brief-frow:last-child { border-bottom: 0; }
+
+.ks-brief-fkey {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-brief-fval {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.ks-brief-fval.ks-brief-blank {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  opacity: 0.45;
+}
+
+.ks-brief-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.ks-brief-quiet {
+  font-size: 0.9rem;
+  color: var(--kb-soft);
+  opacity: 0.8;
+}
+.ks-brief-quiet a {
+  color: var(--kb-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--kb-hair);
+  transition: border-color 0.2s ease;
+}
+.ks-brief-quiet a:hover { border-color: var(--kb-ink); }
+
+/* ---- a11y ----------------------------------------------------------------- */
+.ks-brief-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* offscreen but selectable, for the execCommand copy fallback */
+.ks-brief-copyta {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.ks-brief :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- small screens -------------------------------------------------------- */
+@media (max-width: 640px) {
+  .ks-brief-body { grid-template-columns: 1fr; gap: 22px; }
+  .ks-brief-rail-list { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .ks-brief-stage { min-height: 0; }
+  .ks-brief-nav { flex-wrap: wrap; }
+  .ks-brief-skip { order: 3; width: 100%; text-align: left; }
+  .ks-brief-sheet { padding: 2px 16px; }
+}

@@ -1,0 +1,141 @@
+/* =============================================================================
+   Push the Humanoid  ·  [data-ks-push-g1]
+   Balance recovery demo. Lives on the dark #050505 band of work/robotics.html,
+   so ink defaults to bone; add .ks-push-g1-on-light (or mount with
+   data-ks-push-g1="light") for a paper section.
+   All classes are prefixed ks-push-g1- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-push-g1] {
+  --pg-ink: var(--bone);
+  --pg-soft: var(--bone-dim);
+  --pg-hair: var(--hairline-light);
+  color: var(--pg-ink);
+}
+
+[data-ks-push-g1].ks-push-g1-on-light {
+  --pg-ink: var(--ink);
+  --pg-soft: var(--ink-soft);
+  --pg-hair: var(--hairline-dark);
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.ks-push-g1 {
+  display: grid;
+  gap: 22px;
+}
+
+.ks-push-g1-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-push-g1-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-push-g1-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+}
+
+/* ---- stage -------------------------------------------------------------- */
+.ks-push-g1-stage {
+  position: relative;
+  border-top: 1px solid var(--pg-hair);
+  border-bottom: 1px solid var(--pg-hair);
+  padding: 16px 0 10px;
+}
+
+.ks-push-g1-canvas {
+  display: block;
+  width: 100%;
+  /* explicit height: push-g1.js sizes its backing store from clientHeight */
+  height: clamp(300px, 42vh, 460px);
+  touch-action: none;    /* the drag charge owns the gesture               */
+  cursor: grab;
+}
+
+.ks-push-g1-canvas.ks-push-g1-grabbing { cursor: grabbing; }
+
+.ks-push-g1-falls {
+  position: absolute;
+  top: 16px;
+  right: 0;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.78;
+  font-variant-numeric: tabular-nums;
+}
+
+.ks-push-g1-falls[hidden] { display: none; }
+
+/* ---- hint --------------------------------------------------------------- */
+.ks-push-g1-hint {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+/* ---- readout ------------------------------------------------------------ */
+.ks-push-g1-readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 14px 28px;
+  border-top: 1px solid var(--pg-hair);
+  padding-top: 18px;
+}
+
+.ks-push-g1-cell { display: grid; gap: 5px; }
+
+.ks-push-g1-cellkey {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-push-g1-cellval {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- a11y --------------------------------------------------------------- */
+.ks-push-g1-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ks-push-g1 :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .ks-push-g1-readout { grid-template-columns: 1fr 1fr; }
+}
