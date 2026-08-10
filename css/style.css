@@ -596,6 +596,66 @@ em {
   transition: background 0.3s ease, padding-left 0.3s ease;
 }
 .work-summary:hover { background: var(--paper-dim); padding-left: 14px; }
+.work-summary:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+
+/* Closed rows are doors. On hover the row inverts to ink and the
+   description swaps for an invitation naming the toy behind it, so
+   scanning the index reads as a row of doors, not a table of contents. */
+.work-row-sub { position: relative; }
+.work-sub-copy,
+.work-sub-tease {
+  display: block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.work-sub-tease {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(9px);
+  pointer-events: none;
+}
+.work-tease-arrow {
+  display: inline-block;
+  font-size: 12px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+}
+
+@media (hover: hover) {
+  .work-row:not(.is-open) .work-summary:hover,
+  .work-row:not(.is-open) .work-summary:focus-visible {
+    background: var(--ink);
+    color: var(--bone);
+  }
+  .work-row:not(.is-open) .work-summary:hover .work-row-sub,
+  .work-row:not(.is-open) .work-summary:focus-visible .work-row-sub {
+    color: var(--bone-dim);
+  }
+  .work-row:not(.is-open) .work-summary:hover .work-tag,
+  .work-row:not(.is-open) .work-summary:focus-visible .work-tag {
+    border-color: var(--hairline-light);
+  }
+  .work-row:not(.is-open) .work-summary:hover .work-sub-copy,
+  .work-row:not(.is-open) .work-summary:focus-visible .work-sub-copy {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  .work-row:not(.is-open) .work-summary:hover .work-sub-tease,
+  .work-row:not(.is-open) .work-summary:focus-visible .work-sub-tease {
+    opacity: 1;
+    transform: none;
+  }
+  .work-row:not(.is-open) .work-summary:hover .work-tease-arrow,
+  .work-row:not(.is-open) .work-summary:focus-visible .work-tease-arrow {
+    transform: translateX(7px);
+  }
+}
 .work-num {
   font-size: 11px;
   letter-spacing: 0.18em;
@@ -676,20 +736,51 @@ em {
   content: '\2192\00a0\00a0';
   opacity: 0.45;
 }
+/* the gate: a framed door out of the accordion. It names the toy behind it
+   and inverts on hover, so it reads as an entrance instead of a footnote. */
 .work-more {
-  display: inline-block;
-  margin: 0 0 40px var(--work-indent);
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: 4px 0 42px var(--work-indent);
+  padding: 15px 18px 16px;
+  border: 1px solid var(--hairline-dark);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.work-more-text {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--ink);
-  padding: 5px 0 6px;
-  transition: opacity 0.25s ease;
 }
-.work-more:hover { opacity: 0.6; }
+.work-more-hint {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+.work-more-arrow {
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.work-more:hover,
+.work-more:focus-visible {
+  background: var(--ink);
+  color: var(--bone);
+  border-color: var(--ink);
+}
+.work-more:hover .work-more-hint,
+.work-more:focus-visible .work-more-hint { opacity: 0.65; }
+.work-more:hover .work-more-arrow,
+.work-more:focus-visible .work-more-arrow { transform: translateX(7px); }
+.work-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ============ Field sub-pages (work/*.html) ============ */
 .page-hero {
@@ -852,6 +943,15 @@ em {
   aspect-ratio: 3 / 2;
   object-fit: cover;
   display: block;
+}
+
+/* ============ Feature band (work sub-pages) ============
+   Dark full-bleed ground for the interactive features that want a
+   darkroom: the G1 push demo and the contact sheet. */
+.feature-band {
+  background: #050505;
+  color: var(--bone);
+  padding: 10vh var(--pad-x) 11vh;
 }
 
 /* ============ Next field (work sub-pages) ============
@@ -1263,12 +1363,15 @@ html.kb-nav .contact-links {
   .marquee-track { animation: none; }
   .rail { display: none; }
   .work-detail, .work-toggle { transition: none; }
+  .work-sub-copy, .work-sub-tease, .work-tease-arrow { transition: none; }
   /* the coach mark shows precisely to these people, so it fades and
      does not slide */
   .motion-hint { transform: none; transition: opacity 0.42s ease, visibility 0s linear 0.42s; }
   .motion-hint.is-live { transition: opacity 0.42s ease, visibility 0s; }
 }
 html.no-motion .work-detail, html.no-motion .work-toggle { transition: none; }
+html.no-motion .work-sub-copy, html.no-motion .work-sub-tease,
+html.no-motion .work-tease-arrow { transition: none; }
 
 /* ============ Print ============
    Collapse the pinned scroll spacers, drop the canvas and fixed chrome, and
