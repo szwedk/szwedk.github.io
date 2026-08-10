@@ -587,7 +587,7 @@
         introPlayed = true;
         var intro = gsap.timeline({ delay: 0.15 });
         intro.fromTo('#heroCanvas', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.4, ease: 'power2.out' }, 0)
-          .fromTo('.hero-headline[data-headline="0"] .eyebrow, .hero-headline[data-headline="0"] h1, .hero-headline[data-headline="0"] .hero-sub',
+          .fromTo('.hero-headline[data-headline="0"] .eyebrow, .hero-headline[data-headline="0"] h1, .hero-headline[data-headline="0"] .hero-sub, .hero-headline[data-headline="0"] .hero-cta',
             { y: 42, autoAlpha: 0 },
             { y: 0, autoAlpha: 1, duration: 1, ease: 'power3.out', stagger: 0.1 }, 0.2)
           .fromTo('.rail, .hero-foot, .site-chrome, .brand, .motion-toggle, .hud',

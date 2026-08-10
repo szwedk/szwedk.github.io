@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OG card source · 1200×630</title>
+  <!-- Not a site page: this is the artwork for assets/og-card.jpg.
+       Open at exactly 1200x630 and screenshot the viewport to regenerate. -->
+  <link rel="stylesheet" href="../fonts/fonts.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1200px; height: 630px; overflow: hidden; }
+    body {
+      position: relative;
+      background: #050505;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      color: #f2efe9;
+    }
+    #fx { position: absolute; inset: 0; }
+    .copy { position: absolute; left: 72px; top: 148px; z-index: 2; }
+    .chip {
+      display: inline-block;
+      padding: 9px 14px 8px;
+      background: #f2efe9;
+      color: #0b0b0c;
+      font-size: 15px;
+      letter-spacing: 0.22em;
+      font-weight: 600;
+    }
+    h1 {
+      margin-top: 34px;
+      font-size: 96px;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+    }
+    h1 em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      letter-spacing: 0;
+      font-size: 1.06em;
+    }
+    .foot {
+      position: absolute;
+      left: 72px;
+      bottom: 56px;
+      z-index: 2;
+      display: flex;
+      align-items: baseline;
+      gap: 36px;
+    }
+    .site {
+      font-size: 17px;
+      letter-spacing: 0.3em;
+      font-weight: 600;
+      color: #f2efe9;
+    }
+    .fields {
+      font-size: 13.5px;
+      letter-spacing: 0.24em;
+      font-weight: 600;
+      color: rgba(242, 239, 233, 0.52);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fx" width="1200" height="630"></canvas>
+  <div class="copy">
+    <span class="chip">ENGINEER &middot; CREATOR &middot; NEW YORK</span>
+    <h1>Building things<br />that <em>move.</em></h1>
+  </div>
+  <p class="foot">
+    <span class="site">KAMILSZWED.COM</span>
+    <span class="fields">ROBOTS &middot; WEB &middot; PHOTO &middot; BRAND</span>
+  </p>
+
+  <script>
+  /* Portrait on the right, its left edge fraying into particles that blow
+     toward the headline: the hero's dissolve, frozen at its best frame. */
+  (function () {
+    var cv = document.getElementById('fx');
+    var ctx = cv.getContext('2d');
+    var W = 1200, H = 630;
+
+    function rng(seed) {
+      return function () {
+        seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    var rand = rng(630);
+
+    var img = new Image();
+    img.onload = function () {
+      /* cover-fit the portrait into the right half */
+      var rx = 610, rw = W - rx, rh = H;
+      var s = Math.max(rw / img.width, rh / img.height);
+      var dw = img.width * s, dh = img.height * s;
+
+      var off = document.createElement('canvas');
+      off.width = rw; off.height = rh;
+      var octx = off.getContext('2d');
+      octx.drawImage(img, (rw - dw) / 2, (rh - dh) * 0.18, dw, dh);
+
+      /* fray the left edge: erase blocks along a noisy front */
+      var block = 4;
+      var bites = [];
+      for (var y = 0; y < rh; y += block) {
+        /* front position wobbles down the column */
+        var front = 0.16 + 0.20 * Math.abs(Math.sin(y * 0.013)) + rand() * 0.10;
+        var fx = front * rw;
+        for (var x = 0; x < rw; x += block) {
+          if (x > fx + 60) break;
+          var deep = (fx - x) / 60;                   /* 1 deep in the fray */
+          var p = Math.max(0, Math.min(1, deep + (rand() - 0.5) * 0.7));
+          if (rand() < p) {
+            /* remember its color, then take the bite */
+            var d = octx.getImageData(x + 1, y + 1, 1, 1).data;
+            if (d[3] > 0) bites.push({ x: x, y: y, r: d[0], g: d[1], b: d[2], p: p });
+            octx.clearRect(x, y, block, block);
+          }
+        }
+      }
+
+      /* darken the portrait's far edge so it seats into the ground */
+      octx.globalCompositeOperation = 'source-atop';
+      var g = octx.createLinearGradient(0, 0, rw, 0);
+      g.addColorStop(0, 'rgba(5,5,5,0)');
+      g.addColorStop(0.75, 'rgba(5,5,5,0)');
+      g.addColorStop(1, 'rgba(5,5,5,0.55)');
+      octx.fillStyle = g;
+      octx.fillRect(0, 0, rw, rh);
+
+      ctx.drawImage(off, rx, 0);
+
+      /* the bitten blocks drift left as particles, keeping their color */
+      for (var i = 0; i < bites.length; i++) {
+        var b = bites[i];
+        if (rand() > 0.42) continue;
+        var fl = b.p * b.p;
+        var drift = 18 + fl * (140 + rand() * 200);
+        var px = rx + b.x - drift;
+        var py = b.y - fl * 30 + (rand() - 0.5) * 26;
+        if (px < 560 && py < 480 && py > 90) continue;   /* keep the headline clear */
+        var a = 0.85 * (1 - fl * 0.75) * (0.5 + rand() * 0.5);
+        ctx.globalAlpha = Math.max(0.06, a);
+        ctx.fillStyle = 'rgb(' + b.r + ',' + b.g + ',' + b.b + ')';
+        var sz = rand() < 0.8 ? 2 : 3;
+        ctx.fillRect(px, py, sz, sz);
+      }
+      ctx.globalAlpha = 1;
+      document.title = 'ready';
+    };
+    img.src = 'portrait.jpg';
+  })();
+  </script>
+</body>
+</html>

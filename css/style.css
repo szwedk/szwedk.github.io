@@ -346,6 +346,23 @@ em {
   font-weight: 400;
 }
 
+/* quiet CTA: rail voice, not a button. It lives inside headline 0, so the
+   scrub crossfade carries it out with the rest of the opening copy. */
+.hero-cta {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 5px 0 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--bone);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline-light);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.hero-cta:hover { color: #fff; border-color: var(--bone); }
+
 .hero-foot {
   position: absolute;
   left: var(--pad-x);
@@ -836,6 +853,48 @@ em {
   object-fit: cover;
   display: block;
 }
+
+/* ============ Next field (work sub-pages) ============
+   One oversized link between the projects and the footer, so the pages read
+   as a loop: robotics into websites into apps and back around. */
+.next-field {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px 40px;
+  flex-wrap: wrap;
+  padding: 46px var(--pad-x) 50px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  border-top: 1px solid var(--hairline-dark);
+  transition: background 0.35s ease;
+}
+.next-field:hover { background: var(--paper-dim); }
+.next-field-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+.next-field-title {
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.next-field-title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: 0;
+}
+.next-field-arrow {
+  display: inline-block;
+  margin-left: 0.35em;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.next-field:hover .next-field-arrow { transform: translateX(8px); }
+.next-field:focus-visible { outline: 2px solid var(--ink); outline-offset: -6px; }
 
 .page-foot {
   background: #050505;

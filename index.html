@@ -7,7 +7,10 @@
   <meta name="description" content="Kamil Szwed, engineer and builder: robots, websites, apps, photography, and brands. Long Island, New York." />
   <meta property="og:title" content="Kamil Szwed · Building Things That Move" />
   <meta property="og:description" content="Robots by day. Websites, apps, weddings, and brands the rest of the time." />
-  <meta property="og:image" content="https://kamilszwed.com/assets/portrait.jpg" />
+  <meta property="og:image" content="https://kamilszwed.com/assets/og-card.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamil Szwed. Building things that move. Robots, web, photo, brand." />
   <link rel="canonical" href="https://kamilszwed.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://kamilszwed.com/" />
@@ -16,8 +19,44 @@
   <link rel="preload" href="fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="fonts/fonts.css" />
-  <link rel="stylesheet" href="css/style.css?v=14" />
-  <link rel="stylesheet" href="css/features/go2.css?v=14" />
+  <link rel="stylesheet" href="css/style.css?v=15" />
+  <link rel="stylesheet" href="css/features/go2.css?v=15" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://kamilszwed.com/#kamil",
+        "name": "Kamil Szwed",
+        "url": "https://kamilszwed.com/",
+        "image": "https://kamilszwed.com/assets/portrait.jpg",
+        "jobTitle": "Robotics Engineer",
+        "description": "Engineer and builder: humanoid robots in production, plus websites, apps, photography, brand work, and custom hardware.",
+        "email": "mailto:kamilmax06@gmail.com",
+        "homeLocation": { "@type": "Place", "name": "Long Island, New York" },
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Sacred Heart University" },
+        "sameAs": [
+          "https://github.com/szwedk",
+          "https://www.linkedin.com/in/kamilszwed006"
+        ],
+        "knowsAbout": [
+          "Humanoid robotics", "ROS 2", "VR teleoperation",
+          "Web design and development", "App development",
+          "Photography", "Brand and marketing",
+          "3D printing", "Embedded hardware"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://kamilszwed.com/#site",
+        "url": "https://kamilszwed.com/",
+        "name": "Kamil Szwed",
+        "publisher": { "@id": "https://kamilszwed.com/#kamil" }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -84,6 +123,7 @@
               <p class="hero-sub">Humanoid robots in production by day. Websites,
                 apps, photography, and brand work the rest of the time. If it
                 needs building, I take it on.</p>
+              <a class="hero-cta" href="brief.html">Start a project&ensp;&rarr;</a>
             </div>
             <div class="hero-headline" data-headline="1">
               <h2>Robots.<br />Websites. Apps.<br /><em>Weddings.</em></h2>
@@ -531,7 +571,7 @@
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/ScrollTrigger.min.js"></script>
   <script src="vendor/lenis.min.js"></script>
-  <script src="js/main.js?v=14"></script>
-  <script src="js/features/go2.js?v=14"></script>
+  <script src="js/main.js?v=15"></script>
+  <script src="js/features/go2.js?v=15"></script>
 </body>
 </html>
