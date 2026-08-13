@@ -222,7 +222,9 @@
           'Step ' + (index + 1) + ' of 5 · ' + step.q);
         panel.appendChild(el('p', 'ks-brief-qnum',
           'Step ' + pad2(index + 1) + ' of 05'));
-        panel.appendChild(el('h3', 'ks-brief-qtitle', step.q));
+        /* h2, not h3: the questions sit directly under the page h1, so an
+           h3 here leaves a hole in the outline. The class carries the size. */
+        panel.appendChild(el('h2', 'ks-brief-qtitle', step.q));
         if (step.type === 'chips') { buildChips(step, panel); }
         else if (step.type === 'text') { buildText(step, panel); }
         else { buildWho(step, panel); }

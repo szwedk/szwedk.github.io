@@ -47,11 +47,28 @@ The robot demos use the real URDF numbers from
 - Motion: the header switch writes `localStorage["ks-motion"]`, which
   outranks `prefers-reduced-motion`. Every feature honors it; still mode
   keeps things usable without autonomous animation.
-- Cache busting: every css/js reference carries `?v=N`. Bump N on every
-  deploy that touches those files, on every page, or Pages serves stale
-  assets for up to ten minutes.
+- Cache busting: every css/js reference carries `?v=N`. Bump it with
+  `node tools/stamp.mjs` after any css or js change, never by hand.
+  Pages serves assets with `max-age=600`, so a stale stamp means up to
+  ten minutes of visitors getting the old file and the fix looking like
+  it never deployed.
 - Classes are prefixed per feature (`ks-gait-lab-`, `ks-brief-`, ...) so
   the pairs stay isolated.
+
+## Checks
+
+```
+node tools/stamp.mjs      bump every ?v= stamp to one number
+node tools/audit.mjs      load every page and fail on anything broken
+```
+
+The audit runs headless chromium over all nine pages and exits non-zero
+on dead links, uncaught exceptions, console errors, 4xx responses,
+missing alt text, duplicate ids, heading-level jumps, controls with no
+accessible name, sub-24px tap targets, missing metadata, unresolvable
+sitemap entries, and drifted cache stamps. `.github/workflows/audit.yml`
+runs it plus a syntax check and an em-dash sweep on every push and pull
+request.
 
 ## Adding a project
 

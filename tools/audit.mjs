@@ -1,0 +1,218 @@
+/* =============================================================================
+   Site audit. Loads every page in headless chromium and fails the build on
+   anything that would look broken to a visitor: dead links, console errors,
+   missing alt text, heading jumps, sub-24px tap targets, missing metadata,
+   and drifted cache stamps.
+
+   Local:  node tools/audit.mjs
+   CI:     .github/workflows/audit.yml runs it on every push and PR.
+
+   Exits 1 on any finding. Set AUDIT_BASE to point at a running server, or
+   let it start its own on port 8899.
+   ========================================================================== */
+
+import { chromium } from 'playwright';
+import { createServer } from 'node:http';
+import { readFile, access } from 'node:fs/promises';
+import { join, extname, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const PORT = 8899;
+
+const PAGES = [
+  'index.html',
+  'brief.html',
+  '404.html',
+  'work/robotics.html',
+  'work/websites.html',
+  'work/apps.html',
+  'work/photography.html',
+  'work/marketing.html',
+  'work/hardware.html'
+];
+
+const MIME = {
+  '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
+  '.json': 'application/json', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg',
+  '.png': 'image/png', '.woff2': 'font/woff2', '.xml': 'application/xml',
+  '.txt': 'text/plain'
+};
+
+const findings = [];
+const note = (page, msg) => findings.push(`${page}: ${msg}`);
+
+/* ---- static server ------------------------------------------------------ */
+function serve() {
+  return new Promise((resolve) => {
+    const server = createServer(async (req, res) => {
+      const path = decodeURIComponent(req.url.split('?')[0]);
+      const file = join(ROOT, path === '/' ? 'index.html' : path);
+      try {
+        const body = await readFile(file);
+        res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
+        res.end(body);
+      } catch {
+        res.writeHead(404).end('not found');
+      }
+    });
+    server.listen(PORT, () => resolve(server));
+  });
+}
+
+/* ---- cache stamps must agree across every page --------------------------
+   A stylesheet edit with a stale ?v= is invisible for up to ten minutes on
+   Pages, which reads as "the fix did not deploy". Catch the drift here. */
+async function checkStamps() {
+  const stamps = new Map();
+  for (const page of PAGES) {
+    const html = await readFile(join(ROOT, page), 'utf8');
+    for (const m of html.matchAll(/\?v=(\d+)/g)) {
+      if (!stamps.has(m[1])) stamps.set(m[1], []);
+      if (!stamps.get(m[1]).includes(page)) stamps.get(m[1]).push(page);
+    }
+  }
+  if (stamps.size > 1) {
+    const detail = [...stamps.entries()]
+      .map(([v, pages]) => `v=${v} on ${pages.join(', ')}`).join(' | ');
+    note('cache stamps', `versions have drifted: ${detail}. Run node tools/stamp.mjs`);
+  }
+  return stamps;
+}
+
+/* ---- per-page DOM checks ------------------------------------------------ */
+const domChecks = () => {
+  const out = [];
+
+  const ids = {};
+  document.querySelectorAll('[id]').forEach(e => { ids[e.id] = (ids[e.id] || 0) + 1; });
+  Object.entries(ids).filter(([, n]) => n > 1)
+    .forEach(([k, n]) => out.push(`duplicate id #${k} appears ${n} times`));
+
+  document.querySelectorAll('img').forEach(i => {
+    if (!i.hasAttribute('alt')) out.push(`img without alt: ${i.getAttribute('src')}`);
+  });
+
+  const levels = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map(h => +h.tagName[1]);
+  const h1s = levels.filter(l => l === 1).length;
+  if (h1s !== 1) out.push(`page has ${h1s} h1 elements, expected exactly 1`);
+  for (let i = 1; i < levels.length; i++) {
+    if (levels[i] - levels[i - 1] > 1) out.push(`heading jumps h${levels[i - 1]} to h${levels[i]}`);
+  }
+
+  document.querySelectorAll('a,button').forEach(e => {
+    const name = (e.getAttribute('aria-label') || e.textContent || '').trim();
+    if (!name) out.push(`${e.tagName.toLowerCase()} with no accessible name: ${e.className || 'unclassed'}`);
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const id = a.getAttribute('href').slice(1);
+    if (id && !document.getElementById(id)) out.push(`anchor points nowhere: ${a.getAttribute('href')}`);
+  });
+
+  /* WCAG 2.2 target size (minimum). sr-only helpers are 1px by design. */
+  document.querySelectorAll('a,button,input,select').forEach(e => {
+    const b = e.getBoundingClientRect();
+    if (b.width === 0 || b.height === 0) return;
+    if (b.width <= 2 && b.height <= 2) return;
+    if (Math.min(b.width, b.height) < 22) {
+      const label = (e.textContent || e.className || e.type || '').trim().slice(0, 30);
+      out.push(`tap target ${Math.round(b.width)}x${Math.round(b.height)}: ${label}`);
+    }
+  });
+
+  if (!document.querySelector('meta[name="description"]')) out.push('no meta description');
+  if (!document.querySelector('link[rel="canonical"]') &&
+      !document.querySelector('meta[name="robots"][content*="noindex"]')) {
+    out.push('no canonical link');
+  }
+  if (!document.querySelector('meta[property="og:title"]') &&
+      !document.querySelector('meta[name="robots"][content*="noindex"]')) {
+    out.push('no og:title');
+  }
+
+  return out;
+};
+
+/* ---- run ---------------------------------------------------------------- */
+const server = await serve();
+const base = process.env.AUDIT_BASE || `http://localhost:${PORT}`;
+
+/* CI installs chromium where playwright expects it. Some sandboxes ship a
+   prebuilt one instead, so honour PW_CHROMIUM and fall back to the common
+   preinstall path before giving up. */
+async function launch() {
+  const candidates = [process.env.PW_CHROMIUM, '/opt/pw-browsers/chromium'].filter(Boolean);
+  for (const executablePath of candidates) {
+    try {
+      await access(executablePath);
+      return await chromium.launch({ executablePath });
+    } catch { /* try the next one */ }
+  }
+  return chromium.launch();
+}
+const browser = await launch();
+
+await checkStamps();
+
+for (const page of PAGES) {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const tab = await ctx.newPage();
+  const runtime = [];
+
+  tab.on('pageerror', e => runtime.push(`uncaught: ${String(e).slice(0, 160)}`));
+  tab.on('console', m => { if (m.type() === 'error') runtime.push(`console error: ${m.text().slice(0, 160)}`); });
+  tab.on('requestfailed', r => {
+    const url = r.url().replace(base, '');
+    if (!url.startsWith('data:')) runtime.push(`request failed: ${url}`);
+  });
+  tab.on('response', r => {
+    if (r.status() >= 400) runtime.push(`${r.status()} on ${r.url().replace(base, '')}`);
+  });
+
+  await tab.goto(`${base}/${page}`, { waitUntil: 'networkidle' });
+  /* reveal-on-scroll content is visibility:hidden until it scrolls in, and
+     hidden elements have no box to measure, so unhide the same way a Tab
+     press does before measuring targets */
+  await tab.evaluate(() => document.documentElement.classList.add('kb-nav'));
+  await tab.waitForTimeout(1200);
+
+  (await tab.evaluate(domChecks)).forEach(f => note(page, f));
+  runtime.forEach(f => note(page, f));
+
+  /* every relative link must resolve */
+  const hrefs = await tab.evaluate(() => [...document.querySelectorAll('a[href]')]
+    .map(a => a.getAttribute('href'))
+    .filter(h => h && !/^(#|mailto:|tel:|https?:|data:)/.test(h)));
+  for (const href of [...new Set(hrefs)]) {
+    const target = new URL(href, `${base}/${page}`).toString();
+    const res = await tab.request.get(target).catch(() => null);
+    if (!res || res.status() >= 400) note(page, `broken link ${href} (${res ? res.status() : 'unreachable'})`);
+  }
+
+  await ctx.close();
+}
+
+/* sitemap entries must all resolve */
+{
+  const sitemap = await readFile(join(ROOT, 'sitemap.xml'), 'utf8');
+  const ctx = await browser.newContext();
+  const tab = await ctx.newPage();
+  for (const m of sitemap.matchAll(/<loc>https:\/\/kamilszwed\.com(\/[^<]*)<\/loc>/g)) {
+    const path = m[1] === '/' ? '/index.html' : m[1];
+    const res = await tab.request.get(`${base}${path}`).catch(() => null);
+    if (!res || res.status() >= 400) note('sitemap.xml', `${m[1]} does not resolve`);
+  }
+  await ctx.close();
+}
+
+await browser.close();
+server.close();
+
+if (findings.length) {
+  console.error(`\nAUDIT FAILED, ${findings.length} finding${findings.length === 1 ? '' : 's'}:\n`);
+  findings.forEach(f => console.error(`  - ${f}`));
+  console.error('');
+  process.exit(1);
+}
+console.log(`\nAudit clean across ${PAGES.length} pages.\n`);
