@@ -30,11 +30,17 @@ jobs:
             node --check "$f"
           done
 
+      # Literal character rather than a PCRE escape: \x{2014} silently fails
+      # to match under some locales, which made this pass locally while the
+      # runner correctly failed. Scoped to tracked files so a stray
+      # node_modules cannot fail the build.
       - name: No em dashes in shipped text
         run: |
-          if grep -rlP '\x{2014}' --include='*.html' --include='*.css' --include='*.js' \
-               . | grep -v '^./vendor/'; then
-            echo "em dash found in the files listed above"
+          hits=$(git ls-files -z '*.html' '*.css' '*.js' \
+                 | xargs -0 grep -l '—' 2>/dev/null | grep -v '^vendor/' || true)
+          if [ -n "$hits" ]; then
+            echo "em dash found in:"
+            echo "$hits"
             exit 1
           fi
 

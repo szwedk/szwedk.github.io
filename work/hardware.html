@@ -19,8 +19,8 @@
   <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="../fonts/fonts.css" />
-  <link rel="stylesheet" href="../css/style.css?v=18" />
-  <link rel="stylesheet" href="../css/features/wordmark.css?v=18" />
+  <link rel="stylesheet" href="../css/style.css?v=21" />
+  <link rel="stylesheet" href="../css/features/wordmark.css?v=21" />
 </head>
 <body>
 
@@ -58,7 +58,7 @@
     <!-- slicer-preview demo: the wordmark reprints itself -->
     <section class="printbed" aria-label="Slicer preview">
       <p class="eyebrow"><span>SLICER PREVIEW</span></p>
-      <div class="printbed-mark" data-ks-wordmark>Kamil Szwed</div>
+      <div class="printbed-mark" data-ks-wordmark data-ks-lazy="../js/features/wordmark.js?v=21">Kamil Szwed</div>
       <p class="printbed-hint">Press and hold. The toolpath is not canned: the name
         is rasterised, turned into a distance field, and the perimeters and 45&deg;
         infill are extracted from it in the browser, then printed back layer by
@@ -150,7 +150,6 @@
   <script src="../vendor/gsap.min.js"></script>
   <script src="../vendor/ScrollTrigger.min.js"></script>
   <script src="../vendor/lenis.min.js"></script>
-  <script src="../js/page.js?v=18"></script>
-  <script src="../js/features/wordmark.js?v=18"></script>
+  <script src="../js/page.js?v=21"></script>
 </body>
 </html>

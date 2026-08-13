@@ -3,6 +3,46 @@
    Lenis smooth scroll + GSAP ScrollTrigger + canvas particle hero
    ============================================================ */
 
+/* ------------------------------------------------------------
+   GO2 is 44 KB of quadruped for an easter egg that only exists if
+   you type its name. Nobody should download it on the chance that
+   they might, so the word is watched here, in a few lines, and the
+   bundle is fetched only once it has actually been typed. The
+   feature runs its own sequence detector, so the word it missed
+   while it was on the wire gets replayed into it on load.
+   ------------------------------------------------------------ */
+(function () {
+  'use strict';
+
+  var src = document.body.getAttribute('data-ks-go2');
+  if (!src) { return; }
+
+  var CODE = 'go2';
+  var buf = '';
+  var fetched = false;
+
+  document.addEventListener('keydown', function (e) {
+    if (fetched || e.metaKey || e.ctrlKey || e.altKey) { return; }
+    if (!e.key || e.key.length !== 1) { return; }
+
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(input|textarea|select)$/i.test(t.tagName))) { return; }
+
+    buf = (buf + e.key.toLowerCase()).slice(-CODE.length);
+    if (buf !== CODE) { return; }
+
+    fetched = true;
+    var s = document.createElement('script');
+    s.onload = function () {
+      CODE.split('').forEach(function (key) {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: key, bubbles: true }));
+      });
+    };
+    s.src = src;
+    document.body.appendChild(s);
+  });
+})();
+
 (function () {
   'use strict';
 

@@ -1,5 +1,5 @@
 /* =============================================================================
-   Gait Lab  —  [data-ks-gait-lab]
+   Gait Lab  ·  [data-ks-gait-lab]
    Quadruped gait explorer. Sits on a PAPER section by default; add
    .ks-gait-lab-on-dark (or data-theme handling in JS) for dark placement.
    All classes are prefixed ks-gait-lab- to avoid collisions.
@@ -97,7 +97,7 @@
 .ks-gait-lab-field {
   display: grid;
   gap: 9px;
-  border: 0;         /* it is a <fieldset> — drop the UA box */
+  border: 0;         /* it is a <fieldset>, so drop the UA box */
   padding: 0;
   margin: 0;
   min-width: 0;
@@ -167,7 +167,7 @@
   color: #050505;
 }
 
-/* range inputs — thin track, small round thumb */
+/* range inputs: thin track, small round thumb */
 .ks-gait-lab-range,
 .ks-gait-lab-slider {
   -webkit-appearance: none;

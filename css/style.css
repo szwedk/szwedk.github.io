@@ -1,5 +1,5 @@
 /* ============================================================
-   Kamil Szwed — portfolio
+   Kamil Szwed, portfolio
    Dark pinned hero → light manifesto/work → dark contact
    ============================================================ */
 
@@ -695,7 +695,7 @@ em {
 }
 .work-row.is-open .work-toggle { transform: rotate(45deg); opacity: 0.9; }
 
-/* expandable detail — grid-rows trick animates height without JS */
+/* expandable detail: the grid-rows trick animates height without JS */
 .work-detail {
   display: grid;
   grid-template-rows: 0fr;
@@ -1328,7 +1328,7 @@ main:focus, section:focus, footer:focus { outline: none; }
 }
 
 /* Below ~430px a centered top nav collides with the toggle. Float it to the
-   bottom instead — more thumb-reachable, and no collision at any width. */
+   bottom instead: more thumb-reachable, and no collision at any width. */
 @media (max-width: 430px) {
   .site-chrome {
     inset: auto 0 0 0;
@@ -1405,7 +1405,7 @@ html.no-motion .work-tease-arrow { transition: none; }
   .manifesto { padding: 8mm 0; }
   .manifesto-text { max-width: 62ch; text-align: left; }
 
-  /* GSAP writes inline opacity/transform/filter — override it all */
+  /* GSAP writes inline opacity/transform/filter, so override it all */
   .hero-headline, .hero-headline *, .hero-sub, .hero-foot,
   .manifesto-text, .manifesto-text .word,
   .path-head, .path-item, .work-head, .work-row,
