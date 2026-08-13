@@ -1,0 +1,285 @@
+/* =============================================================================
+   Is It Real Yet?  ·  [data-ks-significance]
+   A/B significance reader. Sits on a PAPER section by default (the projects
+   band of work/marketing.html); mount with data-ks-significance="dark" or add
+   .ks-significance-on-dark for a dark band.
+   All classes are prefixed ks-significance- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-significance] {
+  --sg-ink: var(--ink);
+  --sg-soft: var(--ink-soft);
+  --sg-hair: var(--hairline-dark);
+  color: var(--sg-ink);
+}
+
+[data-ks-significance].ks-significance-on-dark {
+  --sg-ink: var(--bone);
+  --sg-soft: var(--bone-dim);
+  --sg-hair: var(--hairline-light);
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.ks-significance {
+  display: grid;
+  gap: 24px;
+  max-width: 1080px;
+}
+
+.ks-significance-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-significance-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-significance-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+}
+
+/* ---- variant input rows -------------------------------------------------- */
+.ks-significance-arms {
+  display: grid;
+  gap: 18px;
+  border-top: 1px solid var(--sg-hair);
+  padding-top: 20px;
+}
+
+.ks-significance-arm {
+  display: grid;
+  grid-template-columns: minmax(104px, 0.85fr) minmax(0, 1fr) minmax(0, 1fr) minmax(76px, 0.66fr);
+  align-items: end;
+  gap: 10px 22px;
+}
+
+.ks-significance-armkey {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.62;
+  padding-bottom: 9px;
+}
+
+/* echoes the canvas: A is an outline, B is filled */
+.ks-significance-sw {
+  display: inline-block;
+  width: 20px;
+  height: 8px;
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+}
+.ks-significance-sw-fill { background: currentColor; }
+
+.ks-significance-field { display: grid; gap: 7px; min-width: 0; }
+
+.ks-significance-fieldlab {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-significance-input {
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--sg-ink);
+  background: transparent;
+  border: 1px solid var(--sg-hair);
+  border-radius: 2px;
+  padding: 8px 10px;
+  min-height: 36px;          /* comfortably past the 24px target minimum */
+  width: 100%;
+  min-width: 0;
+  transition: border-color 0.2s ease;
+}
+.ks-significance-input:hover { border-color: var(--sg-soft); }
+.ks-significance-input:focus { border-color: var(--sg-ink); }
+
+.ks-significance-ratewrap { align-content: end; }
+
+.ks-significance-rate {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+/* ---- plot ---------------------------------------------------------------- */
+.ks-significance-stage {
+  border-top: 1px solid var(--sg-hair);
+  border-bottom: 1px solid var(--sg-hair);
+  padding: 14px 0 10px;
+}
+
+.ks-significance-plothead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 18px;
+  margin-bottom: 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.45;
+}
+
+.ks-significance-plot {
+  display: block;
+  width: 100%;
+  /* explicit height: significance.js sizes its backing store from clientHeight */
+  height: clamp(180px, 26vh, 280px);
+}
+
+/* ---- note ---------------------------------------------------------------- */
+.ks-significance-note {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--sg-soft);
+  opacity: 0.85;
+  max-width: 62ch;
+}
+
+/* ---- readout ------------------------------------------------------------- */
+.ks-significance-readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px 28px;
+  border-top: 1px solid var(--sg-hair);
+  padding-top: 18px;
+}
+
+.ks-significance-cell { display: grid; gap: 5px; align-content: start; }
+
+.ks-significance-cellkey {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-significance-cellval {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- presets ------------------------------------------------------------- */
+.ks-significance-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+
+.ks-significance-presetlab {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-significance-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ks-significance-pill {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--sg-ink);
+  background: none;
+  border: 1px solid var(--sg-hair);
+  border-radius: 999px;
+  padding: 8px 15px;
+  min-height: 30px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.ks-significance-pill:hover { border-color: var(--sg-ink); }
+.ks-significance-pill[aria-pressed="true"] {
+  background: var(--sg-ink);
+  color: var(--paper);
+  border-color: var(--sg-ink);
+}
+[data-ks-significance].ks-significance-on-dark .ks-significance-pill[aria-pressed="true"] {
+  color: #050505;
+}
+
+/* ---- a11y ---------------------------------------------------------------- */
+.ks-significance-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ks-significance :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* a pressed pill inverts, so currentColor would draw a paper ring onto the
+   paper behind it · pin the ring back to the module ink */
+.ks-significance-pill[aria-pressed="true"]:focus-visible {
+  outline-color: var(--sg-ink);
+}
+
+@media (max-width: 760px) {
+  .ks-significance-arm {
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+  }
+  .ks-significance-armkey {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+  /* the rate reads as one line, "RATE 3.00%", instead of eating a whole row */
+  .ks-significance-ratewrap {
+    grid-column: 1 / -1;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .ks-significance-rate { min-height: 0; }
+  .ks-significance-readout { grid-template-columns: 1fr 1fr; }
+}

@@ -1,0 +1,393 @@
+/* =============================================================================
+   The Latency Budget  ·  [data-ks-teleop]
+   VR teleoperation delay-line demo. Lives on the dark #050505 band of
+   work/robotics.html, so ink defaults to bone; add .ks-teleop-on-light (or
+   mount with data-ks-teleop="light") for a paper section.
+   All classes are prefixed ks-teleop- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-teleop] {
+  --tl-ink: var(--bone);
+  --tl-soft: var(--bone-dim);
+  --tl-faint: var(--bone-faint);
+  --tl-hair: var(--hairline-light);
+  --tl-rule: rgba(242, 239, 233, 0.34);
+  --tl-warn: #b03a2e;
+  color: var(--tl-ink);
+}
+
+[data-ks-teleop].ks-teleop-on-light {
+  --tl-ink: var(--ink);
+  --tl-soft: var(--ink-soft);
+  --tl-faint: rgba(11, 11, 12, 0.55);
+  --tl-hair: var(--hairline-dark);
+  --tl-rule: rgba(11, 11, 12, 0.3);
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.ks-teleop {
+  display: grid;
+  gap: 22px;
+}
+
+.ks-teleop-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-teleop-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-teleop-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+  max-width: 46ch;
+}
+
+/* ---- stage -------------------------------------------------------------- */
+.ks-teleop-stage {
+  position: relative;
+  border-top: 1px solid var(--tl-hair);
+  border-bottom: 1px solid var(--tl-hair);
+  padding: 16px 0 10px;
+}
+
+.ks-teleop-canvas {
+  display: block;
+  width: 100%;
+  /* explicit height: teleop.js sizes its backing store from clientHeight */
+  height: clamp(280px, 40vh, 440px);
+  touch-action: none;      /* the drag owns the gesture                     */
+  cursor: grab;
+}
+
+.ks-teleop-canvas.ks-teleop-grabbing { cursor: grabbing; }
+
+.ks-teleop-reach {
+  position: absolute;
+  top: 16px;
+  right: 0;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--tl-warn);
+}
+
+.ks-teleop-reach[hidden] { display: none; }
+
+/* ---- hint --------------------------------------------------------------- */
+.ks-teleop-hint {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+/* ---- budget bar --------------------------------------------------------- */
+.ks-teleop-budget {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--tl-hair);
+  padding-top: 18px;
+}
+
+.ks-teleop-budgethead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-teleop-barwrap {
+  position: relative;
+  padding-top: 16px;       /* headroom for the threshold caption            */
+}
+
+.ks-teleop-marklab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.72;
+}
+
+.ks-teleop-track {
+  position: relative;
+  height: 26px;
+  border-bottom: 1px solid var(--tl-hair);
+}
+
+.ks-teleop-seg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: currentColor;
+}
+
+.ks-teleop-over {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--tl-warn);
+  opacity: 0.82;
+}
+.ks-teleop-over[hidden] { display: none; }
+
+/* still mode: jitter is shown as a static plus-or-minus band, not a shimmer */
+.ks-teleop-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0.42;
+  background-image: repeating-linear-gradient(
+    90deg, currentColor 0 1px, transparent 1px 5px);
+}
+.ks-teleop-band[hidden] { display: none; }
+
+.ks-teleop-div {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--tl-rule);
+}
+
+.ks-teleop-mark {
+  position: absolute;
+  top: -7px;
+  bottom: -7px;
+  width: 1px;
+  background: currentColor;
+  opacity: 0.8;
+}
+
+/* ---- budget legend ------------------------------------------------------ */
+.ks-teleop-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 10px 18px;
+}
+
+.ks-teleop-lcell { display: grid; gap: 5px; }
+
+.ks-teleop-sw {
+  display: block;
+  height: 2px;
+  background: currentColor;
+}
+
+.ks-teleop-lkey {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-teleop-lval {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  opacity: 0.9;
+}
+
+.ks-teleop-num { font-variant-numeric: tabular-nums; }
+
+/* ---- flag + note --------------------------------------------------------
+   NOTE: teleop.js puts .ks-teleop-warn on the ROOT element as a state flag,
+   so it must never set `color` or the whole module inherits it. Only the
+   flag text is tinted. */
+.ks-teleop-flag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--tl-soft);
+  opacity: 0.6;
+  min-height: 1.2em;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.ks-teleop-warn .ks-teleop-flag { color: var(--tl-warn); opacity: 1; }
+
+.ks-teleop-note {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--tl-soft);
+  opacity: 0.72;
+  max-width: 64ch;
+}
+
+/* ---- controls ----------------------------------------------------------- */
+.ks-teleop-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px 34px;
+  align-items: start;
+  border-top: 1px solid var(--tl-hair);
+  padding-top: 18px;
+}
+
+.ks-teleop-field { display: grid; gap: 9px; align-content: start; min-width: 0; }
+
+.ks-teleop-legendkey,
+.ks-teleop-sliderhead {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-teleop-sliderhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  opacity: 1;
+}
+
+.ks-teleop-val {
+  letter-spacing: 0.06em;
+  opacity: 0.95;
+}
+
+.ks-teleop-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ks-teleop-pill {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--tl-ink);
+  background: none;
+  border: 1px solid var(--tl-hair);
+  border-radius: 999px;
+  padding: 6px 14px;
+  min-height: 26px;        /* WCAG 2.2 minimum target size */
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.ks-teleop-pill:hover { border-color: var(--tl-ink); }
+.ks-teleop-pill[aria-pressed="true"] {
+  background: var(--tl-ink);
+  color: #050505;
+  border-color: var(--tl-ink);
+}
+[data-ks-teleop].ks-teleop-on-light .ks-teleop-pill[aria-pressed="true"] {
+  color: var(--paper);
+}
+
+/* range input · thin track, small round thumb */
+.ks-teleop-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 24px;            /* WCAG 2.2 minimum target size */
+  background: none;
+  cursor: pointer;
+  margin: 0;
+}
+.ks-teleop-range::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--tl-hair);
+}
+.ks-teleop-range::-moz-range-track {
+  height: 1px;
+  background: var(--tl-hair);
+}
+.ks-teleop-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--tl-ink);
+  margin-top: -5px;
+}
+.ks-teleop-range::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--tl-ink);
+}
+
+/* ---- readout ------------------------------------------------------------ */
+.ks-teleop-readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 14px 28px;
+  border-top: 1px solid var(--tl-hair);
+  padding-top: 18px;
+}
+
+.ks-teleop-cell { display: grid; gap: 5px; }
+
+.ks-teleop-cellkey {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-teleop-cellval {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ---- a11y --------------------------------------------------------------- */
+.ks-teleop-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ks-teleop :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .ks-teleop-readout { grid-template-columns: 1fr 1fr; }
+  .ks-teleop-legend { grid-template-columns: 1fr 1fr; }
+  .ks-teleop-panel { grid-template-columns: 1fr; }
+}
