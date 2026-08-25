@@ -125,6 +125,15 @@ h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; le
 .link-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
 
 .link-card {
+  /* every transform on a card is a sum of these, so hover lift, press
+     sink, contact tilt and neighbour push compose instead of clobbering
+     each other. JS writes the last four; CSS owns --lift. */
+  --lift: 0px;
+  --push-x: 0px;
+  --push-y: 0px;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --press: 1;
   min-height: 265px;
   border-radius: 16px;
   border: 1px solid var(--ink);
@@ -134,9 +143,21 @@ h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; le
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform:
+    translate3d(var(--push-x), calc(var(--lift) + var(--push-y)), 0)
+    rotateX(var(--tilt-x)) rotateY(var(--tilt-y))
+    scale(var(--press));
+  /* release overshoots rest by a hair and settles, the way a panel on a
+     spring does. The press-in below cuts this to 90ms so contact is
+     immediate and only the return is springy. */
+  transition: transform 0.42s cubic-bezier(0.22, 1.35, 0.36, 1), box-shadow 0.32s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-a.link-card[href]:hover { transform: translateY(-5px); box-shadow: 0 18px 42px rgba(11, 11, 12, 0.15); }
+/* Gated: an iPhone fires :hover on tap and leaves it stuck, so a card
+   would stay lifted after a tap that went nowhere. */
+@media (hover: hover) {
+  a.link-card[href]:hover { --lift: -5px; box-shadow: 0 18px 42px rgba(11, 11, 12, 0.15); }
+}
 a.link-card:focus-visible { outline: 3px solid currentColor; outline-offset: -9px; }
 
 .featured { grid-column: span 7; min-height: 360px; }
@@ -179,8 +200,34 @@ a.link-card:focus-visible { outline: 3px solid currentColor; outline-offset: -9p
 .instagram .social-mark { background: linear-gradient(135deg, #7a3cff, #ff3f83 55%, #ffad33); box-shadow: 4px 3px 0 rgba(255, 255, 255, 0.72); }
 .github .social-mark { box-shadow: 4px 3px 0 rgba(11, 11, 12, 0.14); }
 
-.arrow { width: 40px; height: 40px; border: 1px solid currentColor; border-radius: 50%; display: inline-grid; place-items: center; font-size: 18px; transition: transform 0.25s ease; }
-a[href]:hover .arrow { transform: rotate(45deg); }
+.arrow {
+  width: 40px;
+  height: 40px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-size: 18px;
+  position: relative;
+  isolation: isolate;
+  transition: transform 0.25s ease;
+}
+/* a disc behind the glyph rather than a background on the ring: filling
+   the ring with currentColor would take the glyph with it */
+.arrow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+@media (hover: hover) {
+  a[href]:hover .arrow { transform: rotate(45deg); }
+  a[href]:hover .arrow::before { opacity: 0.1; }
+}
 
 .card-copy { position: relative; z-index: 1; }
 .card-copy p, .note-label { margin: 0 0 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; }
@@ -272,6 +319,153 @@ a.link-card:not([href]) .arrow { opacity: 0.32; }
   .hub-foot { align-items: flex-start; flex-direction: column; justify-content: center; }
 }
 
+/* ---- interaction --------------------------------------------------------
+   Four behaviours, all driven by js/features/hub.js, all optional: with
+   JavaScript off none of these classes are ever set and the page is exactly
+   what it was, six anchors on a grid.
+   ========================================================================= */
+
+/* perspective has to live on the grid, not the card, or each card gets its
+   own vanishing point and the tilt reads flat */
+.link-grid { perspective: 900px; }
+
+/* --- press: the card behaves like a panel pinned at its centre ---------- */
+.link-card.is-pressed {
+  --press: 0.988;
+  box-shadow: 0 10px 22px rgba(11, 11, 12, 0.2);
+  /* contact is immediate; only the release springs */
+  transition: transform 0.09s ease-out, box-shadow 0.09s ease-out;
+}
+/* neighbours give way to a press they did not receive, and come back slower */
+.link-card.is-flexed { transition: transform 0.52s cubic-bezier(0.22, 1.2, 0.36, 1); }
+
+.link-card.is-pressed .arrow::before,
+.link-card.is-committed .arrow::before { opacity: 0.16; }
+.link-card.is-pressed .arrow,
+.link-card.is-committed .arrow { transform: rotate(45deg); }
+
+/* --- receipt: proof the tap landed, during the dead second before the
+       new tab paints ----------------------------------------------------- */
+.link-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  z-index: 2;
+  background: currentColor;
+  opacity: 0.5;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+.link-card.is-committed::before {
+  transform: scaleX(1);
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* --- thumb line: the touch substitute for hover. A band across the middle
+       of the viewport lights whichever cards are crossing it, so a phone
+       gets the same pre-commitment state a mouse gets for free. ----------- */
+@media (hover: none) {
+  .link-card.is-lit .arrow { transform: rotate(45deg); }
+  .link-card.is-lit .arrow::before { opacity: 0.1; }
+}
+
+/* --- the tray: one socket per platform, filled by actually going there -- */
+.ks-tray { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; position: relative; z-index: 1; }
+.ks-socket {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(242, 239, 233, 0.26);
+  background: transparent;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1.4, 0.36, 1);
+}
+.ks-socket.is-filled { border-color: transparent; transform: scale(1); }
+.ks-socket[data-p="youtube"].is-filled   { background: #ff6347; }
+.ks-socket[data-p="tiktok"].is-filled    { background: #d6fff8; }
+.ks-socket[data-p="instagram"].is-filled { background: linear-gradient(135deg, #7a3cff, #ff3f83 55%, #ffad33); }
+.ks-socket[data-p="linkedin"].is-filled  { background: var(--blue); }
+.ks-socket[data-p="x"].is-filled         { background: #fff; }
+.ks-socket[data-p="github"].is-filled    { background: var(--acid); }
+.ks-socket.is-landing { transform: scale(1.32); }
+
+.ks-tray-note {
+  margin: 12px 0 0;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-faint, rgba(242, 239, 233, 0.42));
+  opacity: 0.5;
+}
+.ks-tray-note span { opacity: 0.62; }
+
+/* the marble itself: body-level and fixed, so no card's transform can
+   become its containing block mid-flight */
+.ks-marble {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  z-index: 60;
+  pointer-events: none;
+  will-change: transform;
+  box-shadow: 0 3px 10px rgba(11, 11, 12, 0.35);
+}
+
+/* --- all six: the note card turns over ---------------------------------- */
+.note-card blockquote { transition: opacity 0.45s ease, transform 0.45s ease; }
+.note-card.is-complete blockquote { opacity: 0; transform: translateY(-14px); pointer-events: none; }
+.ks-allsix {
+  position: absolute;
+  left: 24px;
+  right: 78px;   /* clears the KS scribble already in that corner */
+  bottom: 22px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.45s ease 0.15s, transform 0.45s ease 0.15s;
+  pointer-events: none;
+}
+.note-card.is-complete .ks-allsix { opacity: 1; transform: translateY(0); }
+.ks-allsix-bar { display: flex; height: 10px; border-radius: 99px; overflow: hidden; }
+.ks-allsix-bar i { flex: 1; }
+.ks-allsix-line {
+  margin: 14px 0 0;
+  font: 400 clamp(24px, 3.2vw, 38px)/1 var(--font-serif);
+  font-style: italic;
+}
+.ks-allsix-date { margin: 8px 0 0; font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.5; }
+
+/* --- the honest dot: the availability pill tells the real time in New
+       York, and the dot is lit only while that is a waking hour ---------- */
+.available .dot { transition: background 0.4s ease, box-shadow 0.4s ease; }
+.available.is-asleep .dot { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(11, 11, 12, 0.34); }
+
+/* announcements for screen readers, visually gone but not display:none */
+.ks-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 780px) {
+  .ks-socket { width: 19px; height: 19px; }
+  .ks-tray { gap: 7px; margin-top: 13px; }
+  .ks-allsix { left: 18px; right: 64px; bottom: 18px; }
+}
+
 /* ---- motion ------------------------------------------------------------
    The portfolio's header switch writes ks-motion, and an explicit choice
    outranks the OS preference. The inline boot script on this page reads the
@@ -284,6 +478,29 @@ html.no-motion { scroll-behavior: auto; }
 html.no-motion .link-card, html.no-motion .arrow { transition: none; }
 html.no-motion a.link-card[href]:hover { transform: none; box-shadow: none; }
 html.no-motion a[href]:hover .arrow { transform: none; }
+
+/* the interaction layer in still mode: states remain, travel does not.
+   Direct response to a press is not autonomous animation, so removing it
+   would make still mode worse than motion mode, not calmer. */
+html.no-motion .link-card,
+html.no-motion .link-card::before,
+html.no-motion .arrow,
+html.no-motion .arrow::before,
+html.no-motion .ks-socket,
+html.no-motion .ks-allsix,
+html.no-motion .note-card blockquote,
+html.no-motion .available .dot { transition: none; }
+html.no-motion .link-card.is-pressed {
+  --press: 1;
+  box-shadow: none;
+  outline: 2px solid currentColor;
+  outline-offset: -10px;
+}
+html.no-motion .link-card.is-pressed .arrow,
+html.no-motion .link-card.is-committed .arrow,
+html.no-motion .link-card.is-lit .arrow { transform: none; }
+html.no-motion .ks-socket.is-landing { transform: none; }
+
 
 /* The OS preference is the fallback, not the authority: an explicit choice
    outranks it everywhere else on the site, so honour ks-motion 'on' here

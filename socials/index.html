@@ -30,7 +30,7 @@
   <link rel="preload" href="/fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/fonts/fonts.css" />
   <!-- Standalone on purpose: this page does not load css/style.css. -->
-  <link rel="stylesheet" href="/css/socials.css?v=31" />
+  <link rel="stylesheet" href="/css/socials.css?v=32" />
 
   <script>
     /* The home page switch writes ks-motion; honour it here before first
@@ -62,7 +62,7 @@
             <span class="brand-sub">Build &middot; Deploy &middot; Support</span>
           </span>
         </a>
-        <span class="available"><span class="dot" aria-hidden="true"></span> New York &middot; Worldwide</span>
+        <span class="available"><span class="dot" aria-hidden="true"></span><span class="ks-where">New York &middot; Worldwide</span></span>
       </header>
 
       <section class="intro" id="top">
@@ -98,7 +98,7 @@
            =================================================================== -->
       <section class="link-grid" aria-label="Where to find me">
 
-        <a class="link-card youtube featured" href="https://www.youtube.com/@kambuildstuff" target="_blank" rel="noopener noreferrer">
+        <a class="link-card youtube featured" data-p="youtube" href="https://www.youtube.com/@kambuildstuff" target="_blank" rel="noopener noreferrer">
           <div class="card-top">
             <span class="social-mark">YT</span>
             <span class="arrow" aria-hidden="true">&#8599;</span>
@@ -111,7 +111,7 @@
           <span class="pending">URL ready to add</span>
         </a>
 
-        <a class="link-card tiktok" href="https://www.tiktok.com/@kambuildstuff" target="_blank" rel="noopener noreferrer">
+        <a class="link-card tiktok" data-p="tiktok" href="https://www.tiktok.com/@kambuildstuff" target="_blank" rel="noopener noreferrer">
           <div class="card-top">
             <span class="social-mark">TT</span>
             <span class="arrow" aria-hidden="true">&#8599;</span>
@@ -124,7 +124,7 @@
           <span class="pending">URL ready to add</span>
         </a>
 
-        <a class="link-card instagram" href="https://www.instagram.com/kambuildstuff/" target="_blank" rel="noopener noreferrer">
+        <a class="link-card instagram" data-p="instagram" href="https://www.instagram.com/kambuildstuff/" target="_blank" rel="noopener noreferrer">
           <div class="card-top">
             <span class="social-mark">IG</span>
             <span class="arrow" aria-hidden="true">&#8599;</span>
@@ -137,7 +137,7 @@
           <span class="pending">URL ready to add</span>
         </a>
 
-        <a class="link-card linkedin" href="https://www.linkedin.com/in/kamilszwed006" target="_blank" rel="noopener noreferrer">
+        <a class="link-card linkedin" data-p="linkedin" href="https://www.linkedin.com/in/kamilszwed006" target="_blank" rel="noopener noreferrer">
           <div class="card-top">
             <span class="social-mark">in</span>
             <span class="arrow" aria-hidden="true">&#8599;</span>
@@ -150,7 +150,7 @@
           <span class="pending">URL ready to add</span>
         </a>
 
-        <a class="link-card x" href="https://x.com/kamdoesrobots" target="_blank" rel="noopener noreferrer">
+        <a class="link-card x" data-p="x" href="https://x.com/kamdoesrobots" target="_blank" rel="noopener noreferrer">
           <div class="card-top">
             <span class="social-mark">X</span>
             <span class="arrow" aria-hidden="true">&#8599;</span>
@@ -163,7 +163,7 @@
           <span class="pending">URL ready to add</span>
         </a>
 
-        <a class="link-card github" href="https://github.com/szwedk" target="_blank" rel="noopener noreferrer">
+        <a class="link-card github" data-p="github" href="https://github.com/szwedk" target="_blank" rel="noopener noreferrer">
           <div class="card-top">
             <span class="social-mark">GH</span>
             <span class="arrow" aria-hidden="true">&#8599;</span>
@@ -200,5 +200,6 @@
     </div>
   </main>
 
+  <script src="/js/features/hub.js?v=32" defer></script>
 </body>
 </html>
