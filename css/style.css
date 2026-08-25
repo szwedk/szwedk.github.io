@@ -1333,7 +1333,7 @@ main:focus, section:focus, footer:focus { outline: none; }
   .pill-nav a { padding: 6px 12px; font-size: 12px; }
   /* five links overflow a narrow pill; About is an anchor to the very next
      section, so it is the one that folds first */
-  .pill-nav a[href="#about"] { display: none; }
+  .pill-nav a[href$="#about"] { display: none; }
   .rail-bottom-right { display: none; }
   .hero-foot { bottom: 18px; }
 }

@@ -275,3 +275,47 @@
     line-height: 1.6;
   }
 }
+
+/* ---- field filter bar ---------------------------------------------------
+   Only rendered while a field hub is acting as a lens on the vault. */
+.ks-vault-filter {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hairline-dark);
+}
+.ks-vault-filter-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink);
+}
+.ks-vault-filter-clear {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--hairline-dark);
+  border-radius: 999px;
+  padding: 7px 14px;
+  min-height: 24px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.ks-vault-filter-clear:hover,
+.ks-vault-filter-clear:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.ks-vault-filter-clear:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}

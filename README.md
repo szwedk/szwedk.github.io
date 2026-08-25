@@ -19,7 +19,10 @@ ScrollTrigger + Lenis are vendored in `vendor/`, fonts are self-hosted in
 - `404.html` · the page that dissolves; all URLs root-absolute because
   Pages serves it from whatever missing path was requested
 - `notes.html` · the vault: an Obsidian-style force graph of every note
-  plus the chronological index, both drawn from `assets/notes.json`
+  plus the chronological index, both drawn from `assets/notes.json`.
+  Clicking a field hub filters the vault to that field rather than
+  leaving for the work page, and the filter is mirrored into the URL,
+  so `notes.html#field-robotics` is a shareable filtered view
 - `notes/*.html` · one page per note; `notes/_template.html` is the
   copy-me scaffold (underscore keeps it out of audit, stamp, and sitemap)
 - `assets/og-card.html` · source artwork for the 1200x630 share card,
