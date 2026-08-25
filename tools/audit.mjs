@@ -25,7 +25,7 @@ const PORT = 8899;
    notes/_template.html, and stay out. */
 async function discoverPages() {
   const out = [];
-  for (const dir of ['', 'work', 'notes']) {
+  for (const dir of ['', 'work', 'notes', 'socials']) {
     let entries = [];
     try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
     for (const f of entries) {
@@ -52,9 +52,19 @@ function serve() {
   return new Promise((resolve) => {
     const server = createServer(async (req, res) => {
       const path = decodeURIComponent(req.url.split('?')[0]);
-      const file = join(ROOT, path === '/' ? 'index.html' : path);
+      let file = join(ROOT, path === '/' ? 'index.html' : path);
       try {
-        const body = await readFile(file);
+        /* Pages resolves a directory to its index.html and 301s the
+           trailing slash on. Without that here, /socials/ is a 404 in the
+           audit while it is the real published URL in production, so a
+           correct link to it would fail the build. */
+        let body;
+        try {
+          body = await readFile(file);
+        } catch {
+          file = join(file, 'index.html');
+          body = await readFile(file);
+        }
         res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
         res.end(body);
       } catch {
