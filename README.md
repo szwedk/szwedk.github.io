@@ -25,6 +25,20 @@ ScrollTrigger + Lenis are vendored in `vendor/`, fonts are self-hosted in
   so `notes.html#field-robotics` is a shareable filtered view
 - `notes/*.html` · one page per note; `notes/_template.html` is the
   copy-me scaffold (underscore keeps it out of audit, stamp, and sitemap)
+- `socials/index.html` · the link hub, a bento page for social bios.
+  Standalone by design: it does not load `css/style.css`, it owns
+  `css/socials.css`, and it borrows only the brand layer. It carries
+  `noindex`, is absent from `sitemap.xml`, and nothing on the site links
+  to it, so search engines that honour noindex will not list it. That is
+  unlisted, not secret: this repository is public, so the path is visible
+  to anyone reading the file tree, and static hosting has no access
+  control. A card goes live the moment you paste `href`, `target`, and
+  `rel` into its `<a>`; with no href it renders as a placeholder, via a
+  CSS attribute selector rather than any JavaScript
+- `assets/og-socials.jpg` · the share card for the link hub, 1200x630.
+  Raster artwork, so there is no HTML source to re-screenshot the way
+  `og-card.html` works: to change it, export a new 1200x630 image over
+  the same path
 - `assets/og-card.html` · source artwork for the 1200x630 share card,
   screenshot it to regenerate `assets/og-card.jpg`
 - `assets/robot-kinematics.json` · link lengths and joint limits parsed
@@ -69,7 +83,7 @@ node tools/stamp.mjs      bump every ?v= stamp to one number
 node tools/audit.mjs      load every page and fail on anything broken
 ```
 
-The audit discovers every page (root, work/, notes/) and walks each one
+The audit discovers every page (root, work/, notes/, socials/) and walks each one
 in headless chromium, exiting non-zero
 on dead links, uncaught exceptions, console errors, 4xx responses,
 missing alt text, duplicate ids, heading-level jumps, controls with no

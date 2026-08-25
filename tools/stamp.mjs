@@ -21,7 +21,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 /* discovered, not listed: underscore-prefixed files are scaffolding */
 async function discoverPages() {
   const out = [];
-  for (const dir of ['', 'work', 'notes']) {
+  for (const dir of ['', 'work', 'notes', 'socials']) {
     let entries = [];
     try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
     for (const f of entries) {

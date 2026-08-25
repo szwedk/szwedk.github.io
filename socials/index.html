@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Links &middot; Kamil Szwed</title>
+  <meta name="description" content="Every place Kamil Szwed posts, in one page: YouTube, TikTok, Instagram, LinkedIn, X, GitHub, and kamilszwed.com." />
+
+  <!-- Unlisted, not private. noindex keeps it out of the search engines
+       that honour it, it is absent from sitemap.xml, and nothing on the
+       site links to it. It is not secret, though: the repository serving
+       this site is public, so the path is visible to anyone reading the
+       file tree. Anyone holding the URL can open it, which is the point,
+       since it is meant to live in a social bio. Static hosting offers no
+       access control. -->
+  <meta name="robots" content="noindex" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kamilszwed.com/socials/" />
+  <meta property="og:title" content="Kamil Szwed &middot; Links" />
+  <meta property="og:description" content="One place. Everything I make. Robots, web, photo, brand." />
+  <meta property="og:image" content="https://kamilszwed.com/assets/og-socials.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamil Szwed. One place. Everything I make." />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+  <!-- Standalone on purpose: this page does not load css/style.css. -->
+  <link rel="stylesheet" href="/css/socials.css?v=31" />
+
+  <script>
+    /* The home page switch writes ks-motion; honour it here before first
+       paint so motion off there stays off here. Explicit choice outranks
+       the OS preference either way. */
+    (function () {
+      var stored = null;
+      try { stored = window.localStorage.getItem('ks-motion'); } catch (e) { stored = null; }
+      var still = stored
+        ? stored === 'off'
+        : window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.documentElement.className += still ? ' no-motion' : ' motion-on';
+    })();
+  </script>
+</head>
+<body>
+
+  <main>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <div class="shell">
+
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Kamil Szwed, top of page">
+          <span class="brand-mark" aria-hidden="true">KS</span>
+          <span class="brand-copy">
+            <span class="brand-name">Kamil Szwed</span>
+            <span class="brand-sub">Build &middot; Deploy &middot; Support</span>
+          </span>
+        </a>
+        <span class="available"><span class="dot" aria-hidden="true"></span> New York &middot; Worldwide</span>
+      </header>
+
+      <section class="intro" id="top">
+        <div class="portrait" aria-hidden="true">
+          <span>KS</span>
+          <b>EST. 2026</b>
+        </div>
+        <div class="intro-copy">
+          <p class="kicker">Robots &middot; Web &middot; Photo &middot; Brand</p>
+          <h1>One place.<br /><em>Everything I make.</em></h1>
+          <p class="bio">Humanoid robots in production by day. Websites, apps,
+            photography, and brand work the rest of the time.</p>
+          <div class="role-row">
+            <span>Engineer &middot; Creator &middot; New York</span>
+            <span class="location">Based online &middot; Everywhere</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TO ACTIVATE A CARD: paste this into its <a> tag, just before
+           the closing angle bracket, with the real URL:
+
+               href="https://..." target="_blank" rel="noopener noreferrer"
+
+           The href is the whole switch. With no href the card renders as a
+           placeholder (chip visible, arrow dimmed, no hover lift, not
+           focusable); with one it goes live. Nothing else to edit, no
+           JavaScript involved. target and rel travel with the href because
+           HTML only allows them on an anchor that has one.
+
+           Keep each row adding to twelve columns: 7+5, 4+4+4, 4+8.
+           =================================================================== -->
+      <section class="link-grid" aria-label="Where to find me">
+
+        <a class="link-card youtube featured">
+          <div class="card-top">
+            <span class="social-mark">YT</span>
+            <span class="arrow" aria-hidden="true">&#8599;</span>
+          </div>
+          <div class="card-copy">
+            <p>Watch</p>
+            <h2>YouTube</h2>
+            <span>Videos, deep dives &amp; new ideas</span>
+          </div>
+          <span class="pending">URL ready to add</span>
+        </a>
+
+        <a class="link-card tiktok">
+          <div class="card-top">
+            <span class="social-mark">TT</span>
+            <span class="arrow" aria-hidden="true">&#8599;</span>
+          </div>
+          <div class="card-copy">
+            <p>Follow</p>
+            <h2>TikTok</h2>
+            <span>Short, sharp &amp; behind the scenes</span>
+          </div>
+          <span class="pending">URL ready to add</span>
+        </a>
+
+        <a class="link-card instagram">
+          <div class="card-top">
+            <span class="social-mark">IG</span>
+            <span class="arrow" aria-hidden="true">&#8599;</span>
+          </div>
+          <div class="card-copy">
+            <p>See the latest</p>
+            <h2>Instagram</h2>
+            <span>Photos, reels &amp; everyday moments</span>
+          </div>
+          <span class="pending">URL ready to add</span>
+        </a>
+
+        <a class="link-card linkedin" href="https://www.linkedin.com/in/kamilszwed006" target="_blank" rel="noopener noreferrer">
+          <div class="card-top">
+            <span class="social-mark">in</span>
+            <span class="arrow" aria-hidden="true">&#8599;</span>
+          </div>
+          <div class="card-copy">
+            <p>Connect</p>
+            <h2>LinkedIn</h2>
+            <span>Work, lessons &amp; professional notes</span>
+          </div>
+          <span class="pending">URL ready to add</span>
+        </a>
+
+        <a class="link-card x">
+          <div class="card-top">
+            <span class="social-mark">X</span>
+            <span class="arrow" aria-hidden="true">&#8599;</span>
+          </div>
+          <div class="card-copy">
+            <p>Think out loud</p>
+            <h2>X</h2>
+            <span>Live thoughts, links &amp; conversations</span>
+          </div>
+          <span class="pending">URL ready to add</span>
+        </a>
+
+        <a class="link-card github" href="https://github.com/szwedk" target="_blank" rel="noopener noreferrer">
+          <div class="card-top">
+            <span class="social-mark">GH</span>
+            <span class="arrow" aria-hidden="true">&#8599;</span>
+          </div>
+          <div class="card-copy">
+            <p>Read the source</p>
+            <h2>GitHub</h2>
+            <span>Repos, experiments &amp; this site itself</span>
+          </div>
+          <span class="pending">URL ready to add</span>
+        </a>
+
+        <div class="link-card note-card">
+          <p class="note-label">The standard</p>
+          <blockquote>&ldquo;The tools keep changing.<br />The standard doesn&rsquo;t.&rdquo;</blockquote>
+          <span class="scribble" aria-hidden="true">KS</span>
+        </div>
+
+      </section>
+
+      <section class="website-strip" aria-label="Personal website">
+        <div>
+          <p>For the full story &middot; @kamilszwed</p>
+          <h2>Building things that move.</h2>
+        </div>
+        <a class="website-button" href="https://kamilszwed.com">Explore kamilszwed.com <span class="arrow" aria-hidden="true">&#8599;</span></a>
+      </section>
+
+      <footer class="hub-foot">
+        <p>&copy; 2026 Kamil Szwed</p>
+        <p>Long Island, New York &middot; Designed and built by hand</p>
+      </footer>
+
+    </div>
+  </main>
+
+</body>
+</html>
