@@ -40,4 +40,24 @@
     <lastmod>2026-07-31</lastmod>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://kamilszwed.com/notes.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kamilszwed.com/notes/capture-point.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://kamilszwed.com/notes/latency-budget.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://kamilszwed.com/notes/no-build-step.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.5</priority>
+  </url>
 </urlset>

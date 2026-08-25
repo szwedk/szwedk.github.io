@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The capture point &middot; Notes &middot; Kamil Szwed</title>
+  <meta name="description" content="Why a shoved humanoid steps where it steps, and the one number that decides it." />
+  <link rel="canonical" href="https://kamilszwed.com/notes/capture-point.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kamilszwed.com/notes/capture-point.html" />
+  <meta property="og:title" content="The capture point &middot; Kamil Szwed" />
+  <meta property="og:description" content="Why a shoved humanoid steps where it steps, and the one number that decides it." />
+  <meta property="og:image" content="https://kamilszwed.com/assets/og-card.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamil Szwed. Building things that move. Robots, web, photo, brand." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../fonts/fonts.css" />
+  <link rel="stylesheet" href="../css/style.css?v=23" />
+</head>
+<body>
+
+  <a class="brand" href="../index.html">
+    <span class="brand-name">Kamil Szwed</span>
+    <span class="brand-sub">BUILD &middot; DEPLOY &middot; SUPPORT</span>
+  </a>
+
+  <header class="site-chrome">
+    <nav class="pill-nav" aria-label="Primary">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../notes.html" class="is-active">Notes</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <section class="page-hero">
+        <a class="back-link" href="../notes.html">&larr;&nbsp; Back to the vault</a>
+        <p class="eyebrow"><span>NOTE &middot; ROBOTICS &middot; 13 AUG 2026</span></p>
+        <h1>The capture<br /><em>point.</em></h1>
+        <p class="page-intro">Why a shoved humanoid steps where it steps, and the one number that decides it.</p>
+      </section>
+
+      <section class="note-body">
+        <div class="note-prose">
+      <p>Push a standing humanoid and something has to decide, in about a tenth
+        of a second, whether it can hold its ground or has to step. The thing
+        that decides is one number.</p>
+      <p>Take where the center of mass is, add how fast it is moving times
+        <code>sqrt(h/g)</code>, and you get a point on the floor called the
+        <strong>capture point</strong>: the spot where, if the robot planted a
+        foot right now, it would come to rest balanced. While that point stays
+        inside the foot it already has on the ground, ankle torque is enough.
+        Push harder and the hips fold and the arms windmill, buying a little
+        angular momentum. Push harder still and the capture point escapes the
+        foot entirely, and the only correct answer left is to step on it.
+        Not near it. On it.</p>
+      <p>I built <a href="../work/robotics.html">a small demo of this</a> with
+        the real link lengths from the Unitree G1 URDF, thigh 194 mm and shin
+        300 mm, and the honest thing about it is how undramatic the math is.
+        Balance looks like reflex and grace from the outside. Inside it is
+        arithmetic: one point, one polygon, and a rule about which side of the
+        line you are on.</p>
+      <p>The part that stays with me from commissioning real humanoids is that
+        falling is not the failure mode. Falling is in the spec. The failure
+        mode is falling <em>without a plan</em>, which is exactly what the
+        capture point exists to prevent. A robot that knows where to step when
+        shoved is a robot you can put in a room with people.</p>
+      </div>
+
+        <footer class="note-linked">
+          <h2>Linked in the vault</h2>
+          <ul>
+            <li><span class="note-linked-kind">Note</span><a href="latency-budget.html">Milliseconds are a budget</a></li>
+            <li><span class="note-linked-kind">Field</span><a href="../work/robotics.html">Robotics</a></li>
+          </ul>
+        </footer>
+      </section>
+    </article>
+
+    <footer class="page-foot">
+      <h2>Read something<br />worth <em>arguing?</em></h2>
+      <ul class="page-foot-links">
+        <li><a href="mailto:kamilmax06@gmail.com">Email me</a></li>
+        <li><a href="../notes.html">The vault</a></li>
+        <li><a href="../index.html">Home</a></li>
+      </ul>
+    </footer>
+  </main>
+
+  <script src="../vendor/gsap.min.js"></script>
+  <script src="../vendor/ScrollTrigger.min.js"></script>
+  <script src="../vendor/lenis.min.js"></script>
+  <script src="../js/page.js?v=23"></script>
+</body>
+</html>

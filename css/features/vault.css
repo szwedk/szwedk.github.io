@@ -1,0 +1,277 @@
+/* =============================================================================
+   The Vault  ·  [data-ks-vault-graph] + [data-ks-vault-list]
+   The note graph lives on the dark #050505 .feature-band; the note index
+   lives on a paper .projects section. One manifest feeds both.
+   All classes are prefixed ks-vault- to avoid collisions.
+   ========================================================================== */
+
+[data-ks-vault-graph] { color: var(--bone); }
+[data-ks-vault-list] { color: var(--ink); }
+
+/* ---- graph shell --------------------------------------------------------- */
+.ks-vault-graph {
+  display: grid;
+  gap: 22px;
+}
+
+.ks-vault-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 28px;
+}
+
+.ks-vault-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-vault-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.42;
+}
+
+.ks-vault-stage {
+  position: relative;
+  border-top: 1px solid var(--hairline-light);
+  border-bottom: 1px solid var(--hairline-light);
+  padding: 16px 0;
+}
+
+.ks-vault-canvas {
+  display: block;
+  width: 100%;
+  /* explicit height: vault.js sizes its backing store from clientHeight */
+  height: clamp(360px, 56vh, 600px);
+  /* vertical scroll stays with the page; node drags are horizontal-ish */
+  touch-action: pan-y;
+}
+
+/* ---- legend -------------------------------------------------------------- */
+.ks-vault-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.ks-vault-key { white-space: nowrap; }
+
+.ks-vault-sw {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 7px;
+  vertical-align: -1px;
+}
+.ks-vault-sw-note { background: currentColor; }
+.ks-vault-sw-field { border: 1px solid currentColor; }
+.ks-vault-sw-link {
+  width: 22px;
+  height: 0;
+  border-radius: 0;
+  border-top: 1px solid currentColor;
+  vertical-align: 2px;
+}
+
+/* ---- peek card ------------------------------------------------------------
+   A real anchor, so the card itself is clickable. It is positioned by
+   vault.js and clamped inside the stage. */
+.ks-vault-card {
+  position: absolute;
+  z-index: 3;
+  width: min(262px, 82%);
+  display: block;
+  padding: 13px 15px 12px;
+  background: var(--bone);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
+  text-decoration: none;
+  pointer-events: auto;
+}
+.ks-vault-card[hidden] { display: none; }
+
+.ks-vault-card-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+  margin-bottom: 7px;
+}
+
+.ks-vault-card-title {
+  font-size: 1.02rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.ks-vault-card-summary {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.ks-vault-card-summary:empty { display: none; }
+
+.ks-vault-card-open {
+  display: block;
+  margin-top: 9px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+/* ---- note index (paper) --------------------------------------------------- */
+.ks-vault-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 1080px;
+}
+
+.ks-vault-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr) minmax(150px, 20%);
+  column-gap: clamp(18px, 3vw, 48px);
+  align-items: baseline;
+  min-height: 56px;
+  padding: 26px 34px 28px 0;
+  border-top: 1px solid var(--hairline-dark);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+.ks-vault-list li:last-child .ks-vault-row {
+  border-bottom: 1px solid var(--hairline-dark);
+}
+.ks-vault-row:hover,
+.ks-vault-row:focus-visible { background: var(--paper-dim); }
+.ks-vault-row:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+}
+
+.ks-vault-date {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+.ks-vault-title {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.ks-vault-summary {
+  margin-top: 8px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.ks-vault-meta {
+  text-align: right;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.5;
+  line-height: 1.9;
+}
+
+.ks-vault-arrow {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translate(-6px, -50%);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+.ks-vault-row:hover .ks-vault-arrow,
+.ks-vault-row:focus-visible .ks-vault-arrow {
+  transform: translate(0, -50%);
+  opacity: 1;
+}
+
+.ks-vault-footline {
+  max-width: 1080px;
+  margin-top: 26px;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.45;
+}
+
+/* ---- failure line (either mount) ------------------------------------------ */
+.ks-vault-fail-line {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.55;
+}
+
+.ks-vault-fail-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.7;
+}
+.ks-vault-fail-link:hover { opacity: 1; }
+
+/* ---- screen-reader-only note ---------------------------------------------- */
+.ks-vault-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- small screens --------------------------------------------------------- */
+@media (max-width: 720px) {
+  .ks-vault-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 10px;
+    padding: 22px 30px 24px 0;
+  }
+  .ks-vault-meta {
+    text-align: left;
+    line-height: 1.6;
+  }
+}

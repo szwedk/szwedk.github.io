@@ -12,17 +12,26 @@
    node tools/stamp.mjs 21     set every page to exactly 21
    ========================================================================== */
 
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const PAGES = [
-  'index.html', 'brief.html', '404.html',
-  'work/robotics.html', 'work/websites.html', 'work/apps.html',
-  'work/photography.html', 'work/marketing.html', 'work/hardware.html'
-];
+/* discovered, not listed: underscore-prefixed files are scaffolding */
+async function discoverPages() {
+  const out = [];
+  for (const dir of ['', 'work', 'notes']) {
+    let entries = [];
+    try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
+    for (const f of entries) {
+      if (!f.endsWith('.html') || f.startsWith('_')) continue;
+      out.push(dir ? `${dir}/${f}` : f);
+    }
+  }
+  return out.sort();
+}
+const PAGES = await discoverPages();
 
 const explicit = process.argv[2] ? parseInt(process.argv[2], 10) : null;
 if (explicit !== null && (!Number.isInteger(explicit) || explicit < 1)) {

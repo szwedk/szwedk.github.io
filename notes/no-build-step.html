@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No build step &middot; Notes &middot; Kamil Szwed</title>
+  <meta name="description" content="This site is hand-written HTML served exactly as written. That is a feature, and it costs discipline." />
+  <link rel="canonical" href="https://kamilszwed.com/notes/no-build-step.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kamilszwed.com/notes/no-build-step.html" />
+  <meta property="og:title" content="No build step &middot; Kamil Szwed" />
+  <meta property="og:description" content="This site is hand-written HTML served exactly as written. That is a feature, and it costs discipline." />
+  <meta property="og:image" content="https://kamilszwed.com/assets/og-card.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamil Szwed. Building things that move. Robots, web, photo, brand." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../fonts/fonts.css" />
+  <link rel="stylesheet" href="../css/style.css?v=23" />
+</head>
+<body>
+
+  <a class="brand" href="../index.html">
+    <span class="brand-name">Kamil Szwed</span>
+    <span class="brand-sub">BUILD &middot; DEPLOY &middot; SUPPORT</span>
+  </a>
+
+  <header class="site-chrome">
+    <nav class="pill-nav" aria-label="Primary">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../notes.html" class="is-active">Notes</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <section class="page-hero">
+        <a class="back-link" href="../notes.html">&larr;&nbsp; Back to the vault</a>
+        <p class="eyebrow"><span>NOTE &middot; WEBSITES &middot; 13 AUG 2026</span></p>
+        <h1>No build<br /><em>step.</em></h1>
+        <p class="page-intro">This site is hand-written HTML served exactly as written. That is a feature, and it costs discipline.</p>
+      </section>
+
+      <section class="note-body">
+        <div class="note-prose">
+      <p>This site has no bundler, no framework, no compile step, and no
+        node_modules in production. The files you get are the files I wrote.
+        View source and you are reading the actual site, not the exhaust of
+        one.</p>
+      <p>That is a deliberate trade. The animation libraries are vendored as
+        three static files. The fonts are self-hosted. Every interactive demo
+        on the work pages, the <a href="capture-point.html">balance
+        recovery</a>, the gait lab, the parking sandbox, is one hand-written
+        JavaScript file and one stylesheet, mounted by a data attribute and
+        fetched only when you scroll near it. Nothing here can break because
+        a dependency three levels down changed its mind.</p>
+      <p>What it costs is discipline, because nothing is automated for you.
+        Cache-busting stamps have to move in lockstep across every page, so a
+        script bumps them all at once. There is no framework catching broken
+        links or missing alt text, so a headless browser walks every page in
+        CI and fails the push on anything a visitor would notice. The
+        machinery a build step would hide still exists. It is just visible,
+        small, and mine.</p>
+      <p>I would not run a bank on this. For a personal site meant to last
+        years with occasional weekend edits, plain files are the most durable
+        format there is. HTML from 1995 still renders. Nothing built by a
+        toolchain from 2019 does.</p>
+      </div>
+
+        <footer class="note-linked">
+          <h2>Linked in the vault</h2>
+          <ul>
+            <li><span class="note-linked-kind">Note</span><a href="capture-point.html">The capture point</a></li>
+            <li><span class="note-linked-kind">Field</span><a href="../work/websites.html">Websites</a></li>
+          </ul>
+        </footer>
+      </section>
+    </article>
+
+    <footer class="page-foot">
+      <h2>Read something<br />worth <em>arguing?</em></h2>
+      <ul class="page-foot-links">
+        <li><a href="mailto:kamilmax06@gmail.com">Email me</a></li>
+        <li><a href="../notes.html">The vault</a></li>
+        <li><a href="../index.html">Home</a></li>
+      </ul>
+    </footer>
+  </main>
+
+  <script src="../vendor/gsap.min.js"></script>
+  <script src="../vendor/ScrollTrigger.min.js"></script>
+  <script src="../vendor/lenis.min.js"></script>
+  <script src="../js/page.js?v=23"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!--
+  COPY ME to notes/your-slug.html, then:
+  1. fill in title, description, canonical, og:url, eyebrow, h1, prose, linked list
+  2. REMOVE the robots noindex line below
+  3. add the note to assets/notes.json (id, title, date, fields, links, minutes, summary, href)
+  4. add a line to sitemap.xml
+  5. run: node tools/stamp.mjs   then: node tools/audit.mjs
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Note title here &middot; Notes &middot; Kamil Szwed</title>
+  <meta name="robots" content="noindex" />
+  <meta name="description" content="One sentence on what this note argues." />
+  <link rel="canonical" href="https://kamilszwed.com/notes/your-slug-here.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kamilszwed.com/notes/your-slug-here.html" />
+  <meta property="og:title" content="Note title here &middot; Kamil Szwed" />
+  <meta property="og:description" content="One sentence on what this note argues." />
+  <meta property="og:image" content="https://kamilszwed.com/assets/og-card.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamil Szwed. Building things that move. Robots, web, photo, brand." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../fonts/fonts.css" />
+  <link rel="stylesheet" href="../css/style.css?v=22" />
+</head>
+<body>
+
+  <a class="brand" href="../index.html">
+    <span class="brand-name">Kamil Szwed</span>
+    <span class="brand-sub">BUILD &middot; DEPLOY &middot; SUPPORT</span>
+  </a>
+
+  <header class="site-chrome">
+    <nav class="pill-nav" aria-label="Primary">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../notes.html" class="is-active">Notes</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <section class="page-hero">
+        <a class="back-link" href="../notes.html">&larr;&nbsp; Back to the vault</a>
+        <p class="eyebrow"><span>NOTE &middot; FIELD &middot; 1 JAN 2026</span></p>
+        <h1>Headline with a<br />serif <em>kicker.</em></h1>
+        <p class="page-intro">One sentence on what this note argues.</p>
+      </section>
+
+      <section class="note-body">
+        <div class="note-prose">
+      <p>Write here. Keep paragraphs short. Use strong for the load-bearing phrase, code for identifiers, and blockquote for the one line worth pulling out.</p>
+      </div>
+
+        <footer class="note-linked">
+          <h2>Linked in the vault</h2>
+          <ul>
+            <li><span class="note-linked-kind">Note</span><a href="capture-point.html">The capture point</a></li>
+          </ul>
+        </footer>
+      </section>
+    </article>
+
+    <footer class="page-foot">
+      <h2>Read something<br />worth <em>arguing?</em></h2>
+      <ul class="page-foot-links">
+        <li><a href="mailto:kamilmax06@gmail.com">Email me</a></li>
+        <li><a href="../notes.html">The vault</a></li>
+        <li><a href="../index.html">Home</a></li>
+      </ul>
+    </footer>
+  </main>
+
+  <script src="../vendor/gsap.min.js"></script>
+  <script src="../vendor/ScrollTrigger.min.js"></script>
+  <script src="../vendor/lenis.min.js"></script>
+  <script src="../js/page.js?v=22"></script>
+</body>
+</html>

@@ -13,24 +13,29 @@
 
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, readdir } from 'node:fs/promises';
 import { join, extname, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 8899;
 
-const PAGES = [
-  'index.html',
-  'brief.html',
-  '404.html',
-  'work/robotics.html',
-  'work/websites.html',
-  'work/apps.html',
-  'work/photography.html',
-  'work/marketing.html',
-  'work/hardware.html'
-];
+/* Pages are discovered, not listed, so a new note or work page is audited
+   the moment it exists. Underscore-prefixed files are scaffolding, like
+   notes/_template.html, and stay out. */
+async function discoverPages() {
+  const out = [];
+  for (const dir of ['', 'work', 'notes']) {
+    let entries = [];
+    try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
+    for (const f of entries) {
+      if (!f.endsWith('.html') || f.startsWith('_')) continue;
+      out.push(dir ? `${dir}/${f}` : f);
+    }
+  }
+  return out.sort();
+}
+const PAGES = await discoverPages();
 
 const MIME = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
@@ -110,11 +115,14 @@ const domChecks = () => {
     if (id && !document.getElementById(id)) out.push(`anchor points nowhere: ${a.getAttribute('href')}`);
   });
 
-  /* WCAG 2.2 target size (minimum). sr-only helpers are 1px by design. */
+  /* WCAG 2.2 target size (minimum). sr-only helpers are 1px by design,
+     and links flowing inside a sentence are exempt under the rule's own
+     inline exception, so only block-ish targets are measured. */
   document.querySelectorAll('a,button,input,select').forEach(e => {
     const b = e.getBoundingClientRect();
     if (b.width === 0 || b.height === 0) return;
     if (b.width <= 2 && b.height <= 2) return;
+    if (e.tagName === 'A' && getComputedStyle(e).display === 'inline') return;
     if (Math.min(b.width, b.height) < 22) {
       const label = (e.textContent || e.className || e.type || '').trim().slice(0, 30);
       out.push(`tap target ${Math.round(b.width)}x${Math.round(b.height)}: ${label}`);
@@ -191,6 +199,46 @@ for (const page of PAGES) {
   }
 
   await ctx.close();
+}
+
+/* the notes manifest, the files on disk, and the sitemap must agree,
+   or the vault silently drifts as it grows */
+{
+  let manifest = null;
+  try { manifest = JSON.parse(await readFile(join(ROOT, 'assets/notes.json'), 'utf8')); }
+  catch (e) { note('assets/notes.json', `unreadable or invalid JSON: ${e.message}`); }
+  if (manifest) {
+    const fieldIds = new Set((manifest.fields || []).map(f => f.id));
+    const noteIds = new Set((manifest.notes || []).map(n => n.id));
+    for (const f of manifest.fields || []) {
+      await access(join(ROOT, f.href)).catch(() => note('assets/notes.json', `field ${f.id} points at missing ${f.href}`));
+    }
+    for (const n of manifest.notes || []) {
+      await access(join(ROOT, n.href)).catch(() => note('assets/notes.json', `note ${n.id} points at missing ${n.href}`));
+      for (const fid of n.fields || []) {
+        if (!fieldIds.has(fid)) note('assets/notes.json', `note ${n.id} references unknown field ${fid}`);
+      }
+      for (const lid of n.links || []) {
+        if (!noteIds.has(lid)) note('assets/notes.json', `note ${n.id} links to unknown note ${lid}`);
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(n.date || '')) note('assets/notes.json', `note ${n.id} has a malformed date`);
+    }
+    const manifested = new Set((manifest.notes || []).map(n => n.href));
+    for (const page of PAGES) {
+      if (page.startsWith('notes/') && !manifested.has(page)) {
+        note(page, 'exists on disk but is missing from assets/notes.json, so the vault will not show it');
+      }
+    }
+  }
+
+  /* every indexable page belongs in the sitemap */
+  const sitemap = await readFile(join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const page of PAGES) {
+    const html = await readFile(join(ROOT, page), 'utf8');
+    if (/name="robots"[^>]*noindex/.test(html)) continue;
+    const loc = page === 'index.html' ? 'https://kamilszwed.com/' : `https://kamilszwed.com/${page}`;
+    if (!sitemap.includes(`<loc>${loc}</loc>`)) note(page, 'not listed in sitemap.xml');
+  }
 }
 
 /* sitemap entries must all resolve */

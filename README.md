@@ -18,6 +18,10 @@ ScrollTrigger + Lenis are vendored in `vendor/`, fonts are self-hosted in
   brief into an email; no backend, nothing stored
 - `404.html` · the page that dissolves; all URLs root-absolute because
   Pages serves it from whatever missing path was requested
+- `notes.html` · the vault: an Obsidian-style force graph of every note
+  plus the chronological index, both drawn from `assets/notes.json`
+- `notes/*.html` · one page per note; `notes/_template.html` is the
+  copy-me scaffold (underscore keeps it out of audit, stamp, and sitemap)
 - `assets/og-card.html` · source artwork for the 1200x630 share card,
   screenshot it to regenerate `assets/og-card.jpg`
 - `assets/robot-kinematics.json` · link lengths and joint limits parsed
@@ -62,13 +66,28 @@ node tools/stamp.mjs      bump every ?v= stamp to one number
 node tools/audit.mjs      load every page and fail on anything broken
 ```
 
-The audit runs headless chromium over all nine pages and exits non-zero
+The audit discovers every page (root, work/, notes/) and walks each one
+in headless chromium, exiting non-zero
 on dead links, uncaught exceptions, console errors, 4xx responses,
 missing alt text, duplicate ids, heading-level jumps, controls with no
 accessible name, sub-24px tap targets, missing metadata, unresolvable
 sitemap entries, and drifted cache stamps. `.github/workflows/audit.yml`
 runs it plus a syntax check and an em-dash sweep on every push and pull
 request.
+
+## Adding a note
+
+1. Copy `notes/_template.html` to `notes/your-slug.html` and follow the
+   checklist in its top comment (title, canonical, prose, linked list,
+   remove the noindex line).
+2. Add the note to `assets/notes.json`: id, title, date, fields, links,
+   minutes, summary, href. The graph and the list both draw from this
+   file, so a note that is not in it does not exist.
+3. Add a `<url>` line to `sitemap.xml`.
+4. Run `node tools/stamp.mjs` then `node tools/audit.mjs`. The audit
+   cross-checks the manifest against the files on disk and the sitemap,
+   so a missed step fails the build instead of shipping a half-wired
+   note.
 
 ## Adding a project
 
