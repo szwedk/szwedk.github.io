@@ -34,6 +34,13 @@ jobs:
       # to match under some locales, which made this pass locally while the
       # runner correctly failed. Scoped to tracked files so a stray
       # node_modules cannot fail the build.
+      #
+      # The escape hatches are checked too. Six em dashes in wordmark.js had
+      # been rewritten as the literal text \u2014 inside block comments, where
+      # an escape means nothing and a human reads six characters of noise, and
+      # one in gait-lab.js as a double hyphen. That is laundering the mark
+      # past the grep rather than rewriting the sentence, so the grep now
+      # catches it and the sentence has to be rewritten.
       - name: No em dashes in shipped text
         run: |
           hits=$(git ls-files -z '*.html' '*.css' '*.js' \
@@ -41,6 +48,14 @@ jobs:
           if [ -n "$hits" ]; then
             echo "em dash found in:"
             echo "$hits"
+            exit 1
+          fi
+          laundered=$(git ls-files -z '*.html' '*.css' '*.js' \
+                 | xargs -0 grep -nE '\\u2014|[a-z] -- [a-z]' 2>/dev/null | grep -v '^vendor/' || true)
+          if [ -n "$laundered" ]; then
+            echo "em dash smuggled past the check as an escape or a double hyphen:"
+            echo "$laundered"
+            echo "Rewrite the sentence instead."
             exit 1
           fi
 

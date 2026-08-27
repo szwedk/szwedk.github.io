@@ -1,8 +1,8 @@
 /* =============================================================================
-   Wordmark, reprinted  \u2014  [data-ks-wordmark]
+   Wordmark, reprinted  ·  [data-ks-wordmark]
    -----------------------------------------------------------------------------
    Press and hold the footer wordmark: the rendered name dissolves and is then
-   re-printed on screen as a simulated FDM slicer preview \u2014 outer perimeter,
+   re-printed on screen as a simulated FDM slicer preview: outer perimeter,
    inner perimeter, 45-degree infill, layer by layer, with a live telemetry
    readout.
 
@@ -85,7 +85,7 @@
     return s;
   }
 
-  /* hh:mm:ss -- the format a slicer shows for "time remaining" */
+  /* hh:mm:ss, the format a slicer shows for "time remaining" */
   function clock(seconds) {
     var s = Math.max(0, Math.ceil(seconds));
     var h = Math.floor(s / 3600);
@@ -170,7 +170,7 @@
   /* Separable [1,2,1] blur, in place.
 
      A distance field is locally linear with unit slope, and a symmetric kernel
-     leaves a linear ramp untouched -- so this does not shift a straight edge by
+     leaves a linear ramp untouched, so this does not shift a straight edge by
      even a thousandth of a pixel (verified). What it does remove is the
      half-pixel staircase the tracer inherits from a binary mask, which is
      exactly the high-frequency noise we do not want on a curved letterform.
@@ -234,7 +234,7 @@
   /* Marching squares, chained into closed contours.
 
      Every crossed grid edge carries exactly one contour point, so we key the
-     chain on edge identity rather than on coordinates \u2014 no floating-point
+     chain on edge identity rather than on coordinates: no floating-point
      endpoint matching, and each edge provably has one outgoing and one
      incoming segment. Segments are emitted with the solid on the right, which
      makes outer contours clockwise and holes counter-clockwise, as a slicer
@@ -615,7 +615,7 @@
   /* --- ks-wordmark:geometry:end --- */
 
   /* ---------------------------------------------------------------------------
-     Text rasterisation \u2014 the only place the geometry meets the DOM
+     Text rasterisation, the only place the geometry meets the DOM
      --------------------------------------------------------------------------- */
 
   function fontSpec(px, family) {
@@ -625,7 +625,7 @@
   function applyTracking(ctx, px) {
     if ('letterSpacing' in ctx) {
       try { ctx.letterSpacing = (TRACK_EM * px).toFixed(2) + 'px'; }
-      catch (err) { /* older engines reject the setter \u2014 default tracking */ }
+      catch (err) { /* older engines reject the setter, default tracking */ }
     }
   }
 
@@ -1043,7 +1043,7 @@
       ctx.restore();
     }
 
-    /* Tint whatever ink is already on the canvas -- the cooling shimmer. */
+    /* Tint whatever ink is already on the canvas: the cooling shimmer. */
     function warmTint(strength, sweep) {
       if (strength <= 0.002) return;
       ctx.save();
@@ -1073,7 +1073,7 @@
 
     /* The wordmark mid-un-print: a feathered erase sweeping down from above.
        k = 0 leaves it whole, k = 1 clears it. Being a pure function of k, it
-       plays backwards just as well -- which is what an early release does. */
+       plays backwards just as well, which is what an early release does. */
     function renderDissolve(k) {
       resetCtx(ctx);
       ctx.clearRect(0, 0, cssW, cssH);
@@ -1298,7 +1298,7 @@
         return;
       }
 
-      /* one layer, drawn in full -- no rise, no loop, no timers */
+      /* one layer, drawn in full: no rise, no loop, no timers */
       var path = geo.layerA;
       var cut = step === 1 ? perimeterCost(path) : path.cost;
       enterGeom(ctx, 0);
@@ -1352,7 +1352,7 @@
       startLoop();
     }
 
-    /* Early release cancels, per the interaction spec -- but only while the
+    /* Early release cancels, per the interaction spec, but only while the
        part is still going down. Once cooling starts, let it finish. */
     function release(silent) {
       if (state !== STATE_DISSOLVE && state !== STATE_PRINT) return;
@@ -1419,7 +1419,7 @@
     }
 
     /* Keyboard: Enter/Space starts the same print. It LATCHES rather than
-       requiring a physical hold \u2014 key repeat makes a real hold unreliable, and
+       requiring a physical hold: key repeat makes a real hold unreliable, and
        WCAG discourages hold-to-operate as the only route. Escape or blur
        cancels, which is the keyboard equivalent of letting go. */
     stage.addEventListener('keydown', function (e) {

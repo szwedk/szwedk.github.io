@@ -1,25 +1,11 @@
 /* =============================================================================
-   The link hub's interaction layer.  /socials only.
+   /socials link-hub interaction layer.  No dependencies.
 
-   Four behaviours, one file, no dependencies:
-
-     press    a card behaves like a panel pinned at its centre. It tilts
-              toward the contact point, sinks, its shadow tightens, and its
-              neighbours give way to a press they did not receive.
-     receipt  a committed tap fills the arrow and sweeps a bar along the
-              card's bottom edge, so the visitor can see the tap landed
-              during the dead second before a new tab paints on cell data.
-     thumb    a band across the middle of the viewport lights whichever
-              cards cross it. This is the touch substitute for hover, which
-              does not exist on the devices most of this page's traffic uses.
-     tray     the six sockets on the pull quote fill in as you actually go
-              to the platforms, one marble each, kept in this browser only.
-
-   Everything here is additive. With JavaScript off, none of these classes are
-   ever set and the page is what it always was: six anchors on a grid. Every
-   behaviour also has a still-mode form, because a press is a response to
-   input rather than autonomous animation, and deleting the response would
-   make still mode worse than motion mode instead of calmer.
+   Adds four things on top of the six anchors already on the grid: a press
+   tilt, a tap receipt, an on-scroll lit state for touch (there is no hover
+   there), and a per-platform tray in localStorage. All of it is class
+   toggles, so with JavaScript off the page is unchanged. Still mode keeps
+   every state and drops every transition.
    ========================================================================== */
 
 (function () {
@@ -74,8 +60,8 @@
     var map = read('ks-hub-opened', {}) || {};
     var now = Date.now();
     var out = {};
-    /* a stamp that is weeks old reads as scolding rather than as a record,
-       so it expires rather than accumulating forever */
+    /* the tray is a record of recent visits, not a permanent ledger, so a
+       stamp older than KEEP is dropped rather than kept forever */
     for (var k in map) {
       if (Object.prototype.hasOwnProperty.call(map, k) &&
           PLATFORMS.indexOf(k) !== -1 &&
@@ -200,8 +186,7 @@
     var touch = window.matchMedia && window.matchMedia('(hover: none)').matches;
     if (!touch) { return; }
     if (still || !('IntersectionObserver' in window)) {
-      /* nothing is moving anyway, so label every live card at once. That is
-         arguably the more useful page. */
+      /* nothing is moving anyway, so light every live card at once */
       links.forEach(function (c) { c.classList.add('is-lit'); });
       return;
     }
@@ -228,7 +213,9 @@
   })();
 
   /* =========================================================================
-     THE HONEST DOT.  The green dot meant nothing. Now it means the hour.
+     AVAILABILITY PILL.  Prints the current New York time and dims the dot
+     outside 07:00 to 23:00. Bails entirely if the build has no tz data,
+     rather than silently showing the visitor's own clock.
      ====================================================================== */
   (function () {
     var pill = document.querySelector('.available');

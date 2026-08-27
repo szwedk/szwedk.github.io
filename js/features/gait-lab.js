@@ -1,5 +1,5 @@
 /* =============================================================================
-   GAIT LAB  --  [data-ks-gait-lab]
+   GAIT LAB  ·  [data-ks-gait-lab]
    -----------------------------------------------------------------------------
    A side-view, line-drawn quadruped trotting in place on a scrolling ground
    rule, with a Muybridge-style footfall (Hildebrand) diagram underneath.
@@ -16,7 +16,7 @@
    not telemetry from a real robot, and the on-screen credit says so.
 
    The URDF gives front-leg limits (FR_*) only, so those are applied to all four
-   legs -- stated here rather than quietly glossed over. Trunk depth, the head
+   legs, stated here rather than quietly glossed over. Trunk depth, the head
    pod and the oblique offset of the far leg pair are drawing decisions, not
    URDF data.
 
@@ -24,7 +24,7 @@
    -------------------------
    * Foot trajectories: stance is a straight backward sweep along the ground;
      swing is a cubic Bezier whose end tangents match the stance direction, so
-     the foot lifts off and touches down moving backward -- no velocity step.
+     the foot lifts off and touches down moving backward: no velocity step.
    * Legs are solved with analytic 2-link IK (law of cosines) and clamped to the
      real URDF joint ranges. The calf limit becomes a reachable hip-to-foot
      distance band; the thigh limit is checked in the body frame and, if hit,
@@ -46,7 +46,7 @@
   window.__ksGaitLabLoaded = true;
 
   /* ===========================================================================
-     1.  Kinematics -- real numbers, with an inlined fallback
+     1.  Kinematics: real numbers, with an inlined fallback
      ======================================================================== */
 
   /* Mirrors the "go2" block of /assets/robot-kinematics.json verbatim, so the
@@ -54,10 +54,10 @@
   var FALLBACK = {
     label: 'Unitree Go2',
     links: {
-      thigh: 0.213,             /* m -- hip pitch axis to knee axis           */
-      calf: 0.213,              /* m -- knee axis to foot                     */
-      bodyLengthHalf: 0.1934,   /* m -- trunk centre to hip axis (URDF origin)*/
-      bodyWidthHalf: 0.142      /* m -- trunk centre to hip axis, lateral     */
+      thigh: 0.213,             /* m: hip pitch axis to knee axis            */
+      calf: 0.213,              /* m: knee axis to foot                      */
+      bodyLengthHalf: 0.1934,   /* m: trunk centre to hip axis (URDF origin) */
+      bodyWidthHalf: 0.142      /* m: trunk centre to hip axis, lateral      */
     },
     limits: {
       FR_hip_joint:   { lower: -1.0472, upper: 1.0472,   effort: 23.7 },
@@ -190,10 +190,10 @@
   var S_PITCH = 120;   /* attitude controller stiffness                       */
   var C_PITCH = 9;     /* attitude damping                                    */
 
-  var TRUNK_HALF_DEPTH = 0.056; /* m -- drawn, not URDF                       */
-  var HEAD_LEN         = 0.085; /* m -- drawn, not URDF                       */
+  var TRUNK_HALF_DEPTH = 0.056; /* m: drawn, not URDF                        */
+  var HEAD_LEN         = 0.085; /* m: drawn, not URDF                        */
   var OBLIQUE_X        = 0.13;  /* far pair offset, as a fraction of the      */
-  var OBLIQUE_Y        = -0.15; /* body width -- a drawing decision           */
+  var OBLIQUE_Y        = -0.15; /* body width: a drawing decision            */
 
   var CHART_CYCLES = 3;         /* width of the scrolling footfall window     */
 
@@ -395,7 +395,7 @@
     readout.appendChild(flag);
     root.appendChild(readout);
 
-    /* Debounced, settled description for assistive tech -- the visible
+    /* Debounced, settled description for assistive tech; the visible
        readout churns far too fast to live-announce. */
     var status = el('p', 'ks-gait-lab-sr');
     status.setAttribute('role', 'status');
@@ -459,7 +459,7 @@
     }
 
     /* ===========================================================================
-       7.  Kinematics -- derived constants and the IK
+       7.  Kinematics: derived constants and the IK
        ======================================================================== */
 
     function refreshKinematics() {
@@ -518,7 +518,7 @@
       var kdx = Math.cos(th), kdy = Math.sin(th);
 
       /* Thigh angle in the body frame: measured from body-down, positive
-         rotates the knee rearward. Matches the URDF sign convention -- the
+         rotates the knee rearward. Matches the URDF sign convention, where the
          nominal Go2 stand (thigh 0.9, calf -1.8) reproduces exactly this. */
       var qt = Math.atan2(-(kdx * fxu + kdy * fyu), kdx * dxu + kdy * dyu);
       var qc = clamp(qt, THIGH_LO, THIGH_HI);
@@ -549,7 +549,7 @@
 
     /* Swing trajectory, in metres relative to the leg's neutral stance point.
        A cubic Bezier whose first and last control legs point backward, so the
-       foot leaves and lands moving with the stance sweep -- continuous velocity
+       foot leaves and lands moving with the stance sweep, so velocity stays continuous
        at both liftoff and touchdown. Apex height works out to ~0.99 * stepH. */
     var bez = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
     function swingCtrl() {
@@ -591,7 +591,7 @@
 
       swingCtrl();
 
-      /* Minimum feet in contact anywhere in the cycle -- sampled once per
+      /* Minimum feet in contact anywhere in the cycle, sampled once per
          control change, not per frame. */
       minContact = 4;
       for (var s = 0; s < 240; s++) {
@@ -965,8 +965,8 @@
        the model figures are labelled as such. */
     function drawAnnotations(ctx, cx, cy, fxu, fyu, dxu, dyu) {
       var lp = labelPx();
-      var lf = sol[0];   /* left fore -- the near front leg */
-      var lh = sol[2];   /* left hind -- the near rear leg  */
+      var lf = sol[0];   /* left fore: the near front leg */
+      var lh = sol[2];   /* left hind: the near rear leg  */
 
       ctx.strokeStyle = ink(0.30);
       ctx.lineWidth = 1;

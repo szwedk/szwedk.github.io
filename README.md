@@ -58,6 +58,11 @@ does nothing if the attribute is absent.
 | The Contact Sheet | `data-ks-contact-sheet` | work/photography.html |
 | Wordmark Reprint | `data-ks-wordmark` | work/hardware.html |
 | The Brief | `data-ks-brief` | brief.html |
+| The Latency Budget | `data-ks-teleop` | work/robotics.html |
+| Is It Real Yet? | `data-ks-significance` | work/marketing.html |
+| The Vault graph | `data-ks-vault-graph` | notes.html |
+| The Vault index | `data-ks-vault-list` | notes.html |
+| Link hub interactions | none (auto) | socials/index.html |
 | GO2 | none (type `go2`) | index.html |
 
 The robot demos use the real URDF numbers from
