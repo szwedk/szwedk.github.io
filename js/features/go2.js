@@ -737,7 +737,7 @@
 
     /* Rides in the robot's own band, on its trailing side. The canvas
        composites with mix-blend-mode difference, so the block is only legible
-       over clear space -- and the clear space that reliably exists is the strip
+       over clear space, and the clear space that reliably exists is the strip
        the robot is already walking through (it walks along section rules, which
        sit in the gutter between content rows). Anchoring level with the body,
        rather than a fixed height above it, keeps the block inside that gutter

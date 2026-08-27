@@ -892,8 +892,7 @@
 
     function navigate(nd) {
       if (nd.kind === 'hub') {
-        /* a lens, not an exit: filter the vault and let the list below
-           show what the field actually holds */
+        /* hubs filter in place; only notes navigate */
         Filter.toggle(nd.ref.id);
         return;
       }

@@ -7,13 +7,13 @@
 
    The canvas is painted by js/features/wordmark.js. Until that script has the
    font measured and the geometry derived, .ks-wordmark-text is a plain visible
-   wordmark -- so the footer never renders empty, and if the script never runs
+   wordmark, so the footer never renders empty, and if the script never runs
    at all the name simply stays as type.
    ============================================================================= */
 
 [data-ks-wordmark] {
   /* hot-end tint for the freshly extruded bead and the cooling shimmer.
-     Read by the script via getComputedStyle -- override it to retune. */
+     Read by the script via getComputedStyle; override it to retune. */
   --ks-wordmark-hot: 246, 214, 170;
 
   display: block;
@@ -184,7 +184,7 @@
 
 /* ============ Light surfaces ============
    The feature is specified for the dark footer, but nothing stops it being
-   mounted on paper -- so honour an explicit opt-in rather than guessing. */
+   mounted on paper, so honour an explicit opt-in rather than guessing. */
 
 [data-ks-wordmark].ks-wordmark-on-paper,
 [data-ks-wordmark].ks-wordmark-on-paper .ks-wordmark-text,
@@ -201,7 +201,7 @@
 
 /* ============ Reduced motion ============
    The script switches to three instant states and never starts a frame loop,
-   so there is no animation here to disable. Nothing else to do -- the hover
+   so there is no animation here to disable. Nothing else to do: the hover
    fade on the hint is a 0.25s opacity change on a static element. */
 
 @media (prefers-reduced-motion: reduce) {

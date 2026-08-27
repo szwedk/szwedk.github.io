@@ -101,7 +101,7 @@
     head.appendChild(el('p', 'ks-contact-sheet-eyebrow',
       'The contact sheet · the edit is the craft'));
     head.appendChild(el('p', 'ks-contact-sheet-credit',
-      'Every wedding comes home as a marked sheet'));
+      'Drawn in the browser, marked like the real roll'));
     root.appendChild(head);
 
     var stage = el('div', 'ks-contact-sheet-stage');
@@ -408,7 +408,7 @@
 
       /* sheet annotation, top band */
       var topY = eb * 0.68 + ep * 0.36;
-      tracked(ctx, 'KAMIL SZWED · WEDDING · ROLL 07', 0, topY, ep, 0.5, -1);
+      tracked(ctx, 'KAMIL SZWED · TEST ROLL · 001', 0, topY, ep, 0.5, -1);
       tracked(ctx, 'TRI-X 400', W * 0.62, topY, ep, 0.42, 0);
       tracked(ctx, 'TRI-X 400', W, topY, ep, 0.42, 1);
 

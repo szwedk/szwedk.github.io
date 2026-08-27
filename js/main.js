@@ -51,8 +51,7 @@
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* Private browsing and locked-down storage both throw on access, so every
-     read and write is guarded. A site that will not load without localStorage
-     is a site that does not load. */
+     read and write is guarded. */
   var MOTION_KEY = 'ks-motion';
   var HINT_KEY = 'ks-motion-hint-seen';
   function readStore(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
@@ -475,9 +474,7 @@
         break;
       }
     }
-    window.__dbg = { lenis: lenis, engage: engageSnap, events: 0 };
     lenis.on('scroll', function () {
-      window.__dbg.events++;
       if (snapLock) return;
       engageSnap(true);
       if (snapTimer) clearTimeout(snapTimer);

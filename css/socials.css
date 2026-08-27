@@ -110,14 +110,12 @@ main::before {
 .portrait::before { width: 76%; height: 1px; transform: rotate(36deg); }
 .portrait::after { height: 76%; width: 1px; transform: rotate(36deg); }
 .portrait span { font: 750 58px/1 var(--font-sans); letter-spacing: -0.05em; z-index: 1; }
-.portrait b { position: absolute; bottom: 20px; font-size: 9px; letter-spacing: 0.16em; }
 
 .kicker { margin: 0 0 22px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 h1 { max-width: 900px; font: 550 clamp(50px, 8vw, 96px)/0.94 var(--font-sans); letter-spacing: -0.035em; text-wrap: balance; }
 h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: 0.005em; }
 .bio { max-width: 560px; margin: 30px 0 32px; font-size: clamp(16px, 1.8vw, 20px); line-height: 1.55; letter-spacing: -0.012em; color: var(--ink-soft); }
 .role-row { display: flex; flex-wrap: wrap; gap: 12px 26px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; }
-.location { color: #6a6861; }
 
 /* ---- the bento grid -----------------------------------------------------
    Three rows of twelve: 7+5, 4+4+4, 4+8. Change a span and the row it sits
@@ -294,7 +292,6 @@ a.link-card:not([href]) .arrow { opacity: 0.32; }
   .intro { grid-template-columns: 1fr; gap: 40px; padding: 54px 0 52px; }
   .portrait { width: 132px; border-radius: 70px 70px 10px 10px; box-shadow: 0 18px 42px rgba(11, 11, 12, 0.16); }
   .portrait span { font-size: 38px; }
-  .portrait b { bottom: 13px; font-size: 7px; }
   h1 { font-size: clamp(46px, 14.5vw, 78px); }
   .bio { margin: 24px 0; }
   .link-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -319,11 +316,7 @@ a.link-card:not([href]) .arrow { opacity: 0.32; }
   .hub-foot { align-items: flex-start; flex-direction: column; justify-content: center; }
 }
 
-/* ---- interaction --------------------------------------------------------
-   Four behaviours, all driven by js/features/hub.js, all optional: with
-   JavaScript off none of these classes are ever set and the page is exactly
-   what it was, six anchors on a grid.
-   ========================================================================= */
+/* ---- interaction, driven by js/features/hub.js -------------------------- */
 
 /* perspective has to live on the grid, not the card, or each card gets its
    own vanishing point and the tilt reads flat */
