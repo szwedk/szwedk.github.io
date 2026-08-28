@@ -319,3 +319,38 @@
   outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
+
+/* ---- reserved height -----------------------------------------------------
+   This mount is empty until its script lands, and the script is lazy, so the
+   box grew from zero the moment it mounted and shoved everything below it
+   down the page. Measured on a throttled phone before this: notes.html was
+   CLS 0.67 and work/robotics.html 0.59, against a 0.1 threshold.
+
+   The numbers are the module's own measured built height at each width, not
+   estimates. The scripting guard matters: with JavaScript off the feature
+   never arrives, and reserving space for it would leave a hole instead of
+   the nothing that is there today.
+   ------------------------------------------------------------------------ */
+@media (scripting: enabled) {
+  [data-ks-vault-graph] { min-height: 605px; }
+}
+@media (scripting: enabled) and (max-width: 640px) {
+  [data-ks-vault-graph] { min-height: 647px; }
+}
+
+/* ---- reserved list height ------------------------------------------------
+   The note index is an empty div until vault.js renders it, so it grew from
+   zero and shoved the footer down: this was the last 0.24 of notes.html's
+   CLS after the graph above was reserved.
+
+   A fixed height would go stale the first time a note is added, which is the
+   failure this repository keeps having, so it is derived instead: measured
+   per-note height times the count in --ks-notes, which the audit checks
+   against assets/notes.json.
+   ------------------------------------------------------------------------ */
+@media (scripting: enabled) {
+  [data-ks-vault-list] { min-height: calc(var(--ks-notes, 3) * 134px); }
+}
+@media (scripting: enabled) and (max-width: 640px) {
+  [data-ks-vault-list] { min-height: calc(var(--ks-notes, 3) * 193px); }
+}
