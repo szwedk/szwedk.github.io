@@ -1,19 +1,47 @@
 {
   "fields": [
-    { "id": "robotics",    "label": "Robotics",    "href": "work/robotics.html" },
-    { "id": "websites",    "label": "Websites",    "href": "work/websites.html" },
-    { "id": "apps",        "label": "Apps",        "href": "work/apps.html" },
-    { "id": "photography", "label": "Photography", "href": "work/photography.html" },
-    { "id": "marketing",   "label": "Marketing",   "href": "work/marketing.html" },
-    { "id": "hardware",    "label": "Hardware",    "href": "work/hardware.html" }
+    {
+      "id": "robotics",
+      "label": "Robotics",
+      "href": "work/robotics.html"
+    },
+    {
+      "id": "websites",
+      "label": "Websites",
+      "href": "work/websites.html"
+    },
+    {
+      "id": "apps",
+      "label": "Apps",
+      "href": "work/apps.html"
+    },
+    {
+      "id": "photography",
+      "label": "Photography",
+      "href": "work/photography.html"
+    },
+    {
+      "id": "marketing",
+      "label": "Marketing",
+      "href": "work/marketing.html"
+    },
+    {
+      "id": "hardware",
+      "label": "Hardware",
+      "href": "work/hardware.html"
+    }
   ],
   "notes": [
     {
       "id": "capture-point",
       "title": "The capture point",
       "date": "2026-08-13",
-      "fields": ["robotics"],
-      "links": ["latency-budget"],
+      "fields": [
+        "robotics"
+      ],
+      "links": [
+        "latency-budget"
+      ],
       "minutes": 3,
       "summary": "Why a shoved humanoid steps where it steps, and the one number that decides it.",
       "href": "notes/capture-point.html"
@@ -22,8 +50,13 @@
       "id": "latency-budget",
       "title": "Milliseconds are a budget",
       "date": "2026-08-13",
-      "fields": ["robotics"],
-      "links": ["capture-point"],
+      "fields": [
+        "robotics"
+      ],
+      "links": [
+        "capture-point",
+        "g1-custom-sounds"
+      ],
       "minutes": 4,
       "summary": "Teleoperation lag is not one number. It is seven, and only one of them is negotiable.",
       "href": "notes/latency-budget.html"
@@ -32,11 +65,29 @@
       "id": "no-build-step",
       "title": "No build step",
       "date": "2026-08-13",
-      "fields": ["websites"],
-      "links": ["capture-point"],
+      "fields": [
+        "websites"
+      ],
+      "links": [
+        "capture-point"
+      ],
       "minutes": 3,
       "summary": "This site is hand-written HTML served exactly as written. That is a feature, and it costs discipline.",
       "href": "notes/no-build-step.html"
+    },
+    {
+      "id": "g1-custom-sounds",
+      "title": "The Unitree G1's voice isn't a file",
+      "date": "2026-08-28",
+      "fields": [
+        "robotics"
+      ],
+      "links": [
+        "latency-budget"
+      ],
+      "minutes": 9,
+      "summary": "The prompts are synthesized at runtime and the chest speaker belongs to a second computer, so the file replacement plan was wrong from the start.",
+      "href": "notes/g1-custom-sounds.html"
     }
   ]
 }

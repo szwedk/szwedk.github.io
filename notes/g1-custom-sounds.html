@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Unitree G1&rsquo;s voice isn&rsquo;t a file &middot; Kamil Szwed</title>
+  <meta name="description" content="The G1's prompts are synthesized at runtime, and the chest speaker belongs to a second on-board computer. What that means for playing your own audio on it." />
+  <link rel="canonical" href="https://kamilszwed.com/notes/g1-custom-sounds.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kamilszwed.com/notes/g1-custom-sounds.html" />
+  <meta property="og:title" content="The Unitree G1's voice isn't a file" />
+  <meta property="og:description" content="The G1's prompts are synthesized at runtime, and the chest speaker belongs to a second on-board computer. What that means for playing your own audio on it." />
+  <meta property="og:image" content="https://kamilszwed.com/assets/og-card.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamil Szwed. Building things that move. Robots, web, photo, brand." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../fonts/fonts.css" />
+  <link rel="stylesheet" href="../css/style.css?v=33" />
+</head>
+<body>
+
+  <a class="brand" href="../index.html">
+    <span class="brand-name">Kamil Szwed</span>
+    <span class="brand-sub">BUILD &middot; DEPLOY &middot; SUPPORT</span>
+  </a>
+
+  <header class="site-chrome">
+    <nav class="pill-nav" aria-label="Primary">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#work">Work</a>
+      <a href="../notes.html" class="is-active">Notes</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <section class="page-hero">
+        <a class="back-link" href="../notes.html">&larr;&nbsp; Back to the vault</a>
+        <p class="eyebrow"><span>NOTE &middot; ROBOTICS &middot; 28 AUG 2026</span></p>
+        <h1>The Unitree G1&rsquo;s voice isn&rsquo;t a file.</h1>
+        <p class="page-intro">The prompts are synthesized at runtime, and the chest speaker belongs to a second on-board computer. Both facts arrived late, after I had built the wrong thing.</p>
+      </section>
+
+      <section class="note-body">
+        <div class="note-prose">
+
+      <p>I wanted my Unitree G1 to say my own lines instead of its stock
+        prompts. The obvious plan is to find the prompt audio on the robot&rsquo;s
+        disk and replace it, and I built most of a toolchain around that plan:
+        a scanner, a backup script that records checksums, a converter that
+        matches the original file&rsquo;s exact format, a restore path for putting
+        it all back.</p>
+
+      <p>Then it turned out there is no such audio on the disk. This is the
+        sequence I went through, including the parts that wasted time.</p>
+
+      <h2>What I expected to find</h2>
+
+      <p>A robot that says &ldquo;Battery low&rdquo; out loud is getting that audio from
+        somewhere, so I went looking for it. A scan of the robot&rsquo;s development
+        computer turned up about fifty-five audio files.</p>
+
+      <p>All of it was stock desktop audio: the <code>alsa-utils</code> channel
+        test clips, the Debian <code>sound-icons</code> set, GNOME alert sounds,
+        <code>speech-dispatcher</code> fixtures.</p>
+
+      <p>One hit was <code>COPYING.opus</code>, a licence text file that matched
+        because the first pass filtered on extension. The scanner in the
+        repository now validates with <code>file --mime-type</code> and keeps
+        only <code>audio/*</code> and <code>application/ogg</code>.</p>
+
+      <h2>One command settles it</h2>
+
+      <p>The check that ends the search is package ownership:</p>
+
+<pre><code><span class="sh">$ dpkg -S /usr/share/sounds/alsa/Front_Center.wav</span>
+<span class="out">alsa-utils: /usr/share/sounds/alsa/Front_Center.wav</span></code></pre>
+
+      <p>If a distribution package owns a file, that file arrived with the
+        operating system. Across every candidate nothing survived: no unowned
+        audio file on the disk could plausibly be the robot&rsquo;s voice, which
+        invalidated the file replacement premise entirely. The scanner labels
+        each file <code>STOCK_PKG</code> or <code>UNOWNED</code> so the set can
+        be read at a glance.</p>
+
+      <p>The backup and restore scripts I had written by that point were
+        solving a problem that does not exist.</p>
+
+      <h2>The voice is synthesized at runtime</h2>
+
+      <p>The G1&rsquo;s spoken prompts are produced on demand by an on-board
+        service. There is no directory of prompt WAVs, which is why the search
+        came up empty. Custom audio has to go in through the SDK instead,
+        specifically the <code>unitree_sdk2</code> <code>AudioClient</code>.</p>
+
+      <p>One consequence is that there is no rollback procedure to write.
+        Nothing on the robot&rsquo;s filesystem is modified, so stopping the API
+        calls returns the robot to how it was.</p>
+
+      <h2>Two computers, one speaker</h2>
+
+      <p>The G1 has two on-board computers. The Jetson Orin NX is the
+        development computer, the one you log into and run your own code on.
+        The second is the control computer, and it owns the chest speaker and
+        the TTS engine.</p>
+
+      <p>The Jetson has no speaker amplifier. I worked through
+        <code>aplay</code>, then <code>paplay</code>, then the Tegra APE mixer
+        controls, looking for a route that would come out of the chest. No
+        ALSA configuration on the Jetson will drive that speaker, because the
+        amplifier is not attached to that computer.</p>
+
+      <p><strong>The symptom that kept me there was the API call returning
+        success while the robot stayed silent.</strong> The RPC was accepted
+        and answered, just not by the machine I was sitting at and listening
+        to. I was reading a return code as though the two computers were
+        one.</p>
+
+      <p>I did not work this out from nothing.
+        <a href="https://github.com/experientialtech/g1-audio-driver" target="_blank" rel="noopener noreferrer">experientialtech/g1-audio-driver</a>,
+        which exposes the G1&rsquo;s microphone array and speaker as ordinary
+        PulseAudio devices so that any Linux application can use them, already
+        had this architecture mapped, and it is where this project started.</p>
+
+      <h2>The last blocker was an SDK version gap</h2>
+
+      <p>With the architecture understood, the call to make is
+        <code>PlayStream</code>. The SDK present on the robot did not have it.
+        <code>AudioClient</code> exposed <code>TtsMaker</code>,
+        <code>GetVolume</code> and <code>SetVolume</code>, and nothing else.
+        The check is one line:</p>
+
+<pre><code><span class="sh">&gt;&gt;&gt; hasattr(client, "PlayStream")</span>
+<span class="out">False</span></code></pre>
+
+      <p>The gap went deeper than a missing wrapper. The RPC client underneath
+        lacked the binary request method that <code>PlayStream</code> needs in
+        order to carry PCM, so writing the wrapper myself would not have
+        helped.</p>
+
+      <p>Vendoring a current <code>unitree_sdk2_python</code> fixed it.
+        <code>PlayStream</code> wants 16 kHz, mono, 16-bit PCM, sent in chunks
+        under one stream id:</p>
+
+<pre><code>REQ_RATE, REQ_CHANNELS, REQ_SAMPWIDTH = 16000, 1, 2
+CHUNK_BYTES = 32 * 1024
+
+stream_id = str(int(time.time() * 1000))          # unique per utterance
+for i in range(0, len(pcm), CHUNK_BYTES):
+    client.PlayStream(app_name, stream_id, pcm[i:i + CHUNK_BYTES])
+client.PlayStop(app_name)</code></pre>
+
+      <p><code>prompts.tsv</code> starts with P01, &ldquo;Hello. I&rsquo;m online and
+        ready.&rdquo; It is the line I keep coming back to when I want to know
+        whether the whole path is still working.</p>
+
+      <p>There is also <code>TtsMaker(text, speaker_id)</code>, where
+        <code>speaker_id</code> 0 is Chinese and 1 is English. On some firmware
+        it returns success without producing audible output. What separates the
+        firmware where that happens from the firmware where it does not is
+        something I have not pinned down. Rendering the line to a WAV and
+        sending it through <code>PlayStream</code> removes the dependency, so
+        that is what the batch tooling does.</p>
+
+      <h2>Loudness, and why matching LUFS was not enough</h2>
+
+      <p>The first pass normalized every clip with
+        <code>loudnorm=I=-16:TP=-1.5:LRA=11</code>. Downloaded sound effects
+        came out fine. Speech at the same integrated loudness sounded clearly
+        quieter.</p>
+
+      <p>Integrated LUFS is an average across the clip. A mastered sound effect
+        is compressed close to brick wall, so its average sits near its peak
+        and it is loud essentially all the time. Speech has a wide dynamic
+        range, so much of the clip sits well below its own peaks, and those
+        peaks still have to fit under the true peak ceiling. Same number,
+        different perceived loudness.</p>
+
+      <p>The fix is to compress the dynamic range first, then level the clip
+        toward full scale, then limit so the result cannot clip:</p>
+
+<pre><code>acompressor=threshold=0.06:ratio=4:attack=5:release=130:makeup=3,
+dynaudnorm=f=200:g=15:p=0.9:m=12,
+alimiter=level_in=1:level_out=1:limit=0.97</code></pre>
+
+      <p>Every clip entering the library goes through that chain, so speech and
+        effects land at a comparable perceived loudness.</p>
+
+      <p>Speaker volume is separate. <code>SetVolume</code> takes 0 to 100 and
+        is the hardware control. Above 100 the studio applies a software boost
+        by multiplying the 16-bit samples before streaming.
+        <code>audioop.mul</code> saturates at the sample limits, so pushing
+        past the hardware maximum clips hard instead of turning to noise.
+        <code>audioop</code> was removed in Python 3.13, so the import is
+        guarded and the boost is unavailable there.</p>
+
+      <h2>A second output</h2>
+
+      <p>A USB audio device plugged into the Jetson shows up as an ordinary
+        PulseAudio sink, and unlike the chest speaker it is local, so
+        <code>paplay</code> drives it directly. Playing to both at once needs
+        an offset, because the internal path crosses the network to the control
+        computer while the USB path does not.</p>
+
+      <p>The studio exposes that offset in milliseconds and includes a click
+        train for tuning it by ear: a short 2 kHz blip every 500 ms. When the
+        two outputs are aligned you hear single tight clicks, and when they are
+        not you hear a flam. That is a cruder method than measuring it, and it
+        converges faster.</p>
+
+      <p><code>g1-audio-driver</code> solves the same problem a different way,
+        loading PulseAudio&rsquo;s <code>module-combine-sink</code> to aggregate
+        the outputs into one device. That is tidier than what I do, and it is
+        the better choice if you want the robot to behave like a normal sound
+        card. I play to the two outputs separately because a combined sink
+        gives me nowhere to put the offset.</p>
+
+      <h2>What is in the repository</h2>
+
+<pre><code>g1-custom-sounds/
+├── README.md
+├── docs/                  audio architecture, discovery and replacement procedures
+├── scripts/               scanning, backup, conversion, generation, deployment
+└── voice/
+    ├── prompts.tsv        event to English line catalog
+    ├── app/               Voice Studio server and web UI
+    ├── lib/g1_play.py     AudioClient wrapper
+    └── deploy/            robot-side launcher and systemd unit</code></pre>
+
+      <p>Voice Studio runs on localhost or on the robot itself and handles
+        uploading, recording, conversion, text to speech and playback.
+        <code>prompts.tsv</code> maps robot events to English lines for batch
+        generation, with entries risk tiered so that safety related lines are
+        skipped unless explicitly included. There is a simulate mode that
+        exercises every code path with no SDK and no robot, which is how most
+        of the UI got built.</p>
+
+      <p>The <code>docs/</code> and the scanning scripts are the remains of the
+        file replacement approach. I kept them, because they are still the
+        right tools for genuine on-disk audio, and because the scan is how you
+        prove to yourself that the G1&rsquo;s voice is not there.</p>
+
+      <h2>Scope</h2>
+
+      <p>This project plays audio and manages audio files. It does not touch
+        firmware, motion, or safety systems, and it does not modify anything on
+        the robot&rsquo;s filesystem.</p>
+
+      <h2>Credits</h2>
+
+      <p><strong>experientialtech</strong> for
+        <a href="https://github.com/experientialtech/g1-audio-driver" target="_blank" rel="noopener noreferrer">g1-audio-driver</a>,
+        which inspired this project and which parts of it draw on. It bridges
+        the G1&rsquo;s four-microphone array and its speaker into standard
+        PulseAudio devices, and it reaches the speaker over the same
+        <code>AudioClient.PlayStream</code> path this project uses. If you want
+        the robot&rsquo;s audio hardware to appear as an ordinary Linux sound card
+        rather than a managed clip library, start there.</p>
+
+      <p><strong>Unitree Robotics</strong> make the robot and the SDK both
+        projects depend on:
+        <a href="https://github.com/unitreerobotics/unitree_sdk2_python" target="_blank" rel="noopener noreferrer">unitree_sdk2_python</a>,
+        BSD 3-Clause, Copyright (c) 2016-2024 HangZhou YuShu Technology Co.,
+        Ltd. The <code>AudioClient</code> API, including
+        <code>PlayStream</code>, <code>TtsMaker</code> and
+        <code>SetVolume</code>, is theirs. This project is a client of that
+        API, built on Unitree&rsquo;s official SDK rather than forked from it.</p>
+
+      <p><strong>ElevenLabs</strong> provides the optional text to speech used
+        to render the English prompts.</p>
+
+      <p>Repository:
+        <a href="https://github.com/szwedk/g1-custom-sounds" target="_blank" rel="noopener noreferrer">github.com/szwedk/g1-custom-sounds</a>.</p>
+
+        </div>
+
+        <footer class="note-linked">
+          <h2>Linked in the vault</h2>
+          <ul>
+            <li><span class="note-linked-kind">Note</span><a href="latency-budget.html">Milliseconds are a budget</a></li>
+            <li><span class="note-linked-kind">Field</span><a href="../work/robotics.html">Robotics</a></li>
+          </ul>
+        </footer>
+      </section>
+    </article>
+
+    <footer class="page-foot">
+      <h2>Tell me where this is wrong.</h2>
+      <ul class="page-foot-links">
+        <li><a href="mailto:kamilmax06@gmail.com">Email me</a></li>
+        <li><a href="../notes.html">The vault</a></li>
+        <li><a href="../index.html">Home</a></li>
+      </ul>
+    </footer>
+  </main>
+
+  <script src="../vendor/gsap.min.js"></script>
+  <script src="../vendor/ScrollTrigger.min.js"></script>
+  <script src="../vendor/lenis.min.js"></script>
+  <script src="../js/page.js?v=33"></script>
+</body>
+</html>
