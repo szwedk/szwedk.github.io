@@ -1480,6 +1480,61 @@ html.no-motion .work-tease-arrow { transition: none; }
   color: var(--ink);
 }
 
+/* ---- The code rail ----
+   A note with listings in it runs as two columns on a wide screen: the
+   reading measure on the left, and the listing or screenshot it refers to
+   in a rail beside it. Each .note-sec is its own grid row, so a snippet
+   sits level with the paragraph that introduces it and the two columns
+   cannot drift apart down the page. A section splits wherever a new
+   artifact is introduced, which is why some carry no heading.
+
+   Everything below the breakpoint stays exactly as it was: .note-sec is a
+   plain block, margins collapse as they always did, and the source order
+   is the reading order. Notes with nothing to put in a rail have no
+   .note-sec at all and are untouched by any of this. */
+.snip { margin: 0 0 1.5em; }
+.snip pre { margin-bottom: 0; }
+.snip-src {
+  margin: 0 0 8px;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  opacity: 0.72;
+  overflow-wrap: anywhere;
+}
+.snip-src a { border-bottom-color: transparent; }
+.snip-src a:hover { border-bottom-color: var(--hairline-dark); }
+
+@media (min-width: 1180px) {
+  .note-prose { max-width: none; }
+  .note-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 64ch) minmax(0, 32rem);
+    column-gap: clamp(40px, 4.6vw, 88px);
+    align-items: start;
+    margin-top: 2.2em;
+  }
+  .note-sec:first-child { margin-top: 0; }
+  /* a continuation of the section above it, so it gets a paragraph's gap
+     rather than a heading's */
+  .note-sec-cont { margin-top: 1.35em; }
+  .sec-copy, .sec-rail { min-width: 0; }
+  /* grid items trap their children's margins, so the outer ones are
+     zeroed here and the gap between sections comes from .note-sec alone */
+  .sec-copy > :first-child, .sec-rail > :first-child { margin-top: 0; }
+  .sec-copy > :last-child, .sec-rail > :last-child { margin-bottom: 0; }
+  .note-linked { max-width: 64ch; }
+}
+/* on a big screen the measure goes back to the 68ch the rest of the site
+   uses, and the rail widens enough that a 68 character line of code does
+   not need to scroll */
+@media (min-width: 1600px) {
+  .note-sec { grid-template-columns: minmax(0, 68ch) minmax(0, 36rem); }
+  .note-linked { max-width: 68ch; }
+}
+
 .note-linked {
   max-width: 68ch;
   margin-top: 7vh;
