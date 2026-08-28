@@ -86,7 +86,7 @@
         "latency-budget"
       ],
       "minutes": 9,
-      "summary": "The prompts are synthesized at runtime and the chest speaker belongs to a second computer, so the file replacement plan was wrong from the start.",
+      "summary": "The chest speaker belongs to a second computer, not the one you log into. Custom audio goes in through the SDK.",
       "href": "notes/g1-custom-sounds.html"
     }
   ]
