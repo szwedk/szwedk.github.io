@@ -10,16 +10,16 @@
   <meta property="og:url" content="https://kamilszwed.com/notes/g1-custom-sounds.html" />
   <meta property="og:title" content="The Unitree G1's voice isn't a file" />
   <meta property="og:description" content="The G1's prompts are synthesized at runtime, and the chest speaker belongs to a second on-board computer. What that means for playing your own audio on it." />
-  <meta property="og:image" content="https://kamilszwed.com/assets/og-card.jpg" />
+  <meta property="og:image" content="https://kamilszwed.com/assets/notes/g1-custom-sounds/og.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Kamil Szwed. Building things that move. Robots, web, photo, brand." />
+  <meta property="og:image:alt" content="The Voice Studio interface, the local web UI for putting custom audio on a Unitree G1." />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="preload" href="../fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="../fonts/InstrumentSerif-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="../fonts/fonts.css" />
-  <link rel="stylesheet" href="../css/style.css?v=33" />
+  <link rel="stylesheet" href="../css/style.css?v=34" />
 </head>
 <body>
 
@@ -59,6 +59,13 @@
 
       <p>Then it turned out there is no such audio on the disk. This is the
         sequence I went through, including the parts that wasted time.</p>
+
+      <figure>
+        <img src="../assets/notes/g1-custom-sounds/voice-studio.png"
+             width="1280" height="900" loading="lazy" decoding="async"
+             alt="The Voice Studio web interface: a text to speech panel, a recorder, a speaker volume control, and a sound library of clips that can be previewed locally, played on the robot, or copied to the robot&rsquo;s storage." />
+        <figcaption>Voice Studio, the local web UI: text to speech, recording, speaker control, and the sound library.</figcaption>
+      </figure>
 
       <h2>What I expected to find</h2>
 
@@ -128,6 +135,13 @@
         PulseAudio devices so that any Linux application can use them, already
         had this architecture mapped, and it is where this project started.</p>
 
+      <figure>
+        <img src="../assets/notes/g1-custom-sounds/audio-architecture.png"
+             width="1280" height="470" loading="lazy" decoding="async"
+             alt="Block diagram: Voice Studio on a workstation talks to the Jetson Orin NX over DDS using AudioClient; the Jetson forwards 16 kHz mono PCM to the control computer via PlayStream; the control computer owns the chest speaker, while an optional USB speaker is driven locally from the Jetson through PulseAudio." />
+        <figcaption>The path audio takes. The chest speaker belongs to the control computer, so playback is an API call rather than a file swap.</figcaption>
+      </figure>
+
       <h2>The last blocker was an SDK version gap</h2>
 
       <p>With the architecture understood, the call to make is
@@ -157,8 +171,9 @@ for i in range(0, len(pcm), CHUNK_BYTES):
 client.PlayStop(app_name)</code></pre>
 
       <p><code>prompts.tsv</code> starts with P01, &ldquo;Hello. I&rsquo;m online and
-        ready.&rdquo; It is the line I keep coming back to when I want to know
-        whether the whole path is still working.</p>
+        ready.&rdquo; That is the line sitting in the text box in the screenshot at
+        the top of this post, and it is the one I keep coming back to when I
+        want to know whether the whole path is still working.</p>
 
       <p>There is also <code>TtsMaker(text, speaker_id)</code>, where
         <code>speaker_id</code> 0 is Chinese and 1 is English. On some firmware
@@ -199,6 +214,13 @@ alimiter=level_in=1:level_out=1:limit=0.97</code></pre>
         past the hardware maximum clips hard instead of turning to noise.
         <code>audioop</code> was removed in Python 3.13, so the import is
         guarded and the boost is unavailable there.</p>
+
+      <figure class="fig-small">
+        <img src="../assets/notes/g1-custom-sounds/speaker-control.png"
+             width="300" height="300" loading="lazy" decoding="async"
+             alt="The speaker panel from Voice Studio: a circular volume dial reading 85 out of 100, above a Test chest speaker button." />
+        <figcaption>Volume is the hardware control up to 100. The range above it is a software gain applied to the PCM before streaming.</figcaption>
+      </figure>
 
       <h2>A second output</h2>
 
@@ -303,6 +325,6 @@ alimiter=level_in=1:level_out=1:limit=0.97</code></pre>
   <script src="../vendor/gsap.min.js"></script>
   <script src="../vendor/ScrollTrigger.min.js"></script>
   <script src="../vendor/lenis.min.js"></script>
-  <script src="../js/page.js?v=33"></script>
+  <script src="../js/page.js?v=34"></script>
 </body>
 </html>
