@@ -1466,6 +1466,7 @@ html.no-motion .work-tease-arrow { transition: none; }
   border: 1px solid var(--hairline-dark);
   background: var(--paper-dim);
 }
+.note-prose figure.fig-small img { max-width: 300px; }
 .note-prose figcaption {
   margin-top: 10px;
   font-size: 0.82rem;
