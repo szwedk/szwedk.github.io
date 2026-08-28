@@ -391,3 +391,21 @@
   .ks-teleop-legend { grid-template-columns: 1fr 1fr; }
   .ks-teleop-panel { grid-template-columns: 1fr; }
 }
+
+/* ---- reserved height -----------------------------------------------------
+   This mount is empty until its script lands, and the script is lazy, so the
+   box grew from zero the moment it mounted and shoved everything below it
+   down the page. Measured on a throttled phone before this: notes.html was
+   CLS 0.67 and work/robotics.html 0.59, against a 0.1 threshold.
+
+   The numbers are the module's own measured built height at each width, not
+   estimates. The scripting guard matters: with JavaScript off the feature
+   never arrives, and reserving space for it would leave a hole instead of
+   the nothing that is there today.
+   ------------------------------------------------------------------------ */
+@media (scripting: enabled) {
+  [data-ks-teleop] { min-height: 926px; }
+}
+@media (scripting: enabled) and (max-width: 640px) {
+  [data-ks-teleop] { min-height: 1296px; }
+}

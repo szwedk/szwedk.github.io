@@ -272,6 +272,21 @@ for (const page of PAGES) {
       }
       if (!/^\d{4}-\d{2}-\d{2}$/.test(n.date || '')) note('assets/notes.json', `note ${n.id} has a malformed date`);
     }
+    /* notes.html reserves the list's height as --ks-notes times a measured
+       per-note height, so the box exists before vault.js renders into it.
+       That number has to track the manifest or the reservation is wrong and
+       the footer starts shifting again. */
+    {
+      const html = await readFile(join(ROOT, 'notes.html'), 'utf8');
+      const m = /--ks-notes:\s*(\d+)/.exec(html);
+      const want = (manifest.notes || []).length;
+      if (!m) {
+        note('notes.html', 'the vault list mount has no --ks-notes, so its height is not reserved');
+      } else if (parseInt(m[1], 10) !== want) {
+        note('notes.html', `--ks-notes is ${m[1]} but assets/notes.json has ${want} notes, so the reserved height is wrong`);
+      }
+    }
+
     const manifested = new Set((manifest.notes || []).map(n => n.href));
     for (const page of PAGES) {
       if (page.startsWith('notes/') && !manifested.has(page)) {
