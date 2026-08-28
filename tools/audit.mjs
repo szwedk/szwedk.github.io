@@ -188,12 +188,51 @@ for (const page of PAGES) {
     if (r.status() >= 400) runtime.push(`${r.status()} on ${r.url().replace(base, '')}`);
   });
 
+  /* which js/features modules this page actually pulled, so a declared
+     mount that never loads can be told apart from one that loaded fine */
+  const fetched = new Set();
+  tab.on('request', r => {
+    const m = /\/js\/features\/([a-z0-9-]+\.js)/.exec(r.url());
+    if (m) fetched.add(m[1]);
+  });
+
   await tab.goto(`${base}/${page}`, { waitUntil: 'networkidle' });
   /* reveal-on-scroll content is visibility:hidden until it scrolls in, and
      hidden elements have no box to measure, so unhide the same way a Tab
      press does before measuring targets */
   await tab.evaluate(() => document.documentElement.classList.add('kb-nav'));
   await tab.waitForTimeout(1200);
+
+  /* Walk the whole page before measuring. Features are lazily mounted by an
+     IntersectionObserver at rootMargin 100%, so anything more than one
+     viewport below the fold never loaded here: gait-lab, push-g1, teleop and
+     contact-sheet, four of the eleven modules and the three most involved,
+     were never once executed by this audit. Their syntax was checked and
+     nothing else. Stepping down the page mounts them, which puts their
+     constructors under the pageerror and console listeners above. */
+  await tab.evaluate(async () => {
+    const step = Math.round(window.innerHeight * 0.75);
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise(r => setTimeout(r, 90));
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+    await new Promise(r => setTimeout(r, 400));
+    window.scrollTo(0, 0);
+  });
+  await tab.waitForTimeout(1600);
+
+  /* a mount that declares a module and never pulls it is a feature nobody
+     is testing, which is how this gap opened in the first place */
+  const declared = await tab.evaluate(() =>
+    [...document.querySelectorAll('[data-ks-lazy]')]
+      .map(e => (e.getAttribute('data-ks-lazy') || '').split('/').pop().split('?')[0])
+      .filter(Boolean));
+  for (const mod of [...new Set(declared)]) {
+    if (!fetched.has(mod)) {
+      note(page, `feature ${mod} is declared but never loaded, so nothing here exercises it`);
+    }
+  }
 
   (await tab.evaluate(domChecks)).forEach(f => note(page, f));
   runtime.forEach(f => note(page, f));
