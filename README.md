@@ -59,8 +59,11 @@ wishes as new gift articles with unique heading IDs and accurate store links.
 The page collects no payments, reservations, guest information, or purchase
 state. Group gifts currently ask guests to coordinate directly with the couple.
 
-The registry owns its inline CSS and JavaScript and uses system fonts.
-The social sharing image is `registryforkamilandemma/assets/registry-share.png`.
+The registry owns its inline CSS and JavaScript, with a cream and burgundy
+palette and self-hosted Instrument Serif and Inter Tight fonts.
+The social sharing image is `registryforkamilandemma/assets/registry-share-warm.png`.
+The Rolex entry links to the mint-green Datejust 41 configuration 126334-0028;
+its photo is from Rolex and the price is a dated U.S. list-price snapshot.
 The site audit includes both registry routes.
 
 ## Interactive features
