@@ -59,8 +59,8 @@ wishes as new gift articles with unique heading IDs and accurate store links.
 The page collects no payments, reservations, guest information, or purchase
 state. Group gifts currently ask guests to coordinate directly with the couple.
 
-The registry owns its inline CSS and JavaScript and reuses the existing fonts.
-The social sharing image is `registryforkamilandemma/assets/share-card.png`.
+The registry owns its inline CSS and JavaScript and uses system fonts.
+The social sharing image is `registryforkamilandemma/assets/registry-share.png`.
 The site audit includes both registry routes.
 
 ## Interactive features
