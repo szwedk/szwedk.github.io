@@ -25,7 +25,7 @@ const PORT = 8899;
    notes/_template.html, and stay out. */
 async function discoverPages() {
   const out = [];
-  for (const dir of ['', 'work', 'notes', 'socials']) {
+  for (const dir of ['', 'work', 'notes', 'socials', 'registryforkamilandemma', 'registry']) {
     let entries = [];
     try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
     for (const f of entries) {
