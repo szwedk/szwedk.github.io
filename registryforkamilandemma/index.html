@@ -44,8 +44,10 @@
     .share:hover { text-decoration-thickness: 2px; }
     .intro { font-size: 17px; margin: 0 0 35px; }
     .gift { border-top: 1px solid var(--line); padding-top: 32px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 40px; }
+    .gift + .gift { margin-top: 40px; }
     figure { margin: 0; }
     .gift-photo { display: block; width: 100%; height: auto; background: #ddd; }
+    .gift-photo--watch { aspect-ratio: 4 / 3; object-fit: contain; background: #47704c; }
     figcaption { margin: 7px 0 0; font-size: 11px; color: var(--muted); }
     .gift-info { padding-top: 1px; }
     h2 { margin: 0 0 9px; font: 400 31px/1.25 Georgia, "Times New Roman", serif; letter-spacing: -.6px; }
@@ -118,6 +120,26 @@
           <a class="listing-link" href="https://finder.porsche.com/us/en-US/details/porsche-911-turbo-s-preowned-NP40GL" target="_blank" rel="noopener noreferrer" aria-label="See the Porsche listing, opens in a new tab">See the Porsche listing <span aria-hidden="true">↗</span></a>
           <p class="seller-note">Purchases are arranged with the dealer. This page doesn't take payments or reserve gifts.</p>
           <p class="checked">Details checked September 29, 2026.<br>Please confirm price and availability with the dealer.</p>
+        </div>
+      </article>
+      <article class="gift" aria-labelledby="rolex-title">
+        <figure>
+          <img class="gift-photo gift-photo--watch" src="/registryforkamilandemma/assets/rolex-datejust-41-126334-0028.png" alt="Rolex Datejust 41 with a mint green dial, fluted bezel, and Jubilee bracelet." width="1451" height="2160" loading="lazy">
+          <figcaption>Photo: Rolex</figcaption>
+        </figure>
+        <div class="gift-info">
+          <h2 id="rolex-title">Rolex Datejust 41</h2>
+          <p class="model">41 mm · Mint green dial</p>
+          <dl class="specs">
+            <dt>Bracelet</dt><dd>Jubilee</dd>
+            <dt>Material</dt><dd>Oystersteel and white gold</dd>
+            <dt>Model</dt><dd>126334-0028</dd>
+          </dl>
+          <p class="price">$11,850</p>
+          <p class="price-note">Rolex U.S. listed price.</p>
+          <a class="listing-link" href="https://www.rolex.com/en-us/watches/datejust/m126334-0028" target="_blank" rel="noopener noreferrer" aria-label="See the watch at Rolex, opens in a new tab">See the watch at Rolex <span aria-hidden="true">↗</span></a>
+          <p class="seller-note">Contact an Official Rolex Jeweler to arrange a purchase.</p>
+          <p class="checked">Details checked September 29, 2026.<br>Please confirm price and availability with the jeweler.</p>
         </div>
       </article>
     </main>
