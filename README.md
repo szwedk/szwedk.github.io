@@ -44,6 +44,25 @@ ScrollTrigger + Lenis are vendored in `vendor/`, fonts are self-hosted in
 - `assets/robot-kinematics.json` · link lengths and joint limits parsed
   from the official Unitree G1 and Go2 URDFs
 
+## Wedding registry
+
+`registryforkamilandemma/index.html` is the standalone Kamil and Emma registry.
+`registry/index.html` provides a short redirect. Both are unlisted (`noindex`)
+and deliberately absent from the portfolio navigation and sitemap. Anyone
+with the link or public repository can still view them.
+
+The first gift links to Porsche Finder listing NP40GL. The displayed price,
+mileage, and availability note are a dated snapshot from September 29, 2026;
+update those fields in the gift article when the listing changes. The local
+photo is attributed to Porsche Finder / Porsche Beaverton. Add subsequent
+wishes as new gift articles with unique heading IDs and accurate store links.
+The page collects no payments, reservations, guest information, or purchase
+state. Group gifts currently ask guests to coordinate directly with the couple.
+
+The registry owns its inline CSS and JavaScript and reuses the existing fonts.
+The social sharing image is `registryforkamilandemma/assets/share-card.png`.
+The site audit includes both registry routes.
+
 ## Interactive features
 
 Each one is a self-mounting `js/features/*.js` + `css/features/*.css`
@@ -88,7 +107,7 @@ node tools/stamp.mjs      bump every ?v= stamp to one number
 node tools/audit.mjs      load every page and fail on anything broken
 ```
 
-The audit discovers every page (root, work/, notes/, socials/) and walks each one
+The audit discovers every page (root, work/, notes/, socials/, registryforkamilandemma/, registry/) and walks each one
 in headless chromium, exiting non-zero
 on dead links, uncaught exceptions, console errors, 4xx responses,
 missing alt text, duplicate ids, heading-level jumps, controls with no
