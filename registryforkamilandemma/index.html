@@ -108,11 +108,6 @@
         timer = setTimeout(() => status.classList.remove('visible'), 4000);
       }
       button.addEventListener('click', async () => {
-        const data = { title: 'Kamil & Emma · Our Wedding Registry', url };
-        if (navigator.share) {
-          try { await navigator.share(data); return; }
-          catch (error) { if (error.name === 'AbortError') return; }
-        }
         try {
           await navigator.clipboard.writeText(url);
           announce('Registry link copied. Thank you for sharing!');
