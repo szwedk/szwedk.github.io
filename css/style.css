@@ -1631,3 +1631,8 @@ html.no-motion .work-tease-arrow { transition: none; }
   .work-summary { padding: 5mm 0 3mm; }
   .work-groups { padding-bottom: 6mm; }
 }
+
+/* Keep the six-link academy navigation within narrow phone viewports. */
+@media (max-width: 430px) {
+  .pill-nav:has(a[href="/courses/"]) a { padding-inline: 8px; font-size: 12px; }
+}
