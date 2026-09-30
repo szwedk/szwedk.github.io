@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROS 2 engineering workbench · Kamil Szwed</title>
+<meta name="description" content="Interactive ROS 2 learning experiments: DDS QoS compatibility, telemetry freshness, and planar arm forward kinematics with equations and primary sources.">
+<link rel="canonical" href="https://kamilszwed.com/courses/tools/">
+<meta property="og:title" content="ROS 2 engineering workbench · Kamil Szwed">
+<meta property="og:description" content="Explore QoS, measurement freshness, and arm geometry through small inspectable models.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kamilszwed.com/courses/tools/">
+<style>
+:root{color-scheme:light;--navy:#0d2039;--ink:#20344c;--muted:#586c82;--blue:#1b61d1;--line:#d5e0ed;--paper:#f2f6fb;--white:#fff;--good:#116948;--bad:#a53d20;--lightblue:#e9f1ff;--mono:ui-monospace,SFMono-Regular,Consolas,monospace}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button,a,input,select{touch-action:manipulation}a{color:var(--blue);text-underline-offset:3px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e1a229;outline-offset:4px}header{background:var(--navy);color:white;padding:40px max(24px,calc((100vw - 1160px)/2)) 32px}.eyebrow{font:700 12px/1.5 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:#8cb7f2;margin:0 0 14px}h1{font-size:clamp(30px,4vw,48px);font-weight:650;line-height:1.12;letter-spacing:-.045em;margin:0 0 16px}header p{max-width:740px;margin:0;color:#c9d6e7}header .small{font-size:13px;margin-top:18px;color:#98acc6}main{max-width:1208px;padding:28px 24px 48px;margin:auto}.tabs{display:flex;gap:8px;margin:0 0 28px;flex-wrap:wrap}.tab{border:1px solid var(--line);border-radius:5px;background:white;color:var(--ink);padding:12px 18px;cursor:pointer;font-weight:600}.tab[aria-selected=true]{background:var(--blue);color:white;border-color:var(--blue)}.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(265px,1fr);gap:22px}.card{background:white;border:1px solid var(--line);border-radius:8px;padding:28px}.side{padding:24px}.step{font:700 12px var(--mono);color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px}h2{font-size:28px;line-height:1.2;letter-spacing:-.03em;margin:0 0 14px}h3{font-size:17px;line-height:1.35;margin:22px 0 9px}p{margin:0 0 16px}.lede{color:var(--muted);font-size:15px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;margin:24px 0}label{display:block;font-size:14px;font-weight:650}label .hint{display:block;font-weight:400;color:var(--muted);font-size:12px;line-height:1.5;margin:3px 0 6px}select,input[type=number]{width:100%;background:#fff;border:1px solid #aebed1;border-radius:4px;color:var(--ink);padding:10px 11px;min-height:45px}input[type=range]{width:100%;accent-color:var(--blue);margin:11px 0 0}output.value{font:600 15px var(--mono);float:right;color:var(--blue)}.result{border-top:3px solid var(--blue);padding:20px;background:var(--lightblue);border-radius:0 0 5px 5px;margin-top:24px}.result[data-state=bad]{border-color:var(--bad);background:#fff0ea}.result[data-state=good]{border-color:var(--good);background:#eaf6ef}.result h3{font-size:22px;margin:0 0 8px;letter-spacing:-.02em}.result p{margin:0}.details{font-size:14px;color:var(--muted);margin-top:12px!important}.formula{background:var(--navy);color:#dfebff;font:14px/1.8 var(--mono);padding:16px;border-radius:5px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0 16px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-weight:650;color:var(--muted)}tr.current{background:var(--lightblue)}.tag{font:700 12px var(--mono);padding:3px 6px;border-radius:3px;color:var(--good);background:#eaf6ef;white-space:nowrap}.tag.bad{color:var(--bad);background:#fff0ea}.sources{font-size:13px;color:var(--muted);margin:24px 0 0;padding-top:18px;border-top:1px solid var(--line)}.sources a{display:flex;align-items:center;min-height:28px;margin:5px 0}.note{font-size:13px;border-left:3px solid var(--line);padding-left:13px;color:var(--muted)}.buttonrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.preset{border:1px solid var(--line);border-radius:4px;padding:8px 11px;background:white;font-size:13px;color:var(--blue);cursor:pointer}.rangegroup{margin:20px 0}.metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.metric{border:1px solid var(--line);border-radius:5px;padding:13px}.metric small{display:block;color:var(--muted);font-size:12px}.metric strong{font:600 24px/1.5 var(--mono);color:var(--navy)}svg{display:block;width:100%;height:auto;background:#f7faff;border:1px solid var(--line);border-radius:5px;margin:18px 0}.clockbar{height:12px;border-radius:4px;background:#dce5f1;position:relative;overflow:hidden;margin:18px 0 8px}.clockbar span{display:block;height:100%;background:var(--blue);width:0;transition:width .12s}.tiny{font-size:12px;color:var(--muted)}footer{border-top:1px solid var(--line);padding-top:22px;margin-top:28px;font-size:12px;color:var(--muted)}.error{color:var(--bad);font-size:13px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(max-width:760px){header{padding:30px 20px}main{padding:22px 16px 36px}.layout{grid-template-columns:1fr}.card{padding:22px}.tabs{gap:6px}.tab{padding:10px 12px;font-size:13px}h2{font-size:25px}}@media(max-width:420px){.fields{grid-template-columns:1fr}.card{padding:18px}.metric strong{font-size:21px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<a href="/courses/" style="display:inline-flex;align-items:center;min-height:32px;color:#c9d6e7;font-size:14px;margin-bottom:22px">Return to Robotics Academy</a>
+<p class="eyebrow">Robotics curriculum / engineering workbench</p>
+<h1>Change one assumption.<br>Watch the result.</h1>
+<p>Three small experiments for reasoning about ROS 2 communication, telemetry timing, and arm geometry. Every result comes from the equations shown alongside it.</p>
+<p class="small">Illustrative models · runs entirely in your browser · no network requests or robot connection</p>
+</header>
+<main>
+<div class="tabs" role="tablist" aria-label="Engineering experiments">
+<button class="tab" id="tab-qos" role="tab" aria-selected="true" aria-controls="panel-qos" tabindex="0">01 · DDS QoS</button>
+<button class="tab" id="tab-time" role="tab" aria-selected="false" aria-controls="panel-time" tabindex="-1">02 · Freshness</button>
+<button class="tab" id="tab-arm" role="tab" aria-selected="false" aria-controls="panel-arm" tabindex="-1">03 · Arm geometry</button>
+</div>
+<section id="panel-qos" role="tabpanel" aria-labelledby="tab-qos">
+<div class="layout"><article class="card">
+<p class="step">01 / communication contract</p><h2>Will these endpoints match?</h2>
+<p class="lede">The publisher offers a policy; the subscriber requests a minimum. Test reliability and durability separately, then together.</p>
+<div class="fields">
+<label for="pub-reliability">Publisher reliability<span class="hint">Maximum delivery guarantee offered</span><select id="pub-reliability"><option value="best_effort">Best effort</option><option value="reliable">Reliable</option></select></label>
+<label for="sub-reliability">Subscriber reliability<span class="hint">Minimum delivery guarantee requested</span><select id="sub-reliability"><option value="reliable">Reliable</option><option value="best_effort">Best effort</option></select></label>
+<label for="pub-durability">Publisher durability<span class="hint">Whether this writer retains history</span><select id="pub-durability"><option value="volatile">Volatile</option><option value="transient_local">Transient local</option></select></label>
+<label for="sub-durability">Subscriber durability<span class="hint">Whether retained history is requested</span><select id="sub-durability"><option value="volatile">Volatile</option><option value="transient_local">Transient local</option></select></label>
+</div>
+<div id="qos-result" class="result" role="status" aria-live="polite"><h3 id="qos-heading"></h3><p id="qos-explanation"></p><p id="qos-history" class="details"></p></div>
+<h3>Inspect each policy</h3><div class="tablewrap"><table><thead><tr><th scope="col">Policy</th><th scope="col">Offered → requested</th><th scope="col">Result</th></tr></thead><tbody id="qos-policy-rows"></tbody></table></div>
+<div class="buttonrow"><button class="preset" data-qos="sensor">Sensor mismatch</button><button class="preset" data-qos="live">Compatible live stream</button><button class="preset" data-qos="retained">Late-joining configuration</button></div>
+</article><aside class="card side">
+<h3 style="margin-top:0">The rule</h3><div class="formula">Match = reliability compatible
+        AND durability compatible
+
+Best effort → reliable: no
+Reliable → best effort: yes
+
+Volatile → transient local: no
+Transient local → volatile: yes</div>
+<h3>What this result means</h3><p class="lede">A match here means only these two policies are compatible. It does not prove that endpoints exist, types match, discovery succeeds, data arrives on time, or the payload is correct.</p>
+<p class="note">Transient-local history is owned by the publisher and limited by its history and resources. This tool does not guarantee a sample count. Retained data is available to a late joiner only when both endpoints use transient local and the writer still has it.</p>
+<h3>Try a prediction first</h3><p class="lede">Set a reliable, transient-local publisher. Which subscriber choices fail under these two policies? None: all four combinations are compatible, though historical delivery differs.</p>
+<div class="sources">Primary reference<a href="https://github.com/ros2/ros2_documentation/blob/96a43b5659750b4fd8d3b956a17fdcb3073d16b8/source/Concepts/Intermediate/About-Quality-of-Service-Settings.rst" target="_blank" rel="noopener">ROS 2 Jazzy · QoS compatibility tables</a></div>
+</aside></div>
+</section>
+<section id="panel-time" role="tabpanel" aria-labelledby="tab-time" hidden>
+<div class="layout"><article class="card">
+<p class="step">02 / timing contract</p><h2>Is the measurement still usable?</h2><p class="lede">Hold the decision time fixed at 1,000 ms. Adjust the acquisition timestamp and acceptable age. Both timestamps must share the same clock domain.</p>
+<div class="fields">
+<label for="sample-age">Measurement age (ms)<span class="hint">Decision time minus acquisition time; negative means a future stamp</span><input id="sample-age" type="number" min="-100" max="500" step="1" value="75"><input id="sample-age-range" aria-label="Measurement age slider in milliseconds" type="range" min="-100" max="500" step="1" value="75"></label>
+<label for="age-limit">Maximum accepted age (ms)<span class="hint">This example accepts equality at the boundary</span><input id="age-limit" type="number" min="0" max="250" step="1" value="60"><input id="age-limit-range" aria-label="Maximum accepted age slider in milliseconds" type="range" min="0" max="250" step="1" value="60"></label>
+</div>
+<div class="metricgrid"><div class="metric"><small>Acquisition timestamp</small><strong id="acquisition-stamp">925 ms</strong></div><div class="metric"><small>Decision timestamp</small><strong>1,000 ms</strong></div></div>
+<div id="time-result" class="result" role="status" aria-live="polite"><h3 id="time-heading"></h3><p id="time-explanation"></p></div>
+<div class="clockbar" aria-hidden="true"><span id="age-fill"></span></div><p class="tiny" id="age-scale">Bar shows nonnegative age on a fixed 0–500 ms scale.</p>
+<div class="buttonrow"><button class="preset" data-time="fresh">Fresh sample</button><button class="preset" data-time="boundary">Exact boundary</button><button class="preset" data-time="stale">Queued sample</button><button class="preset" data-time="future">Clock mismatch</button></div>
+<h3>Age is cumulative</h3><p class="lede">The queued-sample preset is 8 ms acquisition/encoding + 12 ms transport + 20 ms queueing + 35 ms inference = <strong>75 ms</strong>. Measuring inference alone misses 40 ms of the path.</p>
+</article><aside class="card side">
+<h3 style="margin-top:0">The policy</h3><div class="formula">age = decision_time − acquisition_time
+
+accepted = finite inputs
+       AND limit ≥ 0
+       AND 0 ≤ age ≤ limit</div>
+<h3>Three different failures</h3><p class="lede"><strong>Stale:</strong> the observation is older than the declared limit.<br><strong>Future stamp:</strong> clock alignment or ordering assumptions are broken.<br><strong>Invalid input:</strong> the policy cannot evaluate missing or non-finite values.</p>
+<p class="note">The 60 ms limit is an invented teaching value. It is not a safe timeout for any robot. This tool only classifies data; it does not stop a system or prove a reaction-time bound.</p>
+<h3>Clock choice matters</h3><p class="lede">ROS simulation time can pause or jump. A host watchdog that must expire while simulation is paused needs a separately advancing elapsed-time clock. Never subtract unrelated clock domains without a justified conversion.</p>
+<div class="sources">Primary references<a href="https://github.com/ros2/design/blob/gh-pages/articles/130_ros_time.md" target="_blank" rel="noopener">ROS 2 · Clock and time design</a><a href="https://github.com/ros2/ros2_documentation/blob/96a43b5659750b4fd8d3b956a17fdcb3073d16b8/source/Concepts/Intermediate/About-Executors.rst" target="_blank" rel="noopener">ROS 2 Jazzy · Executors</a></div>
+</aside></div>
+</section>
+<section id="panel-arm" role="tabpanel" aria-labelledby="tab-arm" hidden>
+<div class="layout"><article class="card">
+<p class="step">03 / planar geometry</p><h2>Where does the tool end up?</h2><p class="lede">A two-link arm in the x–y plane. Positive joint angles rotate counterclockwise. The second angle is relative to the first link, not the world.</p>
+<div class="fields">
+<label for="link-one">First link length (m)<span class="hint">Positive length, 0.05–1.00 m</span><input id="link-one" type="number" value="0.4" min="0.05" max="1" step="0.01"></label>
+<label for="link-two">Second link length (m)<span class="hint">Positive length, 0.05–1.00 m</span><input id="link-two" type="number" value="0.3" min="0.05" max="1" step="0.01"></label>
+</div>
+<div class="rangegroup"><label for="joint-one">Joint 1 angle <output class="value" id="joint-one-value">0° / 0.000 rad</output></label><input type="range" id="joint-one" min="-180" max="180" value="0" step="1"></div>
+<div class="rangegroup"><label for="joint-two">Joint 2 angle <output class="value" id="joint-two-value">90° / 1.571 rad</output></label><input type="range" id="joint-two" min="-180" max="180" value="90" step="1"></div>
+<svg id="arm-diagram" viewBox="0 0 540 420" role="img" aria-labelledby="arm-title arm-description"><title id="arm-title">Planar two-link arm</title><desc id="arm-description">Joint geometry and endpoint in meters.</desc><defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#748aa4"/></marker></defs><circle id="reach-outer" cx="270" cy="210" r="175" fill="#edf3fb" stroke="#c1d1e4" stroke-dasharray="5 5"/><circle id="reach-inner" cx="270" cy="210" r="25" fill="#f7faff" stroke="#c1d1e4" stroke-dasharray="3 5"/><path d="M40,210 H503 M270,398 V25" stroke="#748aa4" stroke-width="1" marker-end="url(#arrow)" fill="none"/><text x="498" y="230" fill="#586c82" font-size="13">x</text><text x="282" y="29" fill="#586c82" font-size="13">y</text><line id="arm-first" x1="270" y1="210" x2="370" y2="210" stroke="#203e62" stroke-width="10" stroke-linecap="round"/><line id="arm-second" x1="370" y1="210" x2="370" y2="135" stroke="#1b61d1" stroke-width="8" stroke-linecap="round"/><circle cx="270" cy="210" r="8" fill="#0d2039"/><circle id="arm-elbow" cx="370" cy="210" r="7" fill="white" stroke="#203e62" stroke-width="3"/><circle id="arm-tip" cx="370" cy="135" r="7" fill="#d48c14" stroke="white" stroke-width="2"/><text x="20" y="402" id="arm-scale" fill="#586c82" font-size="12">Outer circle: 0.70 m reach</text></svg>
+<div class="metricgrid" aria-live="polite"><div class="metric"><small>Tool x coordinate</small><strong id="tool-x">0.400 m</strong></div><div class="metric"><small>Tool y coordinate</small><strong id="tool-y">0.300 m</strong></div></div>
+<div id="arm-result" class="result" role="status" aria-live="polite"><h3 id="arm-heading">Bent configuration</h3><p id="arm-explanation"></p></div>
+<div class="buttonrow"><button class="preset" data-arm="straight">Straight arm</button><button class="preset" data-arm="right-angle">Right-angle elbow</button><button class="preset" data-arm="folded">Folded arm</button></div>
+</article><aside class="card side">
+<h3 style="margin-top:0">Forward kinematics</h3><div class="formula">x = L₁ cos(q₁) + L₂ cos(q₁ + q₂)
+y = L₁ sin(q₁) + L₂ sin(q₁ + q₂)
+
+q in radians; L and output in meters
+
+|L₁ − L₂| ≤ radius ≤ L₁ + L₂</div>
+<h3>Read the picture</h3><p class="lede">The dashed circles bound the ideal reachable annulus. The picture rescales when lengths change; the numeric values carry the physical scale. The gold point is the tool position.</p>
+<p class="note">The model omits joint limits, collision, payload, dynamics, and controller behavior. A geometrically reachable point is not necessarily an executable or safe task pose.</p>
+<h3>Why straight and folded are special</h3><p class="lede">For this planar position task, the Jacobian determinant is L₁L₂ sin(q₂). At a straight or fully folded elbow it is zero: the arm loses one independent instantaneous direction of tool motion. A singularity is a geometric condition, not a claim that the robot must fall or collide.</p>
+<div class="sources">Primary references<a href="https://github.com/ros-infrastructure/rep/blob/master/rep-0103.rst" target="_blank" rel="noopener">REP 103 · Units and coordinate conventions</a><a href="https://modernrobotics.northwestern.edu/nu-gm-book-resource/4-1-1-product-of-exponentials-formula-in-the-space-frame/" target="_blank" rel="noopener">Modern Robotics · Forward kinematics</a></div>
+</aside></div>
+</section>
+<footer>These are local teaching models. They send no commands and collect no data. Source references explain the underlying conventions; browser outputs are calculations from the displayed models, not hardware test results.</footer>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+function qosModel(pr,sr,pd,sd){
+ const reliability=sr!=='reliable'||pr==='reliable';
+ const durability=sd!=='transient_local'||pd==='transient_local';
+ return {reliability,durability,match:reliability&&durability,history:reliability&&durability&&pd==='transient_local'&&sd==='transient_local'};
+}
+function freshnessModel(age,limit){
+ if(!Number.isFinite(age)||!Number.isFinite(limit)||limit<0)return {accepted:false,state:'invalid'};
+ if(age<0)return {accepted:false,state:'future'};
+ return {accepted:age<=limit,state:age<=limit?'fresh':'stale'};
+}
+function armModel(l1,l2,q1,q2){
+ if(![l1,l2,q1,q2].every(Number.isFinite)||l1<=0||l2<=0)return null;
+ const elbow={x:l1*Math.cos(q1),y:l1*Math.sin(q1)};
+ const point={x:elbow.x+l2*Math.cos(q1+q2),y:elbow.y+l2*Math.sin(q1+q2)};
+ return {elbow,point,outer:l1+l2,inner:Math.abs(l1-l2),det:l1*l2*Math.sin(q2)};
+}
+function setTab(tab){
+ document.querySelectorAll('[role=tab]').forEach(button=>{const active=button===tab;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;$(button.getAttribute('aria-controls')).hidden=!active;});
+}
+const tabs=Array.from(document.querySelectorAll('[role=tab]'));
+tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>setTab(tab));tab.addEventListener('keydown',event=>{let next=index;if(event.key==='ArrowRight')next=(index+1)%tabs.length;else if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=tabs.length-1;else return;event.preventDefault();setTab(tabs[next]);tabs[next].focus();});});
+const labelPolicy=value=>({best_effort:'Best effort',reliable:'Reliable',volatile:'Volatile',transient_local:'Transient local'})[value];
+function updateQos(){
+ const pr=$('pub-reliability').value,sr=$('sub-reliability').value,pd=$('pub-durability').value,sd=$('sub-durability').value;
+ const r=qosModel(pr,sr,pd,sd);$('qos-result').dataset.state=r.match?'good':'bad';$('qos-heading').textContent=r.match?'Compatible under these policies':'No match under these policies';
+ const causes=[];if(!r.reliability)causes.push('the subscriber requests reliable delivery but the publisher offers best effort');if(!r.durability)causes.push('the subscriber requests transient-local history but the publisher offers volatile durability');
+ $('qos-explanation').textContent=r.match?'The publisher satisfies the subscriber’s reliability and durability requests. Other matching conditions still need to hold.':'Messages do not flow between this pair because '+causes.join(' and ')+'.';
+ $('qos-history').textContent=!r.match?'Historical delivery is unavailable because the endpoints do not match.':r.history?'Late joiner: retained samples may be delivered, limited by the writer’s retained history and resources.':'Late joiner: new messages only for this pair; retained-history delivery is not requested and offered by both endpoints.';
+ $('qos-policy-rows').replaceChildren();[['Reliability',pr,sr,r.reliability],['Durability',pd,sd,r.durability]].forEach(([name,pub,sub,match])=>{const tr=document.createElement('tr');[name,labelPolicy(pub)+' → '+labelPolicy(sub)].forEach(value=>{const td=document.createElement('td');td.textContent=value;tr.append(td);});const td=document.createElement('td'),tag=document.createElement('span');tag.className='tag'+(match?'':' bad');tag.textContent=match?'Compatible':'Incompatible';td.append(tag);tr.append(td);$('qos-policy-rows').append(tr);});
+}
+['pub-reliability','sub-reliability','pub-durability','sub-durability'].forEach(id=>$(id).addEventListener('change',updateQos));
+document.querySelectorAll('[data-qos]').forEach(button=>button.addEventListener('click',()=>{const presets={sensor:['best_effort','reliable','volatile','volatile'],live:['best_effort','best_effort','volatile','volatile'],retained:['reliable','reliable','transient_local','transient_local']};const values=presets[button.dataset.qos];['pub-reliability','sub-reliability','pub-durability','sub-durability'].forEach((id,i)=>$(id).value=values[i]);updateQos();}));
+function readNumber(id){const raw=$(id).value.trim();return raw===''?NaN:Number(raw);}
+function updateTime(){
+ const age=readNumber('sample-age'),limit=readNumber('age-limit'),r=freshnessModel(age,limit);$('time-result').dataset.state=r.accepted?'good':'bad';
+ $('acquisition-stamp').textContent=Number.isFinite(age)?(1000-age).toLocaleString('en-US',{maximumFractionDigits:3})+' ms':'n/a';
+ const heading={invalid:'Invalid input',future:'Rejected: future timestamp',fresh:age===limit?'Accepted: exactly at the limit':'Accepted: current enough',stale:'Rejected: stale measurement'};
+ const text={invalid:'Enter finite numeric values and a nonnegative limit. A missing input is not zero.',future:'The acquisition timestamp is later than the decision timestamp. Check clock alignment and ordering; taking an absolute value would hide the error.',fresh:`Age ${age} ms is within the inclusive interval 0–${limit} ms. This only satisfies the stated data-age rule.`,stale:`Age ${age} ms exceeds the ${limit} ms limit by ${(age-limit).toFixed(1)} ms. More reliable delivery would not make this sample newer.`};
+ $('time-heading').textContent=heading[r.state];$('time-explanation').textContent=text[r.state];$('age-fill').style.width=(Number.isFinite(age)?Math.max(0,Math.min(100,age/5)):0)+'%';$('age-fill').style.background=r.accepted?'var(--good)':'var(--bad)';
+}
+[['sample-age','sample-age-range'],['age-limit','age-limit-range']].forEach(([number,range])=>{$(number).addEventListener('input',()=>{if(Number.isFinite(readNumber(number)))$(range).value=$(number).value;updateTime();});$(range).addEventListener('input',()=>{$(number).value=$(range).value;updateTime();});});
+document.querySelectorAll('[data-time]').forEach(button=>button.addEventListener('click',()=>{const values={fresh:[20,60],boundary:[60,60],stale:[75,60],future:[-20,60]}[button.dataset.time];$('sample-age').value=values[0];$('sample-age-range').value=values[0];$('age-limit').value=values[1];$('age-limit-range').value=values[1];updateTime();}));
+function updateArm(){
+ const l1=readNumber('link-one'),l2=readNumber('link-two'),d1=readNumber('joint-one'),d2=readNumber('joint-two'),q1=d1*Math.PI/180,q2=d2*Math.PI/180;
+ $('joint-one-value').textContent=d1+'° / '+q1.toFixed(3)+' rad';$('joint-two-value').textContent=d2+'° / '+q2.toFixed(3)+' rad';
+ const r=armModel(l1,l2,q1,q2);if(!r||l1<.05||l1>1||l2<.05||l2>1){$('arm-result').dataset.state='bad';$('arm-heading').textContent='Invalid link length';$('arm-explanation').textContent='Enter lengths from 0.05 to 1.00 meters. Geometry is hidden until the inputs are valid.';$('arm-diagram').hidden=true;$('tool-x').textContent='n/a';$('tool-y').textContent='n/a';return;}
+ $('arm-diagram').hidden=false;const scale=175/r.outer;const pixel=p=>({x:270+p.x*scale,y:210-p.y*scale});const e=pixel(r.elbow),tip=pixel(r.point);
+ [['arm-first',{x2:e.x,y2:e.y}],['arm-second',{x1:e.x,y1:e.y,x2:tip.x,y2:tip.y}],['arm-elbow',{cx:e.x,cy:e.y}],['arm-tip',{cx:tip.x,cy:tip.y}],['reach-inner',{r:r.inner*scale}]].forEach(([id,attrs])=>Object.entries(attrs).forEach(([key,value])=>$(id).setAttribute(key,String(value))));
+ const clean=v=>Math.abs(v)<.0005?0:v;$('tool-x').textContent=clean(r.point.x).toFixed(3)+' m';$('tool-y').textContent=clean(r.point.y).toFixed(3)+' m';$('arm-scale').textContent='Ideal radial reach: '+r.inner.toFixed(2)+'–'+r.outer.toFixed(2)+' m';
+ const singular=Math.abs(Math.sin(q2))<1e-10;$('arm-result').dataset.state=singular?'bad':'good';$('arm-heading').textContent=singular?'Singular planar configuration':'Two independent planar directions';$('arm-explanation').textContent='Jacobian determinant = '+(Math.abs(r.det)<1e-10?0:r.det).toFixed(4)+' m². '+(singular?'At this elbow angle the instantaneous position Jacobian loses rank. Reachability and safe execution remain separate questions.':'The ideal position Jacobian has full rank here. This does not check joint limits, collisions, forces, or executable motion.');
+ $('arm-description').textContent='First link '+l1+' meters, second link '+l2+' meters, joint angles '+d1+' and '+d2+' degrees. Tool at x '+clean(r.point.x).toFixed(3)+' meters and y '+clean(r.point.y).toFixed(3)+' meters.';
+}
+['link-one','link-two','joint-one','joint-two'].forEach(id=>$(id).addEventListener('input',updateArm));document.querySelectorAll('[data-arm]').forEach(button=>button.addEventListener('click',()=>{const values={straight:[0,0],'right-angle':[0,90],folded:[0,180]}[button.dataset.arm];$('joint-one').value=values[0];$('joint-two').value=values[1];updateArm();}));
+updateQos();updateTime();updateArm();
+</script>
+</body></html>

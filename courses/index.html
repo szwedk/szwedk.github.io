@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Robotics Academy · Kamil Szwed</title>
+  <meta name="description" content="A practical robotics curriculum: ROS 2, Unitree G1 and Go1, AGIBOT X2 and D1 Ultra, dexterous hands, robot learning, and field engineering. Lessons, labs, and assessments grounded in official documentation.">
+  <link rel="canonical" href="https://kamilszwed.com/courses/">
+  <meta property="og:title" content="Robotics Academy · Kamil Szwed">
+  <meta property="og:description" content="From your first ROS 2 node to evidence-backed robot engineering. Learn, build, test, and document.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kamilszwed.com/courses/">
+  <meta name="theme-color" content="#111c2d">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="academy.css?v=39">
+  <script src="academy.js?v=39" defer></script>
+</head>
+<body data-academy-router>
+  <a class="skip" href="#main">Skip to content</a>
+  <aside class="sidebar" aria-label="Academy navigation">
+    <a class="brand" href="/courses/"><span class="brand-mark" aria-hidden="true">K<span> / </span>S</span><span>ROBOTICS<br><strong>ACADEMY</strong></span></a>
+    <p class="nav-label">YOUR WORKSPACE</p>
+    <nav id="nav">
+      <a href="#/" data-view="home"><span aria-hidden="true">◫</span> Overview</a>
+      <a href="#/catalog" data-view="catalog"><span aria-hidden="true">▤</span> Course library</a>
+      <a href="#/path" data-view="path"><span aria-hidden="true">⌁</span> Learning path</a>
+      <a href="#/labs" data-view="labs"><span aria-hidden="true">⌘</span> Lab notebook</a>
+      <a href="#/saved" data-view="saved"><span aria-hidden="true">▧</span> Saved lessons</a>
+      <a href="/courses/tools/"><span aria-hidden="true">⊞</span> Practice tools</a>
+      <a href="#/reference" data-view="reference"><span aria-hidden="true">⌕</span> Source library</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="sidebar-note"><span class="nav-label">THE STANDARD</span><p>Read the source.<br>Run the experiment.<br>Keep the evidence.</p></div><a href="/" class="back-site">kamilszwed.com <span aria-hidden="true">↗</span></a></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><button id="menu" class="icon-button mobile-only" aria-label="Toggle navigation" aria-expanded="false">☰</button><a class="topbrand" href="#/">Kamil Szwed <span>/ Robotics Academy</span></a><form id="search-form" role="search"><label class="sr-only" for="search">Search lessons and courses</label><input id="search" type="search" placeholder="Search lessons, SDKs, concepts…" autocomplete="off"><span class="keyhint">/</span></form><button id="account" class="account-button">Sign in</button></header>
+    <main id="main" tabindex="-1"><div class="loading"><p class="eyebrow">ROBOTICS ACADEMY</p><h1>Opening the course library.</h1><p>Loading lessons and official source references…</p></div></main>
+    <footer class="footer"><span>Independent education by Kamil Szwed.</span><a href="#/about">Course standards & privacy</a><span id="source-date">Sources reviewed September 2026</span></footer>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="account-dialog" aria-labelledby="dialog-title"><form method="dialog"><button class="dialog-close" aria-label="Close dialog">×</button></form><p class="eyebrow">YOUR LEARNING RECORD</p><h2 id="dialog-title">Pick up where you left off.</h2><p>Save your progress, notes, assessments, and lab submissions across devices. Lessons are open to everyone.</p><p class="small muted">Sign in with ChatGPT to create a free academy profile. We store your name, email, and learning records. Your notes and submissions are private to you and the course instructor.</p><button id="signin" class="button primary wide">Continue with ChatGPT</button><p class="small">No payment. No robot credentials. <a href="#/about" id="privacy-link">Privacy details</a></p></dialog>
+  <noscript><div class="noscript"><h1>Robotics Academy</h1><p>This interactive LMS needs JavaScript for lessons and assessments. Enable it and reload, or use the <a href="curriculum.json">downloadable curriculum</a>.</p></div></noscript>
+</body>
+</html>

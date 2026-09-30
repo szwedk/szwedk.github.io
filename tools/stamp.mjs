@@ -25,7 +25,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
    from it started life with a stale stamp. */
 async function discoverPages() {
   const out = [];
-  for (const dir of ['', 'work', 'notes', 'socials']) {
+  for (const dir of ['', 'work', 'notes', 'socials', 'registryforkamilandemma', 'registry', 'courses', 'courses/tools']) {
     let entries = [];
     try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
     for (const f of entries) {

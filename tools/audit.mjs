@@ -25,7 +25,7 @@ const PORT = 8899;
    notes/_template.html, and stay out. */
 async function discoverPages() {
   const out = [];
-  for (const dir of ['', 'work', 'notes', 'socials', 'registryforkamilandemma', 'registry']) {
+  for (const dir of ['', 'work', 'notes', 'socials', 'registryforkamilandemma', 'registry', 'courses', 'courses/tools']) {
     let entries = [];
     try { entries = await readdir(join(ROOT, dir || '.')); } catch { continue; }
     for (const f of entries) {
@@ -122,6 +122,7 @@ const domChecks = () => {
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     const id = a.getAttribute('href').slice(1);
+    if (id.startsWith('/') && document.body.hasAttribute('data-academy-router')) return;
     if (id && !document.getElementById(id)) out.push(`anchor points nowhere: ${a.getAttribute('href')}`);
   });
 

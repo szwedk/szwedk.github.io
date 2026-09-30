@@ -137,3 +137,29 @@ request.
 
 Copy an `<article class="project">` block on the relevant `work/` page.
 Photos go in `assets/` via the commented `.project-media` figure slot.
+
+
+## Robotics Academy
+
+`courses/index.html` is the public LMS at `/courses/`. It uses hash routes for
+course, lesson, learning-path, notebook, saved lessons, references, and account
+views on GitHub Pages. `courses/curriculum.json` contains the versioned original
+curriculum and official source register. `courses/tools/` contains illustrative
+ROS experiments; `courses/downloads/` contains offline lab material.
+
+Learning records are stored by the dedicated authenticated Sites service, not
+localStorage. Sign-in uses ChatGPT identity with a single-use PKCE-bound
+connection flow. The service enforces learner ownership, server quiz grading,
+and instructor-only review; records persist across devices. The current
+instructor is the service owner's verified ChatGPT email. Session tokens live
+in sessionStorage; drafts are preserved temporarily only during sign-in and
+are bound to the prior account when applicable.
+
+Completion means acknowledged reading, at least 80% in the knowledge check,
+and submitted lab evidence with all self-check criteria. Instructor approval
+is separate. No hardware competence or vendor certification is implied.
+
+The companion backend source and release report are delivered with the
+September 29, 2026 Robotics Academy package. When updating lessons, review
+source versions, rerun snippet checks, regenerate the lab kit and synchronized
+backend curriculum, then deploy the service before the public course files.
