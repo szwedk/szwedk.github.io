@@ -13,8 +13,10 @@
   <meta name="theme-color" content="#111c2d">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/fonts/fonts.css">
-  <link rel="stylesheet" href="academy.css?v=40">
-  <script src="academy.js?v=40" defer></script>
+  <link rel="stylesheet" href="academy.css?v=44">
+  <script src="code-library.js?v=44" defer></script>
+  <script src="terminal-trainer.js?v=44" defer></script>
+  <script src="academy.js?v=44" defer></script>
 </head>
 <body data-academy-router>
   <a class="skip" href="#main">Skip to content</a>
@@ -24,6 +26,8 @@
     <nav id="nav">
       <a href="#/" data-view="home"><span aria-hidden="true">◫</span> Overview</a>
       <a href="#/catalog" data-view="catalog"><span aria-hidden="true">▤</span> Course library</a>
+      <a href="#/code" data-view="code"><span aria-hidden="true">&lt;/&gt;</span> Code library</a>
+      <a href="#/terminal" data-view="terminal"><span aria-hidden="true">&gt;_</span> Terminal practice</a>
       <a href="#/path" data-view="path"><span aria-hidden="true">⌁</span> Learning path</a>
       <a href="#/labs" data-view="labs"><span aria-hidden="true">⌘</span> Lab notebook</a>
       <a href="#/saved" data-view="saved"><span aria-hidden="true">▧</span> Saved lessons</a>
@@ -33,7 +37,7 @@
     <div class="sidebar-bottom"><div class="sidebar-note"><span class="nav-label">THE STANDARD</span><p>Read the source.<br>Run the experiment.<br>Keep the evidence.</p></div><a href="/" class="back-site">kamilszwed.com <span aria-hidden="true">↗</span></a></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><button id="menu" class="icon-button mobile-only" aria-label="Toggle navigation" aria-expanded="false">☰</button><a class="topbrand" href="#/">Kamil Szwed <span>/ Robotics Academy</span></a><form id="search-form" role="search"><label class="sr-only" for="search">Search lessons and courses</label><input id="search" type="search" placeholder="Search lessons, SDKs, concepts…" autocomplete="off"><span class="keyhint">/</span></form><button id="account" class="account-button">Sign in</button></header>
+    <header class="topbar"><button id="menu" class="icon-button mobile-only" aria-label="Toggle navigation" aria-expanded="false">☰</button><a class="topbrand" href="#/">Kamil Szwed <span>/ Robotics Academy</span></a><form id="search-form" role="search"><label class="sr-only" for="search">Search lessons, courses, and programs</label><input id="search" type="search" placeholder="Search lessons & programs…" autocomplete="off"><span class="keyhint">/</span></form><button id="account" class="account-button">Sign in</button></header>
     <main id="main" tabindex="-1"><div class="loading"><p class="eyebrow">ROBOTICS ACADEMY</p><h1>Opening the course library.</h1><p>Loading lessons and official source references…</p></div></main>
     <footer class="footer"><span>Independent education by Kamil Szwed.</span><a href="#/about">Course standards & privacy</a><span id="source-date">Sources reviewed September 2026</span></footer>
   </div>

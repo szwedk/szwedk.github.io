@@ -1,7 +1,25 @@
 {
-  "revision": "2026-09-29.1",
+  "revision": "2026-09-29.2",
   "reviewedAt": "2026-09-29",
   "courses": [
+    {
+      "id": "linux-from-zero",
+      "title": "Linux from zero: the robotics terminal",
+      "subtitle": "Learn the computer skills behind every reliable robot experiment, one observable command at a time.",
+      "family": "foundations",
+      "level": "Beginner",
+      "description": "Start with no terminal experience and build the habits needed for the ROS and vendor SDK courses. You will navigate files, create complete scripts, read logs and exit codes, manage small processes, isolate Python dependencies, inspect networks, transfer files deliberately, and version an experiment with Git. The course uses disposable local fixtures before introducing an optional authorized SSH host. Every lesson includes commands you can run, an expected observation, a failure to explain, and evidence to keep. The goal is to understand why a command works and where its result stops being proof, rather than collect unexplained setup incantations.",
+      "prerequisites": [
+        "An Ubuntu 24.04 learning VM or workstation; no prior terminal experience"
+      ],
+      "outcomes": [
+        "Navigate and edit a project without guessing paths or permissions",
+        "Create and run complete shell/Python fixtures with inspectable outputs",
+        "Diagnose environment, file, process, and network failures at the correct layer",
+        "Produce a versioned, reproducible experiment handoff"
+      ],
+      "order": 1
+    },
     {
       "id": "ros-workstation",
       "title": "The robotics workstation",
@@ -10,6 +28,7 @@
       "level": "Beginner",
       "description": "Begin with the tools that make every later robot experiment understandable: the operating system, terminal, network, source history, Python, and C++. You will record a complete environment manifest, distinguish host and container networking, validate numerical inputs, and reason about memory ownership. The examples operate on invented telemetry and local processes. This lets you make mistakes without moving a robot. Completion means you can reproduce a small program from a clean checkout and explain its inputs, outputs, failure behavior, and dependencies. It does not require prior programming experience, but it requires doing the exercises rather than watching demonstrations.",
       "prerequisites": [
+        "linux-from-zero",
         "A computer capable of running an Ubuntu 24.04 virtual machine or Linux installation"
       ],
       "outcomes": [
@@ -17,7 +36,7 @@
         "Diagnose process, path, permission, and network failures",
         "Implement checked numeric functions in Python and C++"
       ],
-      "order": 1
+      "order": 2
     },
     {
       "id": "ros-application-development",
@@ -34,7 +53,7 @@
         "Justify topic, service, and action choices",
         "Build and run an installable Python ROS package"
       ],
-      "order": 2
+      "order": 3
     },
     {
       "id": "ros-distributed-systems",
@@ -52,7 +71,7 @@
         "Transform vectors between documented frames",
         "Explain ROS network security boundaries"
       ],
-      "order": 3
+      "order": 4
     },
     {
       "id": "ros-robot-modeling",
@@ -70,7 +89,7 @@
         "Record and replay a reproducible dataset",
         "Create tests and a diagnostic failure report"
       ],
-      "order": 4
+      "order": 5
     },
     {
       "id": "ut-g1-sdk2",
@@ -89,7 +108,7 @@
         "Diagnose discovery and data validity separately",
         "Validate an isolated G1 simulation"
       ],
-      "order": 5
+      "order": 6
     },
     {
       "id": "ut-go1-legacy",
@@ -108,7 +127,7 @@
         "Design a stale-command gate",
         "Build a reproducible migration evidence package"
       ],
-      "order": 6
+      "order": 7
     },
     {
       "id": "ag-x2-aimdk",
@@ -126,7 +145,7 @@
         "Measure sensor timing and application stop behavior",
         "Produce an X2 integration acceptance report"
       ],
-      "order": 7
+      "order": 8
     },
     {
       "id": "ag-d1-ultra",
@@ -145,7 +164,7 @@
         "Specify and test a ROS 2 bridge contract",
         "Review low-level joint ordering without actuating hardware"
       ],
-      "order": 8
+      "order": 9
     },
     {
       "id": "ut-dex-hands",
@@ -164,7 +183,7 @@
         "Evaluate retargeting errors",
         "Design measurable contact and grasp experiments"
       ],
-      "order": 9
+      "order": 10
     },
     {
       "id": "bc-revo-integration",
@@ -183,7 +202,7 @@
         "Explain commanded, coupled and simulated joints",
         "Produce a G1/Revo integration readiness dossier"
       ],
-      "order": 10
+      "order": 11
     },
     {
       "id": "ros-autonomy-control",
@@ -201,7 +220,7 @@
         "Design navigation and manipulation acceptance tests",
         "Distinguish planning success from safe execution"
       ],
-      "order": 11
+      "order": 12
     },
     {
       "id": "ag-g1-go1-research",
@@ -221,7 +240,7 @@
         "Design leakage-resistant evaluations",
         "Build a deployment gate for embodiment transfer"
       ],
-      "order": 12
+      "order": 13
     },
     {
       "id": "ros-experiment-engineering",
@@ -239,7 +258,7 @@
         "Evaluate learned control without overstating generalization",
         "Submit and defend a reproducible capstone with fault injection"
       ],
-      "order": 13
+      "order": 14
     },
     {
       "id": "ut-advanced",
@@ -259,10 +278,1050 @@
         "Design perturbation and fault tests",
         "Prepare reproducible releases and recovery plans"
       ],
-      "order": 14
+      "order": 15
     }
   ],
   "lessons": [
+    {
+      "id": "linux-terminal-navigation",
+      "courseId": "linux-from-zero",
+      "title": "Your first terminal: commands, paths, and location",
+      "order": 1,
+      "durationMinutes": 60,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Learn what the terminal is doing before installing a robotics stack. Create a practice directory and use absolute and relative paths without losing track of your location.",
+      "objectives": [
+        "Distinguish terminal, shell, prompt, command, and argument",
+        "Navigate a directory tree and explain the current working directory",
+        "Handle a path containing spaces correctly"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash"
+      ],
+      "sections": [
+        {
+          "heading": "The terminal is a conversation with a shell",
+          "body": "The terminal is the window that displays text and accepts keystrokes. The shell is the program interpreting the commands you type; this course uses Bash inside Ubuntu. The prompt is the shell's invitation to enter a command. It may show a username, machine name, directory, and a dollar sign. Do not type the prompt itself. The code blocks in this course contain only commands, comments, and file contents intended for copying.\n\nA command line normally starts with a program or shell builtin, followed by arguments. In `ls -l notes`, ls is the command, -l is an option requesting detailed output, and notes names the object to inspect. Spaces separate arguments unless quoting groups them. Press Return to submit the line. Ctrl-C asks a running foreground program to stop; it does not mean copy inside a terminal. Most graphical terminals use Ctrl-Shift-C and Ctrl-Shift-V for copying and pasting.\n\nParentheses around a batch create a temporary subshell. Its directory and shell-option changes do not persist after the block ends. Each exercise begins by selecting its own folder; use that same explicit cd command before later manual edits."
+        },
+        {
+          "heading": "Every relative path starts somewhere",
+          "body": "The current working directory is the location against which relative paths are interpreted. `pwd` prints that location. An absolute path starts with `/` and describes a location from the filesystem root. A relative path does not start with `/`; it is resolved from your current directory. The special name `.` means this directory and `..` means its parent. These are path components, not unusual files you should delete.\n\nYour home directory is represented by the shell's HOME variable. The course uses a robot-academy folder beneath it, keeping practice files separate from system files. Double quotes keep a path with spaces as one argument while allowing the variable to expand. Linux filenames are case-sensitive: Logs and logs can be different directories. When a command cannot find a file, check the current directory and spelling before changing permissions or using administrator privileges."
+        },
+        {
+          "heading": "Read a directory tree as a map",
+          "body": "The exercise creates a tiny tree with data, logs, and a folder whose name contains a space. Each command changes or observes one thing. Read the comment, predict the next location, and then compare it with pwd. `cd` changes the shell's location; it does not move the files. `ls` lists directory entries; an empty listing can be a correct result for a newly created directory.\n\nUse Tab completion to reduce spelling errors: type the beginning of a name and press Tab. Use the up arrow to recall a previous command, then inspect it before pressing Return. History can contain commands from another directory, so repeating a line is not automatically safe. Build the habit of checking pwd before commands that create, overwrite, move, or remove files. This is the same habit that later prevents recording a bag in the wrong workspace or building the wrong ROS package.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/01-navigation\"\ncd \"$HOME/robot-academy/linux-from-zero/01-navigation\"\nmkdir -p data logs \"calibration notes\"\npwd\nls\ncd data\npwd\ncd ../logs\npwd\ncd ..\ncd \"calibration notes\"\npwd\ncd ..\nprintf 'Back in: %s\\n' \"$PWD\"\n)",
+          "language": "bash"
+        }
+      ],
+      "lab": {
+        "title": "Navigate a known directory tree",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "Operate only inside this lesson directory. No robot or network configuration is changed.",
+        "steps": [
+          "Open the terminal inside Ubuntu and run the complete block.",
+          "Draw the created directory tree with 01-navigation as its root.",
+          "Before each cd command, predict the next pwd output.",
+          "Type cd calibration notes without quotes, observe the error, then use the quoted path.",
+          "Return to the lesson directory using its absolute path from an unrelated directory."
+        ],
+        "expected": "Three directories exist. The final path ends with /robot-academy/linux-from-zero/01-navigation.",
+        "deliverables": [
+          "Directory-tree sketch",
+          "Three predicted and observed paths",
+          "Explanation of the missing-quotes error"
+        ],
+        "acceptance": [
+          "Absolute and relative navigation reach the same folder",
+          "A space-containing directory is handled as one argument",
+          "No administrator command was needed"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "cd reports too many arguments",
+            "cause": "The path containing a space was split into two arguments",
+            "fix": "Wrap the complete path in double quotes."
+          },
+          {
+            "symptom": "A file appears to be missing",
+            "cause": "The current directory or letter case differs",
+            "fix": "Run pwd and ls, then compare the exact spelling."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "The prompt ends in a dollar sign. What should you copy from a course command block?",
+          "choices": [
+            "Only the command, not an added prompt symbol",
+            "The username and prompt too",
+            "A dollar sign before every argument",
+            "The entire terminal title"
+          ],
+          "answer": 0,
+          "explanation": "The prompt is display text from the shell. The course blocks already contain the executable lines.",
+          "id": "linux-terminal-navigation-q1"
+        },
+        {
+          "prompt": "You run cd logs from inside data. Where does the shell look?",
+          "choices": [
+            "Always in the filesystem root",
+            "For a logs directory inside the current data directory",
+            "In every folder on the machine",
+            "Only on the robot"
+          ],
+          "answer": 1,
+          "explanation": "Relative paths begin at the current directory. Use ../logs for the sibling in this exercise.",
+          "id": "linux-terminal-navigation-q2"
+        },
+        {
+          "prompt": "Why quote \"calibration notes\"?",
+          "choices": [
+            "Quotes create administrator permission",
+            "Quotes encrypt the directory",
+            "Quotes keep the space-containing path as one argument",
+            "Quotes make Linux case-insensitive"
+          ],
+          "answer": 2,
+          "explanation": "Quoting controls shell parsing. It does not change filesystem permissions or naming rules.",
+          "id": "linux-terminal-navigation-q3"
+        }
+      ],
+      "sourceIds": [
+        "ros-linux",
+        "linux-bash-quoting"
+      ],
+      "nextLessonId": "linux-files-editing"
+    },
+    {
+      "id": "linux-files-editing",
+      "courseId": "linux-from-zero",
+      "title": "Create files, edit text, and understand here-documents",
+      "order": 2,
+      "durationMinutes": 75,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Create a complete shell program directly from a code block and inspect the file before running it. Learn the difference between writing, appending, copying, and editing.",
+      "objectives": [
+        "Create a file with a quoted here-document",
+        "Explain overwrite versus append redirection",
+        "Run an inspected script through Bash and change one value"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-terminal-navigation"
+      ],
+      "sections": [
+        {
+          "heading": "Commands can write files as well as print text",
+          "body": "A program normally writes text to the terminal through standard output. Redirection changes its destination. A single greater-than sign opens a file for replacement; if that file already exists, its previous contents are discarded. Two greater-than signs append to the end instead. The shell performs this redirection before the program runs, so a failing command can still have replaced the target file. Choose the destination deliberately.\n\nA here-document feeds several lines of literal text into a command until a delimiter appears alone on its own line. In `cat > file <<'END'`, the quoted delimiter stops the shell from expanding variables and command substitutions within the body. This matters when creating another script: you want its variables to be interpreted when that script runs, not while you are writing it. The closing delimiter must match exactly and should have no extra indentation in these examples."
+        },
+        {
+          "heading": "Create an entire small program",
+          "body": "The block below creates a program called greet.sh. Its first line names Bash as the interpreter when the file is executed directly. For now, `bash greet.sh` explicitly chooses the interpreter, so the script does not need executable permission yet. The variable stores a value, and printf substitutes that value into a fixed output format. Keeping the format string separate from the data avoids surprising formatting behavior.\n\nInspect the program with cat before running it. You should see the literal text $robot_name in the file, because the quoted here-document preserved it. On execution, Bash expands the variable and prints the chosen name. This distinction between file creation time and program execution time is essential when copying setup scripts, YAML generators, and ROS launch helpers.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/02-files\"\ncd \"$HOME/robot-academy/linux-from-zero/02-files\"\ncat > greet.sh <<'SCRIPT'\n#!/usr/bin/env bash\nrobot_name='training-simulator'\nprintf 'Hello from %s\\n' \"$robot_name\"\nSCRIPT\ncat greet.sh\nbash greet.sh\nprintf 'First observation: script ran.\\n' > observations.txt\nprintf 'Second observation: output matched.\\n' >> observations.txt\ncat observations.txt\ncp greet.sh greet.backup.sh\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Edit one thing and preserve a comparison",
+          "body": "An editor changes the file's contents. In Ubuntu's nano editor, open the file with `nano greet.sh`, use the arrow keys to move, and change only the training-simulator value. Ctrl-O writes the file, Return confirms the filename, and Ctrl-X exits. The notation shown by nano uses the caret symbol for Ctrl. You can also use a graphical text editor, provided it saves plain text rather than a word-processing document.\n\nRun the edited script and compare it with the backup using `diff -u greet.backup.sh greet.sh`. A difference is expected because you intentionally changed one value. Keep the backup until you can explain the diff. Copying a file preserves another copy; moving a file changes its location or name. Neither operation creates version history automatically. Later Git lessons provide history, but this small comparison already teaches you to separate an intentional edit from an accidental broad change.\n\nThe creation block has its own temporary working directory. The block below explicitly returns to that folder, opens the existing file, runs it after you close nano, and handles the expected difference status. If nano is not installed, use your plain-text editor on the full path shown by pwd instead.",
+          "language": "bash",
+          "code": "(\n  set -e\ncd \"$HOME/robot-academy/linux-from-zero/02-files\"\ntest -f greet.sh && test -f greet.backup.sh\npwd\nnano greet.sh\nbash greet.sh\n# diff returns 1 when files differ; that is expected after your edit.\nif diff -u greet.backup.sh greet.sh; then\n  printf '%s\\n' 'No change yet. Edit the robot_name value and try again.'\nelse\n  diff_status=$?\n  if [ \"$diff_status\" -ne 1 ]; then exit \"$diff_status\"; fi\nfi\n)"
+        }
+      ],
+      "lab": {
+        "title": "Write and revise a complete program",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "Operate only inside this lesson directory. No robot or network configuration is changed.",
+        "steps": [
+          "Run the block in the new lesson directory.",
+          "Confirm the original program prints Hello from training-simulator.",
+          "Open greet.sh in a plain-text editor and change only the name.",
+          "Run the edited file and compare it with greet.backup.sh using diff -u.",
+          "Explain why observations.txt has two lines and why the script file retained its variable reference."
+        ],
+        "expected": "The first program run prints the documented greeting. A later run reflects only the changed name.",
+        "deliverables": [
+          "Original and edited program",
+          "Two-line observations file",
+          "Focused diff"
+        ],
+        "acceptance": [
+          "The here-document produces valid Bash syntax",
+          "The learner distinguishes > from >>",
+          "Only the intended value changes in the diff"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "The shell keeps showing a continuation prompt",
+            "cause": "The here-document closing delimiter was not entered exactly",
+            "fix": "Enter SCRIPT alone on a line; if unsure, cancel with Ctrl-C and restart the complete block."
+          },
+          {
+            "symptom": "The file contains an empty value where a variable was expected",
+            "cause": "The delimiter was unquoted and expansion happened while creating the file",
+            "fix": "Use the quoted delimiter form shown in the exercise."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "What does > do to an existing destination file?",
+          "choices": [
+            "Creates a Git commit",
+            "Only reads it",
+            "Appends safely",
+            "Replaces its contents before the command runs"
+          ],
+          "answer": 3,
+          "explanation": "Single > is overwrite redirection. Use >> when intentional append behavior is required.",
+          "id": "linux-files-editing-q1"
+        },
+        {
+          "prompt": "Why is the here-document delimiter quoted?",
+          "choices": [
+            "To preserve literal variables in the file being created",
+            "To make the file executable",
+            "To hide the text from cat",
+            "To contact the robot"
+          ],
+          "answer": 0,
+          "explanation": "Quoting prevents expansion during file creation, allowing the generated program to interpret its own variables later.",
+          "id": "linux-files-editing-q2"
+        },
+        {
+          "prompt": "Why can bash greet.sh run before chmod +x?",
+          "choices": [
+            "The extension grants execution",
+            "Bash reads the file as its input program",
+            "All text files are already executable",
+            "Permissions never matter"
+          ],
+          "answer": 1,
+          "explanation": "Calling the interpreter explicitly requires readable script content. Direct execution uses a different permission and interpreter path.",
+          "id": "linux-files-editing-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-bash-redirection",
+        "linux-bash-quoting",
+        "ros-linux"
+      ],
+      "nextLessonId": "linux-shell-data"
+    },
+    {
+      "id": "linux-shell-data",
+      "courseId": "linux-from-zero",
+      "title": "Pipes, quoting, exit codes, and small log queries",
+      "order": 3,
+      "durationMinutes": 90,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Learn how data moves between terminal programs and how failures are reported. Build a small log query whose result you can verify by hand.",
+      "objectives": [
+        "Distinguish standard input, standard output, and standard error",
+        "Use a pipe and capture a command exit status",
+        "Filter and count a fixed log fixture without altering it"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-files-editing"
+      ],
+      "sections": [
+        {
+          "heading": "A pipe carries data, not meaning",
+          "body": "Most command-line programs read from standard input and write normal output to standard output. Diagnostic messages usually go to standard error. A pipe connects one program's standard output to the next program's standard input. It does not automatically include standard error, and it does not understand whether the text is a temperature, warning, or filename. You must choose programs whose input and output formats agree.\n\nFor example, a filter can select lines from a log and a counter can count the selected lines. The result is useful only if the matching rule corresponds to the question. Searching for the letters ERROR anywhere can also match a message that says NO_ERROR. A structured field check is more precise for a known fixture. Do not mistake a short terminal pipeline for a general parser of every possible log format."
+        },
+        {
+          "heading": "Status is separate from printed output",
+          "body": "A command returns an integer exit status to the shell. Zero conventionally indicates success; nonzero indicates a failure or a program-specific condition. The shell variable $? holds the most recent status, so save it immediately if another command will run. A program can print nothing and succeed, or print a plausible line and fail afterward. Record both output and status when diagnosing an automated workflow.\n\nIn Bash, a pipeline normally reports the status of its last command. Enabling pipefail changes the pipeline status so an earlier failure is visible. This matters when a build command is piped into a log writer: a successful log write should not disguise a failed build. It still does not replace checking the actual application result. Learn what each tool's status means instead of treating all nonzero values as equivalent."
+        },
+        {
+          "heading": "Make a query you can check manually",
+          "body": "The fixture below has four records with timestamp, level, and message fields. The awk condition checks the second whitespace-separated field, so only two records qualify as ERROR. The final counter should report two. Quoting the awk expression prevents the shell from expanding its dollar sign before awk sees it. This is a different language embedded in a shell command; the quotes preserve the intended boundary.\n\nThe final example deliberately reads a missing file, capturing normal output and diagnostics separately. The program fails, stdout stays empty, and stderr describes the problem. That combination is evidence, not an inconvenience to hide. When a robot tool fails, keep the original error text and command alongside your hypothesis. Suppressing errors with a blanket success fallback makes a script look calmer while making diagnosis harder.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/03-streams\"\ncd \"$HOME/robot-academy/linux-from-zero/03-streams\"\ncat > run.log <<'LOG'\n00:00 INFO source_started\n00:01 ERROR frame_mismatch\n00:02 INFO NO_ERROR_flag_cleared\n00:03 ERROR stale_sample\nLOG\nawk '$2 == \"ERROR\" {print}' run.log | tee errors.log\nawk '$2 == \"ERROR\" {count++} END {print count+0}' run.log\nset +e\ncat missing-file.txt > captured-output.txt 2> captured-error.txt\nread_status=$?\nprintf 'cat exit status: %s\\n' \"$read_status\"\ncat captured-error.txt\nset -o pipefail\nfalse | cat\npipeline_status=$?\nset -e\nprintf 'pipeline exit status with pipefail: %s\\n' \"$pipeline_status\"\n)",
+          "language": "bash"
+        }
+      ],
+      "lab": {
+        "title": "Trace a log query and a failed command",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "Operate only inside this lesson directory. No robot or network configuration is changed.",
+        "steps": [
+          "Create the fixture and manually identify the two ERROR records.",
+          "Run the awk query and compare errors.log with your prediction.",
+          "Inspect the captured output and error files from the missing-file command.",
+          "Explain why read_status must be assigned before another command runs.",
+          "Compare false | cat with pipefail disabled and enabled in separate Bash sessions."
+        ],
+        "expected": "The exact-field query reports two errors. The missing-file command has nonzero status and a diagnostic on stderr.",
+        "deliverables": [
+          "Fixture and extracted error log",
+          "Output/error/status observations",
+          "Pipeline-status comparison"
+        ],
+        "acceptance": [
+          "NO_ERROR is not counted as an ERROR-level record",
+          "The failure status is saved immediately",
+          "The original log remains unchanged"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "The awk expression behaves unexpectedly",
+            "cause": "Shell expansion occurred because its expression was not protected",
+            "fix": "Use single quotes around the awk program as shown."
+          },
+          {
+            "symptom": "A pipeline reports success despite an earlier failing stage",
+            "cause": "Only the final stage status was observed",
+            "fix": "Enable Bash pipefail for that workflow and inspect the individual failure."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "What does a pipe normally connect?",
+          "choices": [
+            "Both programs’ exit codes",
+            "Only error messages",
+            "The first program’s stdout to the second program’s stdin",
+            "All files on disk"
+          ],
+          "answer": 2,
+          "explanation": "The pipe transports a byte stream. Stderr and status need separate handling.",
+          "id": "linux-shell-data-q1"
+        },
+        {
+          "prompt": "Why save $? immediately after a failing command?",
+          "choices": [
+            "It disappears when printed in red",
+            "It is a password",
+            "It always means zero",
+            "A later command replaces that status"
+          ],
+          "answer": 3,
+          "explanation": "The variable reflects the most recently completed command, not a permanent record of the earlier one.",
+          "id": "linux-shell-data-q2"
+        },
+        {
+          "prompt": "Why check the second log field instead of searching for ERROR anywhere?",
+          "choices": [
+            "It matches the fixture’s level field and excludes NO_ERROR in a message",
+            "It changes the log format",
+            "It repairs the source node",
+            "It is always faster on every machine"
+          ],
+          "answer": 0,
+          "explanation": "The field-based rule matches the question. A substring search answers a different question.",
+          "id": "linux-shell-data-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-bash-redirection",
+        "linux-bash-quoting",
+        "linux-coreutils"
+      ],
+      "nextLessonId": "linux-permissions-processes"
+    },
+    {
+      "id": "linux-permissions-processes",
+      "courseId": "linux-from-zero",
+      "title": "Permissions, running processes, and graceful stopping",
+      "order": 4,
+      "durationMinutes": 90,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Understand why a readable script can still be refused as an executable. Start a bounded process, identify its PID, and stop only the process you created.",
+      "objectives": [
+        "Read owner/group/other permission bits",
+        "Add executable permission narrowly",
+        "Use a captured PID and signals without broad process killing"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-shell-data"
+      ],
+      "sections": [
+        {
+          "heading": "Permissions describe operations on an object",
+          "body": "The familiar permission display divides access into owner, group, and other users. For a regular file, read permits reading its contents, write permits changing it, and execute permits direct execution subject to the interpreter or executable format. Directories interpret these bits differently: search permission is needed to traverse a directory, and write permission affects directory entries. A permission error should be diagnosed on the relevant object and parent path.\n\nAdding executable permission to your own script is a small intentional change. Granting every permission to everyone is a much broader change and often conceals the actual cause. Do not use chmod 777 as a reflex. Likewise, sudo runs a command with elevated authority; it is not a general repair for a wrong path, unsourced environment, or missing dependency. Most development work belongs to your ordinary account."
+        },
+        {
+          "heading": "Run the same file in two different ways",
+          "body": "The fixture first creates a readable script without executable permission. Running it through Bash works because Bash reads the file as text. Running it directly as ./heartbeat.sh asks the operating system to execute that file, which requires executable permission. The ./ prefix tells the shell to use a file in the current directory rather than search the command lookup path.\n\nAfter adding only owner execute permission, start the program in the background. The shell variable $! gives the PID of the most recently started background job. Save it immediately. A PID identifies a particular running process at that time; it is not a permanent application identity. Reusing an old PID much later can refer to a different process, so this exercise keeps creation, inspection, and stopping in one short session.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/04-processes\"\ncd \"$HOME/robot-academy/linux-from-zero/04-processes\"\ncat > heartbeat.sh <<'SCRIPT'\n#!/usr/bin/env bash\ntrap 'printf \"received TERM; exiting\\n\"; exit 0' TERM\nfor tick in 1 2 3 4 5; do\n  printf 'tick=%s\\n' \"$tick\"\n  sleep 1\ndone\nSCRIPT\nchmod u=rw,go= heartbeat.sh\nls -l heartbeat.sh\nbash heartbeat.sh\nchmod u+x heartbeat.sh\n./heartbeat.sh > heartbeat.log 2>&1 &\nheartbeat_pid=$!\nprintf 'Created PID: %s\\n' \"$heartbeat_pid\"\nps -p \"$heartbeat_pid\" -o pid=,comm=\nkill -TERM \"$heartbeat_pid\"\nset +e\nwait \"$heartbeat_pid\"\nstop_status=$?\nset -e\nprintf 'Observed exit status: %s\\n' \"$stop_status\"\ncat heartbeat.log\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "A signal is a request with semantics",
+          "body": "Ctrl-C normally sends an interrupt signal to the foreground process group. A termination signal asks a program to stop and may allow it to flush files or release resources. A program can install a handler to define its response. An uncatchable kill signal removes that opportunity, so it should not be the first choice for a process that is still responding normally. In robotics, abrupt process termination is also not a substitute for a documented physical stop mechanism.\n\nThe example handler prints a final line when it receives TERM, but there is a startup race: if termination arrives before the handler is installed, the default signal behavior applies. Either outcome must be interpreted from the recorded exit status and log. A production supervisor needs a readiness condition before assuming a handler is active. The important lesson is to stop the known process you created, wait for its outcome, and avoid a broad name-based kill that might terminate unrelated work."
+        }
+      ],
+      "lab": {
+        "title": "Inspect permissions and stop one known process",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "Operate only inside this lesson directory. No robot or network configuration is changed.",
+        "steps": [
+          "Create the heartbeat script and inspect its initial mode.",
+          "Run it through Bash and explain why executable permission is unnecessary for that invocation.",
+          "Add owner execute permission and run it in the background.",
+          "Capture the PID, inspect it with ps, and terminate only that process.",
+          "Record whether the handler line appeared and explain the startup timing possibility."
+        ],
+        "expected": "The first run prints five ticks. The background run ends after the explicit TERM request; its exact log depends on scheduling.",
+        "deliverables": [
+          "Script and permission observations",
+          "Captured PID and ps output",
+          "Exit status and log interpretation"
+        ],
+        "acceptance": [
+          "No world-writable permission is added",
+          "Only the captured process is targeted",
+          "An absent handler line is not falsely reported as a guaranteed graceful shutdown"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "Direct execution says permission denied",
+            "cause": "The execute bit is absent or a parent directory is not traversable",
+            "fix": "Inspect ls -l and add only the required owner execute permission for this file."
+          },
+          {
+            "symptom": "The background log has no handler message",
+            "cause": "TERM may have arrived before the handler was installed",
+            "fix": "Record the exit status and distinguish startup termination from handled termination."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "Why can bash script.sh work while ./script.sh fails?",
+          "choices": [
+            "The extension is wrong",
+            "Explicit Bash execution reads the script; direct execution also requires execute permission",
+            "The filename changes its contents",
+            "Bash ignores all permissions"
+          ],
+          "answer": 1,
+          "explanation": "The two invocation paths require different operations on the file.",
+          "id": "linux-permissions-processes-q1"
+        },
+        {
+          "prompt": "What does $! provide immediately after a background launch?",
+          "choices": [
+            "The root password",
+            "The ROS domain",
+            "The last background job’s PID",
+            "The last file size"
+          ],
+          "answer": 2,
+          "explanation": "Capturing that PID lets the exercise target the process it actually created.",
+          "id": "linux-permissions-processes-q2"
+        },
+        {
+          "prompt": "Why avoid broad process-name killing during diagnosis?",
+          "choices": [
+            "It always requires a reboot",
+            "Signals only work by topic name",
+            "Names cannot be displayed",
+            "It can terminate unrelated processes with matching names"
+          ],
+          "answer": 3,
+          "explanation": "The intended target should be identified precisely, especially on a workstation with other running tasks.",
+          "id": "linux-permissions-processes-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-coreutils",
+        "linux-bash-quoting",
+        "linux-bash-signals"
+      ],
+      "nextLessonId": "linux-packages-python"
+    },
+    {
+      "id": "linux-packages-python",
+      "courseId": "linux-from-zero",
+      "title": "Install tools deliberately and isolate Python dependencies",
+      "order": 5,
+      "durationMinutes": 105,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Understand Ubuntu packages, Python packages, and virtual environments as different layers. Create an isolated Python workspace and verify which interpreter actually runs your program.",
+      "objectives": [
+        "Distinguish apt packages from Python packages and ROS distributions",
+        "Create and inspect a venv without modifying system Python",
+        "Install a small dependency set only in the intended Ubuntu environment"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-permissions-processes"
+      ],
+      "sections": [
+        {
+          "heading": "Two package managers solve different problems",
+          "body": "Ubuntu's package manager installs operating-system packages, including libraries, command-line tools, and ROS binary packages from configured repositories. `apt update` refreshes information about available packages; it does not itself install every update. `apt install` changes installed packages and may add dependencies. Read the proposed changes before accepting them. An administrator password prompt normally shows no characters while you type; that is expected terminal behavior.\n\nPython's package installer manages Python distributions for a chosen interpreter environment. It does not configure Ubuntu device permissions or replace a ROS distribution. Use `python -m pip` so the pip invocation clearly belongs to that Python interpreter. Installing a package with one interpreter and running code with another is a common source of ImportError. Avoid sudo pip as a repair: it can alter system-managed Python files and make ownership of dependencies unclear."
+        },
+        {
+          "heading": "Build an environment you can identify",
+          "body": "A virtual environment gives a project its own Python executable entry point and package directory. It still uses the underlying Python installation and operating system; it is not a VM or a security boundary. Activation changes command lookup in the current shell. You can also call .venv/bin/python explicitly, which is unambiguous and works without remembering whether activation happened.\n\nThe block creates a venv and runs a small report using its interpreter. It installs no third-party Python packages. The two printed prefixes should differ when the virtual environment is active: sys.prefix describes this environment and sys.base_prefix identifies the underlying installation. Save that observation with the interpreter version. Do not copy a venv directory between unrelated computers and call it reproducible; recreate it from declared dependencies instead.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/05-python\"\ncd \"$HOME/robot-academy/linux-from-zero/05-python\"\npython3 --version\npython3 -m venv .venv\n.venv/bin/python - <<'PYTHON'\nimport sys\nprint('executable:', sys.executable)\nprint('environment prefix:', sys.prefix)\nprint('base prefix:', sys.base_prefix)\nprint('isolated environment:', sys.prefix != sys.base_prefix)\nPYTHON\n.venv/bin/python -m pip --version\n.venv/bin/python -m pip freeze > requirements-observed.txt\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Install prerequisites only where they belong",
+          "body": "A minimal Ubuntu image may not include venv support. In that case, the explicit Ubuntu preparation block below installs the course's basic tools through the system package manager. The block runs in a subshell and stops on a failed command, so a failed update does not silently continue into an unrelated installation. It does not upgrade the Ubuntu release or install a vendor SDK.\n\nROS binary Python libraries are usually associated with the Python environment used by the installed ROS distribution. An unrelated venv may not see rclpy. For the foundation ROS recipes, use the sourced Jazzy system environment; use a separate venv for standalone Python projects unless a documented ROS integration deliberately specifies otherwise. For vendor courses, reproduce the vendor's stated Ubuntu and ROS versions in a separate environment. Changing an installation command from humble to jazzy is not evidence that the SDK supports the new distribution.",
+          "code": "(\n  set -e\n  test \"$(uname -s)\" = Linux\n  test -f /etc/os-release\n  . /etc/os-release\n  test \"$ID\" = ubuntu\n  test \"$VERSION_ID\" = 24.04\n  sudo apt-get update\n  sudo apt-get install python3 python3-venv python3-pip git rsync iproute2 iputils-ping openssh-client\n)",
+          "language": "bash"
+        }
+      ],
+      "lab": {
+        "title": "Identify the interpreter that owns a project",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "Operate only inside this lesson directory. No robot or network configuration is changed.",
+        "steps": [
+          "Check Python availability and create the venv using the first block.",
+          "If Ubuntu reports missing venv support, read and run the guarded preparation block, then retry.",
+          "Record sys.executable, sys.prefix, and sys.base_prefix.",
+          "Compare the system python3 path with the venv interpreter path.",
+          "Explain why a Python import failure is not automatically solved by changing ROS distributions."
+        ],
+        "expected": "The venv report prints isolated environment: True and pip identifies the same environment.",
+        "deliverables": [
+          "Interpreter report",
+          "Observed dependency file",
+          "Package-layer explanation"
+        ],
+        "acceptance": [
+          "No sudo pip command is used",
+          "The environment can be recreated from its declared setup",
+          "Ubuntu/ROS versions remain explicit and separate from Python dependencies"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "ensurepip or venv support is unavailable",
+            "cause": "The minimal Ubuntu installation lacks python3-venv",
+            "fix": "Install the stated Ubuntu package in the learning VM and retry creation."
+          },
+          {
+            "symptom": "rclpy imports in one shell but not the venv",
+            "cause": "The selected interpreter cannot see the ROS binary Python packages",
+            "fix": "Use the sourced Jazzy system environment for the ROS recipes; inspect interpreter paths before installing anything."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "What does apt update do?",
+          "choices": [
+            "Refreshes repository package metadata",
+            "Installs every available upgrade",
+            "Creates a Python venv",
+            "Changes Ubuntu to the next release"
+          ],
+          "answer": 0,
+          "explanation": "It updates package indexes. Installation and upgrades are distinct operations.",
+          "id": "linux-packages-python-q1"
+        },
+        {
+          "prompt": "Why prefer .venv/bin/python -m pip for a project installation?",
+          "choices": [
+            "It bypasses dependency resolution",
+            "It explicitly selects the interpreter environment that owns pip",
+            "It grants administrator access",
+            "It installs ROS firmware"
+          ],
+          "answer": 1,
+          "explanation": "The interpreter path ties package installation to the environment that will run the code.",
+          "id": "linux-packages-python-q2"
+        },
+        {
+          "prompt": "A venv cannot import rclpy, while the sourced system Python can. What should you inspect first?",
+          "choices": [
+            "The simulator friction",
+            "The SSH fingerprint",
+            "Which interpreter and package paths each command uses",
+            "The robot battery"
+          ],
+          "answer": 2,
+          "explanation": "This is an environment visibility question. Replacing ROS versions or using sudo pip is not a justified first step.",
+          "id": "linux-packages-python-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-apt",
+        "linux-venv",
+        "ros-install"
+      ],
+      "nextLessonId": "linux-networking"
+    },
+    {
+      "id": "linux-networking",
+      "courseId": "linux-from-zero",
+      "title": "Network interfaces, addresses, routes, and a single-host probe",
+      "order": 6,
+      "durationMinutes": 105,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Read the local network configuration before trying to reach a robot. Separate address selection, route selection, ICMP reachability, and application-port connectivity.",
+      "objectives": [
+        "Identify an interface and its assigned address",
+        "Explain a route and a default gateway",
+        "Run a bounded localhost probe and state its limits"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-packages-python"
+      ],
+      "sections": [
+        {
+          "heading": "Start with the interface, not a guessed address",
+          "body": "An interface is the operating system's representation of a network connection. Ethernet, Wi-Fi, loopback, VPNs, and container networks can all appear as interfaces. Interface names vary by machine, so do not copy a name such as eth0 merely because it appeared in an old tutorial. Inspect your own system. An interface can be present but administratively down, disconnected, or lacking the address required by the intended network.\n\nAn IP address belongs to an interface in a network context. A subnet prefix describes the address range considered directly reachable on that link. A route tells the host which interface and next hop to use for a destination. The default route is a fallback for destinations without a more specific route. None of these facts tells you a robot's model, firmware, credentials, or supported SDK. Obtain robot connection settings from the exact vendor instructions and the actual device configuration."
+        },
+        {
+          "heading": "Ask one reachability question at a time",
+          "body": "The ip commands below are read-only. The loopback route keeps traffic on the same host, which makes it useful for a first exercise. Ping sends ICMP echo requests; it does not log in, inspect a ROS topic, or test a TCP service. A host may block ICMP while allowing its application service, and a host that answers ping may have no service listening on the port you need.\n\nThe socket listing shows local endpoints and their listening addresses. Binding to 127.0.0.1 limits an IPv4 listener to loopback, while a wildcard binding can expose it on other interfaces depending on firewall and routing. A VM can reach the internet through address translation while still lacking the network behavior needed for cross-machine DDS discovery. Draw the VM, host, and robot connections before changing configuration.",
+          "code": "(\n  set -e\nip -brief address\nip route\nip route get 127.0.0.1\nping -n -c 3 -W 1 127.0.0.1\nss -lntu\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Use a controlled endpoint before a real device",
+          "body": "The companion network-probe recipe creates a local TCP listener on a port allocated by the operating system, then connects to that exact endpoint and records elapsed time. A readiness file links the tested port to the process the exercise actually started. This avoids accidentally proving that some unrelated service was already running. Its cleanup targets only the captured process.\n\nAfter that baseline passes, a failed connection to an authorized remote endpoint can be investigated systematically: numeric address, selected route, local interface, target service, firewall policy, and application protocol. Do not scan a whole subnet to compensate for missing device documentation. Record the single address and port you were authorized to test and the time of the observation. A successful TCP connect supports only connection establishment; ROS discovery, QoS, source timestamps, and vendor-command semantics remain separate checks."
+        }
+      ],
+      "lab": {
+        "title": "Map your local path and prove one endpoint",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "Inspect local configuration and use localhost by default. A remote probe requires a known authorized endpoint; never infer a robot address.",
+        "steps": [
+          "Run the read-only network commands in Ubuntu and identify loopback plus one non-loopback interface if present.",
+          "Explain the route selected for 127.0.0.1.",
+          "Run the foundations-network-probe recipe with its default local fixture.",
+          "Inspect the JSON host, allocated port, connected flag, and elapsed time.",
+          "Draw a proposed host/VM/robot topology without inventing any robot address or credential."
+        ],
+        "expected": "Loopback ping receives replies in the normal Ubuntu environment; the local TCP fixture reports a successful connection.",
+        "deliverables": [
+          "Annotated interface and route output",
+          "Local probe report",
+          "Topology sketch with unknown values marked"
+        ],
+        "acceptance": [
+          "Interface names come from observation",
+          "The learner distinguishes ICMP from TCP and ROS checks",
+          "No network configuration or remote address range is modified or scanned"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "ip command is missing",
+            "cause": "The minimal image lacks iproute2",
+            "fix": "Install the course prerequisites through Ubuntu packages; do not guess equivalent output."
+          },
+          {
+            "symptom": "A remote ping fails but a TCP service works",
+            "cause": "ICMP and TCP have different policy or service behavior",
+            "fix": "Report both observations without claiming the entire network is down."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "Ping succeeds to a robot computer. What has been established?",
+          "choices": [
+            "ROS topics are compatible",
+            "SDK commands are accepted",
+            "The robot is safe to move",
+            "Some ICMP reachability at that time"
+          ],
+          "answer": 3,
+          "explanation": "Ping exercises ICMP, not the ROS or vendor application contract.",
+          "id": "linux-networking-q1"
+        },
+        {
+          "prompt": "Why inspect interface names on the actual host?",
+          "choices": [
+            "Names and topology vary across systems",
+            "Every computer uses eth0",
+            "Names determine motor order",
+            "Wi-Fi interfaces are invisible"
+          ],
+          "answer": 0,
+          "explanation": "Modern Linux naming, VMs, and adapters can produce different interface names and routes.",
+          "id": "linux-networking-q2"
+        },
+        {
+          "prompt": "What is the best first target for this beginner network exercise?",
+          "choices": [
+            "An arbitrary public address range",
+            "The disposable local listener created by the recipe",
+            "A guessed robot IP",
+            "Every device on the Wi-Fi network"
+          ],
+          "answer": 1,
+          "explanation": "The controlled local fixture has known ownership and behavior, letting you isolate your program before involving a remote system.",
+          "id": "linux-networking-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-ip",
+        "linux-ping",
+        "linux-socket"
+      ],
+      "nextLessonId": "linux-ssh-transfer"
+    },
+    {
+      "id": "linux-ssh-transfer",
+      "courseId": "linux-from-zero",
+      "title": "SSH and file transfer without losing track of the machine",
+      "order": 7,
+      "durationMinutes": 105,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Learn how remote commands and file copies cross machine boundaries. Practice rsync locally first, then use explicit authorized-host substitutions for SSH and SCP.",
+      "objectives": [
+        "Distinguish local and remote command execution",
+        "Explain host-key verification and user authentication",
+        "Use rsync dry-run and verify copied file contents"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-networking"
+      ],
+      "sections": [
+        {
+          "heading": "A remote shell is still someone’s computer",
+          "body": "SSH establishes an encrypted connection to a remote account and can start a shell or execute a command there. The client must identify the host as well as authenticate the user. A first-connection fingerprint should be compared with a trusted value obtained through the device administrator or documented provisioning process. A changed host key is a reason to investigate identity, not a reason to disable checking or delete trust records blindly.\n\nOnce inside an interactive SSH session, pwd, files, processes, and installed packages belong to the remote machine. The familiar prompt can make this easy to forget. Use a deliberately clear prompt and inspect the host identity before consequential work. Avoid installing the course's generic workstation dependencies onto a robot computer just because you can log in. An SDK workstation and an onboard control computer can have different supported environments and responsibilities."
+        },
+        {
+          "heading": "Copying has a direction and a scope",
+          "body": "SCP names a source and a destination. A remote location combines an account, host, and path; a local path refers to the machine on which the scp client is running. Reversing them changes upload into download. A successful transfer means bytes were copied; it does not mean the program is executable, compatible, or configured correctly on the destination.\n\nRsync can copy locally or through a remote shell. Its dry-run mode previews intended changes without copying them, and itemized output makes the plan inspectable. A trailing slash on a source directory means copy its contents into the destination rather than adding the source directory itself as another level. This lesson avoids deletion options: a synchronization command that removes destination files deserves a separate, explicit review of scope."
+        },
+        {
+          "heading": "Prove the local transfer before introducing credentials",
+          "body": "The complete fixture creates one file and copies it between two local directories. Inspect the dry-run output, perform the copy, then compare the exact file bytes. The second dry run should show no pending file-content change in this controlled example. A checksum or byte comparison establishes file identity, not correctness of the file's contents.\n\nFor a real authorized host, substitute values deliberately rather than accepting invented credentials. The separate remote example reads an account and numeric or named host from you, then runs only pwd and uname through SSH. It does not change passwords, copy keys, alter SSH configuration, or bypass host verification. If the host identity cannot be verified, complete the local exercise and obtain the correct provisioning information before connecting.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/07-transfer/source\" \"$HOME/robot-academy/linux-from-zero/07-transfer/received\"\ncd \"$HOME/robot-academy/linux-from-zero/07-transfer\"\nprintf 'calibration_revision=teaching-example\\n' > source/manifest.txt\nrsync -ani source/ received/\nrsync -ai source/ received/\ncmp source/manifest.txt received/manifest.txt\nrsync -ani source/ received/\nprintf 'Local copied bytes match.\\n'\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Optional read-only remote check",
+          "body": "Run this optional block only after you have an authorized account, the intended host, and a trusted fingerprint. Enter the account and host exactly as supplied for that device; no values are assumed by the course. The remote command is quoted so the local shell sends it as one command string. On success, the printed directory and operating-system name belong to the remote host. Keep that distinction visible when you later read logs or transfer a bag.",
+          "code": "(\n  set -e\nread -r -p 'Authorized remote username: ' remote_user\nread -r -p 'Verified remote hostname or IP: ' remote_host\nif [[ -z \"$remote_user\" || -z \"$remote_host\" ]]; then\n  printf '%s\\n' 'No connection attempted: username and host are required.'\nelse\n  ssh -o ConnectTimeout=5 -- \"${remote_user}@${remote_host}\" 'pwd; uname -s'\nfi\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Optional download of one known remote file",
+          "body": "After the read-only identity check, this optional block downloads one file you are authorized to read. Obtain its exact absolute path from the device owner or your own experiment notes. The colon introduces the remote path, and the final directory is local. A fresh local destination avoids replacing an earlier download. Read the transfer result and inspect the downloaded file before using it; a successful copy is not proof of SDK compatibility.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/07-transfer\"\ncd \"$HOME/robot-academy/linux-from-zero/07-transfer\"\nread -r -p 'Authorized remote username: ' remote_user\nread -r -p 'Verified remote hostname or IP: ' remote_host\nread -r -p 'Exact absolute remote file path: ' remote_path\nif [[ -z \"$remote_user\" || -z \"$remote_host\" || \"$remote_path\" != /* ]]; then\n  printf '%s\\n' 'No download attempted: account, host, and an absolute file path are required.'\nelse\n  download_dir=$(mktemp -d ./download.XXXXXX)\n  scp -o ConnectTimeout=5 -- \"${remote_user}@${remote_host}:${remote_path}\" \"$download_dir/\"\n  printf 'Downloaded file is in: %s/%s\\n' \"$PWD\" \"$download_dir\"\n  ls -l \"$download_dir\"\nfi\n)",
+          "language": "bash"
+        }
+      ],
+      "lab": {
+        "title": "Preview and verify a file copy",
+        "environment": "Ubuntu 24.04 with rsync and openssh-client; optional separately provisioned authorized SSH host",
+        "safety": "The required exercise copies only local fixture files. The optional remote check is read-only and requires verified host identity.",
+        "steps": [
+          "Run the local source/destination fixture and read the itemized dry run.",
+          "Perform the transfer and verify identical bytes with cmp.",
+          "Change the source file, run the dry run again, and explain the proposed update.",
+          "Draw the direction of a hypothetical scp download from a verified remote log path to a local folder.",
+          "Optionally run the read-only SSH check on your own verified host, recording which outputs are remote."
+        ],
+        "expected": "The initial copied files match; changing the source produces a visible pending update before the next copy.",
+        "deliverables": [
+          "Dry-run output",
+          "Byte comparison result",
+          "Local/remote direction diagram"
+        ],
+        "acceptance": [
+          "Dry-run is inspected before copying",
+          "Source trailing-slash behavior is explained",
+          "No host-key verification bypass or invented credential is used"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "Permission denied during SSH authentication",
+            "cause": "The account, credential, or server authentication policy does not permit the login",
+            "fix": "Verify the account provisioning and approved authentication method; do not guess credentials."
+          },
+          {
+            "symptom": "Files appear inside an extra source directory",
+            "cause": "The source trailing slash differed",
+            "fix": "Inspect the intended directory topology and compare source/ with source before another transfer."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "What should you do when a known SSH host presents an unexpected changed key?",
+          "choices": [
+            "Upload your private key",
+            "Disable host checking",
+            "Investigate and verify the host identity through a trusted channel",
+            "Assume it is always safe"
+          ],
+          "answer": 2,
+          "explanation": "A changed key can reflect legitimate reprovisioning or a different endpoint. Verification must precede renewed trust.",
+          "id": "linux-ssh-transfer-q1"
+        },
+        {
+          "prompt": "What does rsync source/ destination/ mean here?",
+          "choices": [
+            "Always delete destination",
+            "Copy only the directory name",
+            "Execute every copied file",
+            "Copy the contents of source into destination"
+          ],
+          "answer": 3,
+          "explanation": "The trailing slash changes directory-copy topology. No deletion or execution follows automatically.",
+          "id": "linux-ssh-transfer-q2"
+        },
+        {
+          "prompt": "A checksum matches after a transfer. What has been proven?",
+          "choices": [
+            "The file bytes match",
+            "The robot SDK supports the file",
+            "The calibration is physically accurate",
+            "The remote program has correct permissions"
+          ],
+          "answer": 0,
+          "explanation": "Byte identity is a narrow but useful claim. Compatibility and physical validity require different checks.",
+          "id": "linux-ssh-transfer-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-ssh",
+        "linux-scp",
+        "linux-rsync"
+      ],
+      "nextLessonId": "linux-git-workflow"
+    },
+    {
+      "id": "linux-git-workflow",
+      "courseId": "linux-from-zero",
+      "title": "Git as an experiment notebook: inspect, commit, and undo",
+      "order": 8,
+      "durationMinutes": 105,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Create a local practice repository, make two focused commits, and reverse a change without rewriting history. Learn what Git records and what remains outside it.",
+      "objectives": [
+        "Distinguish working tree, staging area, and commit",
+        "Inspect a diff before committing",
+        "Use revert to preserve an auditable undo history"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-ssh-transfer"
+      ],
+      "sections": [
+        {
+          "heading": "A commit captures selected content",
+          "body": "Git records snapshots of tracked files and the relationships between those snapshots. The working tree contains your current files. The staging area selects the content intended for the next commit. A commit records that staged snapshot with metadata and a parent relationship. Saving a file in an editor does not automatically stage or commit it, and a file sitting in the repository directory can still be untracked.\n\nA useful robotics commit groups one understandable change: a unit conversion, a configuration fix, or a small parser improvement. Inspect the diff before staging and again before committing. Generated build directories, large recordings, virtual environments, credentials, and private imagery usually need separate handling. An ignore file prevents ordinary addition of matching untracked paths; it does not erase a secret that was already committed or prevent every possible forced addition."
+        },
+        {
+          "heading": "Use a disposable local identity for the fixture",
+          "body": "The exercise uses a fresh practice directory and an explicitly labeled local fixture author. That reserved example identity is only for this unpublished exercise; use your own configured identity in real repositories. The first commit records a 10 Hz configuration. The second changes it to 20 Hz. Status and diff show different views of the same work: status identifies changed paths, while diff shows the content change.\n\nThe README-like note states what the file means, and the ignore file excludes common generated paths. No remote repository is configured, and no push occurs. A commit is local history until it is copied or published elsewhere. Record the commit identifier that corresponds to an experiment, and disclose any uncommitted patch if that patch affected the tested result.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/08-git\"\ncd \"$HOME/robot-academy/linux-from-zero/08-git\"\npractice_dir=$(mktemp -d ./practice.XXXXXX)\ncd \"$practice_dir\"\ngit init\nprintf '.venv/\\nreports/\\nbuild/\\ninstall/\\nlog/\\n' > .gitignore\nprintf 'rate_hz=10\\n' > settings.txt\nprintf 'Local teaching fixture; no robot settings are changed.\\n' > README.txt\ngit add .gitignore settings.txt README.txt\ngit diff --cached\ngit -c user.name='Local training fixture' -c user.email='training@example.invalid' commit -m 'Record initial teaching configuration'\nprintf 'rate_hz=20\\n' > settings.txt\ngit diff\ngit add settings.txt\ngit -c user.name='Local training fixture' -c user.email='training@example.invalid' commit -m 'Increase teaching sample rate'\ngit log --oneline -2\ngit -c user.name='Local training fixture' -c user.email='training@example.invalid' revert --no-edit HEAD\ncat settings.txt\ngit log --oneline -3\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Undo can be another visible change",
+          "body": "Revert creates a new commit that reverses an earlier change. The history still shows the original change and its reversal, which helps reviewers understand how the current state was reached. This differs from commands that move branch pointers or replace working-tree files without adding that explanatory history. Do not reach for a destructive reset when a reviewable inverse commit answers the need.\n\nIn this fixture, settings.txt returns to rate_hz=10 and the log contains three commits. That proves the repository workflow, not a real sensor rate. In a real project, include the build configuration and dependency manifest needed to reproduce the code at the selected commit. A repository URL with no revision is a moving target; a revision with undisclosed local edits is an incomplete description. The purpose of Git in robotics is to make tested changes traceable, not merely to accumulate green contribution squares."
+        }
+      ],
+      "lab": {
+        "title": "Create and reverse a focused change",
+        "environment": "Ubuntu 24.04; Bash; ordinary user account",
+        "safety": "This exercise creates a new local repository with a clearly labeled fixture author. No remote is configured and nothing is published.",
+        "steps": [
+          "Run the complete fixture in its newly generated directory.",
+          "Identify the initial, changed, and reverted commit in the log.",
+          "Explain the settings.txt diff before the second commit.",
+          "Confirm that the final file returns to rate_hz=10 while the second commit remains in history.",
+          "Write a short experiment label using the current commit and an explicit statement that the working tree is clean."
+        ],
+        "expected": "The final configuration says rate_hz=10, and all three historical steps remain visible.",
+        "deliverables": [
+          "Three-commit log",
+          "Focused settings diff",
+          "Experiment version label"
+        ],
+        "acceptance": [
+          "The fixture identity is labeled and never published",
+          "The reversal preserves history",
+          "Generated output paths are excluded from ordinary additions"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "Git reports nothing to commit",
+            "cause": "The intended file is unchanged or not staged",
+            "fix": "Inspect status and diff; do not create empty commits to conceal the mismatch."
+          },
+          {
+            "symptom": "A real experiment differs despite the same commit",
+            "cause": "Uncommitted changes or external configuration may differ",
+            "fix": "Record working-tree status and version the relevant configuration alongside code."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "What is the staging area for?",
+          "choices": [
+            "Replacing all backups",
+            "Selecting content for the next commit",
+            "Running a robot simulation",
+            "Storing every file automatically"
+          ],
+          "answer": 1,
+          "explanation": "Git commits the staged snapshot, which can differ from both the previous commit and current working-tree edits.",
+          "id": "linux-git-workflow-q1"
+        },
+        {
+          "prompt": "What does git revert add?",
+          "choices": [
+            "A network upload",
+            "A new Python environment",
+            "A new inverse-change commit",
+            "A guaranteed erasure of history"
+          ],
+          "answer": 2,
+          "explanation": "Revert keeps the original commit visible and records the reversal as another change.",
+          "id": "linux-git-workflow-q2"
+        },
+        {
+          "prompt": "Why is a commit identifier alone insufficient when local edits affected the run?",
+          "choices": [
+            "Git identifiers are always random guesses",
+            "Only filenames matter",
+            "The operating system ignores files",
+            "The identifier omits those uncommitted edits"
+          ],
+          "answer": 3,
+          "explanation": "The tested state is the commit plus the local changes. The evidence must describe both.",
+          "id": "linux-git-workflow-q3"
+        }
+      ],
+      "sourceIds": [
+        "ros-git",
+        "linux-git-revert"
+      ],
+      "nextLessonId": "linux-diagnostics"
+    },
+    {
+      "id": "linux-diagnostics",
+      "courseId": "linux-from-zero",
+      "title": "A diagnostic workflow that produces a reproducible answer",
+      "order": 9,
+      "durationMinutes": 120,
+      "level": "Beginner",
+      "mode": "Offline",
+      "summary": "Turn an unexplained failure into a small, testable claim. Use a deliberate broken-path fixture and the workstation report program to build a useful handoff.",
+      "objectives": [
+        "Separate expected behavior, observation, hypothesis, and conclusion",
+        "Capture command, directory, environment, output, and status",
+        "Reduce a failure to a minimal reproduction and verify the fix"
+      ],
+      "prerequisites": [
+        "An Ubuntu 24.04 VM or Linux workstation with Bash",
+        "linux-git-workflow"
+      ],
+      "sections": [
+        {
+          "heading": "Describe the first failure precisely",
+          "body": "A useful report says what you ran, where you ran it, what you expected, and what actually happened. “It does not work” merges many possible failures: command lookup, file access, import resolution, network reachability, message compatibility, and task behavior. Identify the first observation that contradicts the expected sequence. Later errors may be consequences rather than independent causes.\n\nKeep hypotheses separate from observations. “No samples arrived for ten seconds” is an observation. “The firewall is blocking DDS” is a hypothesis that needs a discriminating test. Restarting every component may remove a symptom but usually destroys information about its cause. Save the original command, status, and relevant error before changing one thing. A fix is more credible when the same test fails before it and passes afterward under otherwise equivalent conditions."
+        },
+        {
+          "heading": "Use an intentionally simple broken path",
+          "body": "The fixture creates a data file under data/ but asks a program to open settings.txt in the current directory. Python reports a missing file because the relative path does not match the actual location. The corrected command passes data/settings.txt. No package installation, permission broadening, or network change is needed. This is a small example of choosing the correct layer for the symptom.\n\nThe program prints the absolute resolved path it attempted before opening the file, making the hidden assumption visible. Its error goes to stderr and the shell records a nonzero status. The failure is expected for the first run, so the block captures it deliberately instead of letting an automatic stop obscure the lesson. In real troubleshooting, add similarly focused observability around a path, topic name, frame, or configuration value rather than logging every secret environment variable.",
+          "code": "(\n  set -e\nmkdir -p \"$HOME/robot-academy/linux-from-zero/09-diagnostics/data\"\ncd \"$HOME/robot-academy/linux-from-zero/09-diagnostics\"\nprintf 'rate_hz=10\\n' > data/settings.txt\ncat > read_settings.py <<'PYTHON'\nfrom pathlib import Path\nimport sys\npath = Path(sys.argv[1])\nprint('attempted path:', path.resolve(), flush=True)\nprint(path.read_text(encoding='utf-8').strip())\nPYTHON\nset +e\npython3 read_settings.py settings.txt > before.stdout.txt 2> before.stderr.txt\nbefore_status=$?\nset -e\nprintf 'Before exit status: %s\\n' \"$before_status\"\ncat before.stdout.txt\ncat before.stderr.txt\npython3 read_settings.py data/settings.txt > after.stdout.txt 2> after.stderr.txt\nafter_status=$?\nprintf 'After exit status: %s\\n' \"$after_status\"\ncat after.stdout.txt\n)",
+          "language": "bash"
+        },
+        {
+          "heading": "Collect enough context without collecting everything",
+          "body": "Run the workstation-report recipe to capture OS, architecture, selected ROS settings, and tool availability. Use its optional network or ROS diagnostic flags only when that context is relevant. Review a report before sharing because addresses, paths, and logs can reveal private details. A complete environment dump is often both noisy and unnecessary; collect the fields that help another engineer reproduce the failure.\n\nFinish with a compact report containing expected behavior, exact reproduction steps, observed outputs and statuses, hypothesis, the single change made, and the confirming rerun. State remaining uncertainty. If you tested on macOS but the failure occurs on Ubuntu, say so rather than presenting the environments as equivalent. For a robotics handoff, add source revision, model/firmware version where relevant, and whether the run was offline, simulated, read-only hardware, or supervised motion. Those labels prevent a software check from being misread as physical commissioning evidence."
+        }
+      ],
+      "lab": {
+        "title": "Write a failure report another learner can reproduce",
+        "environment": "Ubuntu 24.04 + Python 3; the fixture is also portable to a local Python workstation",
+        "safety": "Operate only inside this lesson directory. No robot or network configuration is changed.",
+        "steps": [
+          "Run the broken-path fixture and preserve both output streams and status.",
+          "Explain the attempted absolute path before suggesting a fix.",
+          "Run the corrected command without changing permissions or packages.",
+          "Generate the default workstation report using the foundations-workstation-report recipe.",
+          "Write a reproduction note and ask another learner to repeat the failure and fix."
+        ],
+        "expected": "The first run fails with a missing-file error; the corrected path prints rate_hz=10 and returns success.",
+        "deliverables": [
+          "Before/after stdout and stderr",
+          "Exit-status comparison",
+          "Workstation report",
+          "Minimal reproduction note"
+        ],
+        "acceptance": [
+          "Observation and hypothesis are labeled separately",
+          "The fix changes only the path assumption",
+          "The verification claim names the actual tested environment"
+        ],
+        "troubleshooting": [
+          {
+            "symptom": "The error cannot be reproduced",
+            "cause": "Working directory, input file, or environment was omitted",
+            "fix": "Start from the saved commands and recreate only the documented fixture."
+          },
+          {
+            "symptom": "The diagnostic report includes unrelated private information",
+            "cause": "Too broad a collection command was used",
+            "fix": "Use a small explicit field list and review the artifact before sharing."
+          }
+        ]
+      },
+      "questions": [
+        {
+          "prompt": "Which statement is a direct observation?",
+          "choices": [
+            "The command returned status 1 and reported a missing settings.txt file",
+            "Linux is unreliable",
+            "The firewall must be wrong",
+            "The SDK is broken"
+          ],
+          "answer": 0,
+          "explanation": "The status and error text are observed. The other statements are broad causal claims without supporting tests.",
+          "id": "linux-diagnostics-q1"
+        },
+        {
+          "prompt": "What is the justified fix in this fixture?",
+          "choices": [
+            "Install a new ROS distribution",
+            "Use the correct data/settings.txt path",
+            "Run every command with sudo",
+            "Disable the firewall"
+          ],
+          "answer": 1,
+          "explanation": "The failure is a wrong relative path. Changing unrelated layers adds risk and obscures the cause.",
+          "id": "linux-diagnostics-q2"
+        },
+        {
+          "prompt": "What makes the before/after comparison useful?",
+          "choices": [
+            "Only the successful screenshot is kept",
+            "The environment is silently changed",
+            "The same test is repeated with one explained change",
+            "The error log is deleted"
+          ],
+          "answer": 2,
+          "explanation": "A controlled comparison supports the causal explanation and lets someone else challenge it.",
+          "id": "linux-diagnostics-q3"
+        }
+      ],
+      "sourceIds": [
+        "linux-subprocess",
+        "ros-linux",
+        "ros-git"
+      ],
+      "nextLessonId": "ros-environment"
+    },
     {
       "id": "ros-environment",
       "courseId": "ros-workstation",
@@ -9097,6 +10156,339 @@
       "accessed": "2026-09-29",
       "version": "Current model card; accessed 2026-09-29",
       "scope": "Vision-language-action identity, pretrained model and stated CC BY-NC-SA 4.0 license"
+    },
+    {
+      "id": "linux-apt",
+      "title": "Ubuntu package management",
+      "publisher": "Canonical",
+      "url": "https://documentation.ubuntu.com/server/how-to/software/package-management/",
+      "scope": "apt packages, repository metadata, and installation management",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-bash-quoting",
+      "title": "Bash quoting",
+      "publisher": "GNU Project",
+      "url": "https://www.gnu.org/software/bash/manual/html_node/Quoting.html",
+      "scope": "Quotes, expansion, and literal text",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-bash-redirection",
+      "title": "Bash redirections",
+      "publisher": "GNU Project",
+      "url": "https://www.gnu.org/software/bash/manual/html_node/Redirections.html",
+      "scope": "Streams, append/overwrite redirection, and quoted here-documents",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-bash-signals",
+      "title": "Bash Reference Manual: signals and job control",
+      "publisher": "GNU Project",
+      "url": "https://www.gnu.org/s/bash/manual/bash.html#Signals",
+      "scope": "Signal delivery, trap, wait, and process exit statuses",
+      "accessed": "2026-09-30",
+      "version": "Current primary manual reviewed via web search retrieval"
+    },
+    {
+      "id": "linux-coreutils",
+      "title": "GNU Coreutils source manual",
+      "publisher": "GNU Project / coreutils maintainers",
+      "url": "https://raw.githubusercontent.com/coreutils/coreutils/master/doc/coreutils.texi",
+      "scope": "File operations, permissions, timeout, status codes, and standard utilities",
+      "accessed": "2026-09-29",
+      "version": "Primary source manual retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-git-revert",
+      "title": "Git revert documentation",
+      "publisher": "Git project",
+      "url": "https://raw.githubusercontent.com/git/git/master/Documentation/git-revert.adoc",
+      "scope": "History-preserving inverse commits",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-ip",
+      "title": "iproute2 ip manual",
+      "publisher": "iproute2 maintainers",
+      "url": "https://raw.githubusercontent.com/iproute2/iproute2/main/man/man8/ip.8",
+      "scope": "Interface/address/route inspection",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-ping",
+      "title": "iputils ping manual",
+      "publisher": "iputils maintainers",
+      "url": "https://raw.githubusercontent.com/iputils/iputils/master/doc/ping.xml",
+      "scope": "ICMP echo and Linux timeout flags",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-rsync",
+      "title": "rsync manual",
+      "publisher": "rsync maintainers",
+      "url": "https://download.samba.org/pub/rsync/rsync.1",
+      "scope": "Dry-run, archive copy, itemized changes, and trailing slash behavior",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-scp",
+      "title": "OpenSSH scp manual",
+      "publisher": "OpenBSD / OpenSSH",
+      "url": "https://man.openbsd.org/scp",
+      "scope": "Secure copying and explicit source/destination syntax",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-socket",
+      "title": "Python socket interface",
+      "publisher": "Python Software Foundation",
+      "url": "https://docs.python.org/3/library/socket.html",
+      "scope": "TCP connections and socket timeouts",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-ssh",
+      "title": "OpenSSH ssh manual",
+      "publisher": "OpenBSD / OpenSSH",
+      "url": "https://man.openbsd.org/ssh",
+      "scope": "Remote command syntax, host identity, and client options",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-subprocess",
+      "title": "Python subprocess",
+      "publisher": "Python Software Foundation",
+      "url": "https://docs.python.org/3/library/subprocess.html",
+      "scope": "Argument lists, exit status, captured streams, and timeout",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-venv",
+      "title": "Python virtual environments",
+      "publisher": "Python Software Foundation",
+      "url": "https://docs.python.org/3/library/venv.html",
+      "scope": "Virtual environment creation and interpreter isolation",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "ag-x2-py-examples",
+      "title": "AimDK X2 Python examples",
+      "url": "https://x2-aimdk.agibot.com/en/latest/example/Python.html",
+      "publisher": "AGIBOT",
+      "accessed": "2026-09-29",
+      "version": "AimDK_X2 1.1.0; reviewed 2026-09-29",
+      "scope": "Verified GetMcAction request header, custom source registration and locomotion types"
+    },
+    {
+      "id": "ag-x2-run-example",
+      "title": "AimDK build and run workflow",
+      "url": "https://x2-aimdk.agibot.com/en/latest/quick_start/run_example.html",
+      "publisher": "AGIBOT",
+      "accessed": "2026-09-29",
+      "version": "AimDK_X2 1.1.0; reviewed 2026-09-29",
+      "scope": "Humble environment, SDK overlay and official read-only mode example"
+    },
+    {
+      "id": "ag-d1-example-action",
+      "title": "D1 high-level Python example",
+      "url": "https://github.com/AgibotTech/agibot_D1_Edu-Ultra/blob/b5fe0a86094507238944ad118721376a98615ac0/demo/zsl-1/python/examples/highlevel_demo_Interactive.py",
+      "publisher": "AGIBOT",
+      "accessed": "2026-09-29",
+      "version": "b5fe0a86094507238944ad118721376a98615ac0",
+      "scope": "Official movement example uses move(0,0,0) after a bounded interval; course implementation adds gating and cleanup"
+    },
+    {
+      "id": "ag-ros-message-api",
+      "title": "ROS 2 Humble generated interface utilities",
+      "url": "https://docs.ros.org/en/humble/p/rosidl_runtime_py/rosidl_runtime_py.convert.html",
+      "publisher": "ROS 2 maintainers",
+      "accessed": "2026-09-29",
+      "version": "Humble; reviewed 2026-09-29",
+      "scope": "message_to_ordereddict for JSON serialization"
+    },
+    {
+      "id": "bc-controller-list",
+      "title": "ros2_control hardware inspection service",
+      "url": "https://github.com/ros-controls/ros2_control/blob/humble/controller_manager_msgs/srv/ListHardwareComponents.srv",
+      "publisher": "ros-controls",
+      "accessed": "2026-09-29",
+      "version": "Humble branch; reviewed 2026-09-29",
+      "scope": "ListHardwareComponents response exposes loaded hardware components"
+    },
+    {
+      "id": "bc-sdk-benchmark-code",
+      "title": "BrainCo read-frequency benchmark implementation",
+      "url": "https://github.com/BrainCoTech/brainco-hand-sdk/blob/f7c9c4264cee9461bc6aa99f8082e77e5a330857/python/demo/comm_frequency_test.py",
+      "publisher": "BrainCo",
+      "accessed": "2026-09-29",
+      "version": "f7c9c4264cee9461bc6aa99f8082e77e5a330857",
+      "scope": "Test 1 reads motor status; CLI flags, first-device discovery and report schema verified"
+    },
+    {
+      "id": "bc-sdk-wheel",
+      "title": "BrainCo SDK wheel installer",
+      "url": "https://github.com/BrainCoTech/brainco-hand-sdk/blob/f7c9c4264cee9461bc6aa99f8082e77e5a330857/python/install_whl.sh",
+      "publisher": "BrainCo",
+      "accessed": "2026-09-29",
+      "version": "f7c9c4264cee9461bc6aa99f8082e77e5a330857; wheel 2.0.5",
+      "scope": "Official wheel URL, Linux architecture tags and Python abi3 compatibility"
+    },
+    {
+      "id": "bc-sdk-pypi",
+      "title": "BrainCo Stark SDK 2.0.5 release files",
+      "url": "https://pypi.org/project/bc-stark-sdk/2.0.5/",
+      "publisher": "BrainCo",
+      "accessed": "2026-09-29",
+      "version": "2.0.5; Linux wheel URLs checked 2026-09-30",
+      "scope": "Both x86_64 and aarch64 manylinux_2_34 wheels available; documented installer fallback used because vendor OSS URLs return 404"
+    },
+    {
+      "id": "bc-fake-hardware",
+      "title": "Revo2 right-hand FakeSystem configuration",
+      "url": "https://github.com/BrainCoTech/brainco_hand_ros2/blob/e98dd933bcc85da86f6993910ffe64e8b981160b/brainco_moveit_config/config/revo2_right.ros2_control.xacro",
+      "publisher": "BrainCo",
+      "accessed": "2026-09-29",
+      "version": "e98dd933bcc85da86f6993910ffe64e8b981160b",
+      "scope": "Mock plugin identity and six command/state joint interfaces"
+    },
+    {
+      "id": "ag-go1-model-config",
+      "title": "GO-1 checkpoint configuration",
+      "url": "https://huggingface.co/agibot-world/GO-1/blob/main/config.json",
+      "publisher": "AGIBOT / OpenDriveLab",
+      "accessed": "2026-09-29",
+      "version": "Reviewed 2026-09-29; model repository main is mutable",
+      "scope": "Reviewed checkpoint uses 16 state and action dimensions and 30-step chunks; recipe reads the actual local config"
+    },
+    {
+      "id": "linux-temperature-msg",
+      "title": "sensor_msgs Temperature interface",
+      "publisher": "ROS 2 common_interfaces maintainers",
+      "url": "https://raw.githubusercontent.com/ros2/common_interfaces/jazzy/sensor_msgs/msg/Temperature.msg",
+      "scope": "Stamped temperature, degrees Celsius, and variance semantics",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-rclpy-clock",
+      "title": "rclpy clock API",
+      "publisher": "ROS 2 rclpy maintainers",
+      "url": "https://raw.githubusercontent.com/ros2/rclpy/jazzy/rclpy/rclpy/clock.py",
+      "scope": "Node clock now and ROS/steady clock behavior",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-python-csv",
+      "title": "Python CSV reader and writer",
+      "publisher": "Python Software Foundation",
+      "url": "https://docs.python.org/3/library/csv.html",
+      "scope": "DictReader, DictWriter, newline handling, and explicit field names",
+      "accessed": "2026-09-29",
+      "version": "Primary documentation retrieved 2026-09-29"
+    },
+    {
+      "id": "linux-ros-apt-source",
+      "title": "ROS apt-source repository configuration packages",
+      "publisher": "ROS infrastructure maintainers",
+      "url": "https://github.com/ros-infrastructure/ros-apt-source",
+      "scope": "Official signed-repository configuration packages and release assets",
+      "accessed": "2026-09-29",
+      "version": "Current official release metadata"
+    },
+    {
+      "id": "u-recipe-channel",
+      "title": "SDK2 Python subscriber lifecycle and queue implementation",
+      "url": "https://github.com/unitreerobotics/unitree_sdk2_python/blob/814556d15970dd2ecf1c9984e845ca02ab07e206/unitree_sdk2py/core/channel.py",
+      "publisher": "Unitree Robotics",
+      "accessed": "2026-09-30",
+      "version": "814556d15970dd2ecf1c9984e845ca02ab07e206",
+      "scope": "ChannelFactoryInitialize, ChannelSubscriber.Init and Close signatures"
+    },
+    {
+      "id": "u-recipe-motor-state",
+      "title": "HG Python MotorState generated fields",
+      "url": "https://github.com/unitreerobotics/unitree_sdk2_python/blob/814556d15970dd2ecf1c9984e845ca02ab07e206/unitree_sdk2py/idl/unitree_hg/msg/dds_/_MotorState_.py",
+      "publisher": "Unitree Robotics",
+      "accessed": "2026-09-30",
+      "version": "814556d15970dd2ecf1c9984e845ca02ab07e206",
+      "scope": "Motor telemetry shape including two temperature values, voltage and raw motor status"
+    },
+    {
+      "id": "u-recipe-press-state",
+      "title": "HG Python PressSensorState generated fields",
+      "url": "https://github.com/unitreerobotics/unitree_sdk2_python/blob/814556d15970dd2ecf1c9984e845ca02ab07e206/unitree_sdk2py/idl/unitree_hg/msg/dds_/_PressSensorState_.py",
+      "publisher": "Unitree Robotics",
+      "accessed": "2026-09-30",
+      "version": "814556d15970dd2ecf1c9984e845ca02ab07e206",
+      "scope": "Twelve pressure/temperature values per array and lost counter"
+    },
+    {
+      "id": "u-recipe-remote",
+      "title": "G1 Python wireless remote parser",
+      "url": "https://github.com/unitreerobotics/unitree_sdk2_python/blob/814556d15970dd2ecf1c9984e845ca02ab07e206/example/wireless_controller/wireless_controller.py",
+      "publisher": "Unitree Robotics",
+      "accessed": "2026-09-30",
+      "version": "814556d15970dd2ecf1c9984e845ca02ab07e206",
+      "scope": "Exact HG remote topic, 40-byte decoder offsets and sixteen-button bit mapping"
+    },
+    {
+      "id": "u-recipe-cyclone",
+      "title": "CycloneDDS 0.10.2 native runtime",
+      "url": "https://github.com/eclipse-cyclonedds/cyclonedds/tree/9995905bce6c4cf9f740d6438bbf7fcfd1c83dfd",
+      "publisher": "Eclipse Cyclone DDS",
+      "accessed": "2026-09-30",
+      "version": "9995905bce6c4cf9f740d6438bbf7fcfd1c83dfd",
+      "scope": "Pinned native runtime for the SDK Python cyclonedds==0.10.2 dependency"
+    },
+    {
+      "id": "u-recipe-hg-package",
+      "title": "Unitree HG ROS 2 CMake message generation",
+      "url": "https://github.com/unitreerobotics/unitree_ros2/blob/668d1ec5a05d1c38d3306bdca7d59f2ba3581a88/cyclonedds_ws/src/unitree/unitree_hg/CMakeLists.txt",
+      "publisher": "Unitree Robotics",
+      "accessed": "2026-09-30",
+      "version": "668d1ec5a05d1c38d3306bdca7d59f2ba3581a88",
+      "scope": "HG message generation dependencies and DDS IDL generation"
+    },
+    {
+      "id": "u-recipe-g1-mjcf",
+      "title": "G1 29-DOF MuJoCo model",
+      "url": "https://github.com/unitreerobotics/unitree_mujoco/blob/1eb6642e3f3fdfb7fb13a9794fd6a2dd93ea0e7d/unitree_robots/g1/g1_29dof.xml",
+      "publisher": "Unitree Robotics",
+      "accessed": "2026-09-30",
+      "version": "1eb6642e3f3fdfb7fb13a9794fd6a2dd93ea0e7d",
+      "scope": "Floating base, elbow joint/actuator names, meshes and actuator control ranges"
+    },
+    {
+      "id": "u-recipe-mujoco-python",
+      "title": "MuJoCo 3.3.6 Python bindings",
+      "url": "https://github.com/google-deepmind/mujoco/blob/3.3.6/doc/python.rst",
+      "publisher": "Google DeepMind",
+      "accessed": "2026-09-30",
+      "version": "3.3.6",
+      "scope": "Model/data construction, stepping, name lookup and passive viewer threading requirements"
+    },
+    {
+      "id": "u-recipe-usb-abi",
+      "title": "Linux USB sysfs stable ABI",
+      "url": "https://github.com/torvalds/linux/blob/v6.6/Documentation/ABI/stable/sysfs-bus-usb",
+      "publisher": "Linux kernel project",
+      "accessed": "2026-09-30",
+      "version": "v6.6",
+      "scope": "Read-only USB descriptor attribute surface; no device command protocol"
     }
   ]
 }

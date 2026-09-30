@@ -163,3 +163,19 @@ The companion backend source and release report are delivered with the
 September 29, 2026 Robotics Academy package. When updating lessons, review
 source versions, rerun snippet checks, regenerate the lab kit and synchronized
 backend curriculum, then deploy the service before the public course files.
+
+The expanded `#/code` library reads `courses/recipes.json`: 30 complete
+programs with setup/run blocks, original editable files, explicit validation
+status, and links back to coursework. Individual ZIPs live in
+`courses/downloads/programs/`; the combined library and lab kit include the
+same file contents. Hardware behavior is opt-in and the platform-specific
+requirements remain visible. No vendor SDKs, weights or datasets are bundled.
+
+`#/terminal` is a 12-exercise virtual shell for beginner file/text commands.
+It implements a small documented command subset in memory, never invokes an
+operating-system shell, and does not contact a robot. It complements the
+Linux from zero course; it is not a browser-hosted Ubuntu installation.
+
+The current curriculum has 15 courses, 79 lessons and 237 questions. Keep
+program IDs stable for links/search, use unique relative source filenames,
+and regenerate both combined and per-program archives when changing code.
